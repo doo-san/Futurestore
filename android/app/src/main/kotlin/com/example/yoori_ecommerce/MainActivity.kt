@@ -1,0 +1,6 @@
+package com.interprest.futurestore
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}

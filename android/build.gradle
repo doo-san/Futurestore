@@ -1,0 +1,29 @@
+plugins {
+    id "com.google.gms.google-services" version "4.4.3" apply false
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        // JCenter est fermé depuis 2022 — explicitement exclu pour éviter les timeouts
+    }
+    configurations.all {
+        resolutionStrategy {
+            // Empêche toute version dynamique de OneSignal (injectée par des plugins)
+            force 'com.onesignal:OneSignal:5.6.1'
+        }
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
