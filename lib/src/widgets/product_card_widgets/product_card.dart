@@ -24,9 +24,9 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Ribbon(
-      farLength: dataModel.data![index].isNew! ? 20 : 0.01,
-      nearLength: dataModel.data![index].isNew! ? 40 : 0.005,
-      title: dataModel.data![index].isNew! ? AppTags.neW.tr:"",
+      farLength: (dataModel.data![index].isNew ?? false) ? 20 : 0.01,
+      nearLength: (dataModel.data![index].isNew ?? false) ? 40 : 0.005,
+      title: (dataModel.data![index].isNew ?? false) ? AppTags.neW.tr:"",
       titleStyle: TextStyle(
         fontSize: isMobile(context)?10.sp:7.sp,
         fontFamily: 'Poppins',
@@ -68,8 +68,8 @@ class ProductCard extends StatelessWidget {
                     Row(
                       children: [
                         dataModel.data![index].specialDiscountType == 'flat'
-                            ? num.parse(dataModel
-                                        .data![index].specialDiscount) ==
+                            ? (num.tryParse(dataModel
+                                        .data![index].specialDiscount?.toString() ?? '') ?? 0) ==
                                     0.0
                                 ? const SizedBox()
                                 : Container(
@@ -90,8 +90,8 @@ class ProductCard extends StatelessWidget {
                                   )
                             : dataModel.data![index].specialDiscountType ==
                                     'percentage'
-                                ? num.parse(dataModel
-                                            .data![index].specialDiscount) ==
+                                ? (num.tryParse(dataModel
+                                            .data![index].specialDiscount?.toString() ?? '') ?? 0) ==
                                         0.0
                                     ? const SizedBox()
                                     : Container(
@@ -120,17 +120,15 @@ class ProductCard extends StatelessWidget {
                         : SizedBox(width: 5.w),
                     dataModel.data![index].currentStock == 0
                         ? Container(
-                            height: 20.h,
+                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                             decoration: BoxDecoration(
                               color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(3.r)),
                             ),
-                            child: Center(
-                              child: Text(
-                                AppTags.stockOut.tr,
-                                style: AppThemeData.todayDealNewStyle,
-                              ),
+                            child: Text(
+                              AppTags.stockOut.tr,
+                              style: AppThemeData.todayDealNewStyle,
                             ),
                           )
                         : const SizedBox(),
@@ -176,7 +174,7 @@ class ProductCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 18.w),
                 child: Center(
-                  child: num.parse(dataModel.data![index].specialDiscount) ==
+                  child: (num.tryParse((dataModel.data![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) ==
                           0.0
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,

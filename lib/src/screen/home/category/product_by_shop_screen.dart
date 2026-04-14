@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yoori_ecommerce/src/widgets/loader/shimmer_products.dart';
 import '../../../controllers/home_screen_controller.dart';
@@ -39,12 +39,12 @@ class _ProductByShopState extends State<ProductByShop> {
         ? const Scaffold(body: ShimmerProducts())
         : Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: const Color(0xFFFF0008),
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   Get.back();
@@ -53,7 +53,7 @@ class _ProductByShopState extends State<ProductByShop> {
               centerTitle: true,
               title: Text(
                 widget.shopName.toString(),
-                style: AppThemeData.headerTextStyle_16,
+                style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
               ),
             ),
             body: GridView.builder(

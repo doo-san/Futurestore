@@ -1,4 +1,4 @@
-import 'dart:collection';
+﻿import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,7 +37,7 @@ class PaymentScreen extends GetView<PaymentController> {
             centerTitle: true,
             title: Text(
               AppTags.paymentGateway.tr,
-              style: isMobile(context)? AppThemeData.headerTextStyle_16:AppThemeData.headerTextStyle_16.copyWith(fontSize: 13.sp),
+              style: isMobile(context)? AppThemeData.headerTextStyle_16.copyWith(color: Colors.white):AppThemeData.headerTextStyle_16.copyWith(fontSize: 13.sp),
             ),
           ),
           body: SafeArea(

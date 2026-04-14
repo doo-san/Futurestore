@@ -47,23 +47,19 @@ class MyApp extends StatelessWidget {
 
           theme: ThemeData(
 
-            // ✅ couleur principale FutureStore
-            primaryColor: const Color(0xFFFE840C),
+            primaryColor: const Color(0xFFFF0008),
 
-            // ✅ couleur AppBar (barre du haut)
             appBarTheme: const AppBarTheme(
-              backgroundColor: Color(0xFFFE840C),
+              backgroundColor: Color(0xFFFF0008),
               foregroundColor: Colors.white,
               elevation: 0,
             ),
 
-            // ✅ couleur globale du système
             colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFFFE840C),
-              primary: const Color(0xFFFE840C),
+              seedColor: const Color(0xFFFF0008),
+              primary: const Color(0xFFFF0008),
             ),
 
-            // ✅ couleur fond
             scaffoldBackgroundColor: Colors.white,
 
           ),

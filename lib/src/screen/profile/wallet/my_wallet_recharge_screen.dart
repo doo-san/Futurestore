@@ -1,4 +1,4 @@
-import 'dart:collection';
+﻿import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,7 +33,7 @@ class MyWalletRechargeScreen extends GetView<PaymentController> {
             centerTitle: true,
             title: Text(
               AppTags.paymentGateway.tr,
-              style: AppThemeData.headerTextStyle_16,
+              style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
             ),
           ),
           body: SafeArea(

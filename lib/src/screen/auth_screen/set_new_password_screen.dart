@@ -1,4 +1,4 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+﻿import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:yoori_ecommerce/src/utils/app_tags.dart';
 import '../../utils/app_theme_data.dart';
@@ -25,16 +25,16 @@ class SetNewPasswordScreen extends StatelessWidget {
 
     return Scaffold(
       appBar:isMobile(context)? AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: const BackButton(color: Colors.black),
         centerTitle: true,
         title: Text(
           AppTags.setPassword.tr,
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
       ): AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         toolbarHeight: 60.h,
         leadingWidth: 40.w,
@@ -42,7 +42,7 @@ class SetNewPasswordScreen extends StatelessWidget {
         leading: const BackButton(color: Colors.black),
         title: Text(
           AppTags.setPassword.tr,
-          style: AppThemeData.headerTextStyle_14,
+          style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
         ),
       ),
       body:Obx(()=>Stack(

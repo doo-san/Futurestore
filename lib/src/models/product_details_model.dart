@@ -123,7 +123,7 @@ class Data {
     minimumOrderQuantity = json['minimum_order_quantity'];
     reward = json['reward'];
     totalImages = json['total_images'];
-    images = json['images'].cast<String>();
+    images = json['images'] != null ? List<String>.from(json['images']) : [];
     if (json['colors'] != null) {
       colors = <ColorsData>[];
       json['colors'].forEach((v) {
@@ -142,13 +142,15 @@ class Data {
     isFavourite = json['is_favourite'] ?? false;
     shortDescription = json['short_description'];
     hasVariant = json['has_variant'];
-    isWholesale = json['is_wholesale'];
+    isWholesale = json['is_wholesale'] ?? false;
     isCatalog = json['is_catalog'];
     isFeatured = json['is_featured'];
     isClassified = json['is_classified'];
     isDigital = json['is_digital'];
     isRefundable = json['is_refundable'];
-    descriptionImages = json['description_images'].cast<String>();
+    descriptionImages = json['description_images'] != null
+        ? List<String>.from(json['description_images'])
+        : [];
     specifications = json['specifications'];
     if (json['reviews'] != null) {
       reviews = <Reviews>[];

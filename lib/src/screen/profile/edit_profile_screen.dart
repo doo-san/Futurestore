@@ -1,4 +1,4 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+﻿import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -69,12 +69,12 @@ class _EditProfileState extends State<EditProfile> {
 
     return Scaffold(
       appBar:isMobile(context)? AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
           ),
 
           onPressed: () {
@@ -84,17 +84,17 @@ class _EditProfileState extends State<EditProfile> {
         centerTitle: true,
         title: Text(
           AppTags.editProfile.tr,
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
       ): AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFFF0008),
       elevation: 0,
       toolbarHeight: 60.h,
       leadingWidth: 40.w,
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Colors.black,
+          color: Colors.white,
           size: 25.r,
         ),
 
@@ -105,7 +105,7 @@ class _EditProfileState extends State<EditProfile> {
       centerTitle: true,
       title: Text(
         AppTags.editProfile.tr,
-        style: AppThemeData.headerTextStyle_14,
+        style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
       ),
     ),
       body: Padding(

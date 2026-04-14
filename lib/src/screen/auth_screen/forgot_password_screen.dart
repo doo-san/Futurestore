@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../controllers/forgot_password_controller.dart';
@@ -18,16 +18,16 @@ class ForgetPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: isMobile(context)? AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: const BackButton(color: Colors.black),
         centerTitle: true,
         title: Text(
           AppTags.forgotPasswordText.tr,
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
       ) : AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         toolbarHeight: 60.h,
         leadingWidth: 40.w,
@@ -35,7 +35,7 @@ class ForgetPasswordScreen extends StatelessWidget {
         leading: const BackButton(color: Colors.black),
         title: Text(
           AppTags.forgotPasswordText.tr,
-          style: AppThemeData.headerTextStyle_14,
+          style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
         ),
       ),
       body: Obx(()=>Column(
@@ -56,7 +56,7 @@ class ForgetPasswordScreen extends StatelessWidget {
           LoginEditTextField(
             myController: otpController,
             keyboardType: TextInputType.text,
-            hintText: "Enter OTP code",
+            hintText: "Entrez le code OTP",
             fieldIcon: Icons.password_rounded,
             myObscureText: false,
           ):const SizedBox(),

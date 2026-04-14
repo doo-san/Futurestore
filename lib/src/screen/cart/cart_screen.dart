@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../_route/routes.dart';
@@ -65,14 +65,14 @@ class _CartScreenState extends State<CartScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppThemeData.productBoxDecorationColor,
         elevation: 0,
         centerTitle: true,
         title: Text(
           AppTags.myCart.tr,
           style: isMobile(context)
-              ? AppThemeData.headerTextStyle_16
-              : AppThemeData.headerTextStyle_14,
+              ? AppThemeData.headerTextStyle_16.copyWith(color: Colors.white)
+              : AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
         ),
       ),
       body: Column(
@@ -157,14 +157,14 @@ class _CartScreenState extends State<CartScreen> {
                     SizedBox(height: 10.h),
                     InkWell(
                       onTap: () {
-                        if (LocalDataHelper()
-                            .getConfigData()
-                            .data!
-                            .appConfig!
-                            .disableGuest! &&
-                            LocalDataHelper()
-                                .getUserToken() ==
-                                null) {
+                        final disableGuest = LocalDataHelper()
+                                .getConfigData()
+                                .data
+                                ?.appConfig
+                                ?.disableGuest ??
+                            false;
+                        if (disableGuest &&
+                            LocalDataHelper().getUserToken() == null) {
                           Get.toNamed(Routes.logIn);
                         } else {
                           Navigator.of(context).push(

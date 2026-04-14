@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:country_pickers/country.dart';
@@ -149,13 +149,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             key: _scaffoldkey,
             appBar: isMobile(context)
                 ? AppBar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: AppThemeData.productBoxDecorationColor,
                     elevation: 0,
                     //toolbarHeight: 50.h,
                     leading: IconButton(
                       icon: Icon(
                         Icons.arrow_back,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 20.r,
                       ),
 
@@ -166,7 +166,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     centerTitle: false,
                     title: Text(
                       AppTags.billingShippingAddress.tr,
-                      style: AppThemeData.headerTextStyle_16,
+                      style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
                     ),
                     actions: [
                       Padding(
@@ -197,14 +197,14 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     ],
                   )
                 : AppBar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: AppThemeData.productBoxDecorationColor,
                     elevation: 0,
                     toolbarHeight: 60.h,
                     leadingWidth: 40.w,
                     leading: IconButton(
                       icon: Icon(
                         Icons.arrow_back,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 20.r,
                       ),
 

@@ -41,7 +41,7 @@ class Data {
   });
 
   Data.fromJson(dynamic json) {
-    token = json['token'] ;
+    token = json['token']?.toString() ?? "";
     userId = json['id'] ;
     firstName = json['first_name'];
     lastName = json['last_name'];
@@ -53,7 +53,7 @@ class Data {
     dateOfBirth = json['date_of_birth']??"Select Date";
     gender = json['gender']??"Select Gender";
   }
-  late String token;
+  String token = "";
   int? userId;
   String? firstName;
   String? lastName;

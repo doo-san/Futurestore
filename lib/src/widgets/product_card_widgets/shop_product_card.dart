@@ -1,17 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ribbon_widget/ribbon_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:yoori_ecommerce/config.dart';
 import 'package:yoori_ecommerce/src/controllers/details_screen_controller.dart';
 import '../../_route/routes.dart';
-import '../../controllers/cart_content_controller.dart';
 import '../../controllers/currency_converter_controller.dart';
 import '../../controllers/home_screen_controller.dart';
 import 'package:yoori_ecommerce/src/utils/app_tags.dart';
 import '../../utils/app_theme_data.dart';
 import 'package:yoori_ecommerce/src/utils/responsive.dart';
+import 'product_cart_control.dart';
 
 class ShopProductCard extends StatelessWidget {
   ShopProductCard({
@@ -22,15 +21,14 @@ class ShopProductCard extends StatelessWidget {
   final dynamic dataModel;
   final int index;
   final currencyConverterController = Get.find<CurrencyConverterController>();
-  final _cartController = Get.find<CartContentController>();
 
   @override
   Widget build(BuildContext context) {
     final homeController = Get.put(HomeScreenController());
     return Ribbon(
-      farLength: dataModel[index].isNew! ? isMobile(context)?20:30 : 0.01,
-      nearLength: dataModel[index].isNew! ?  isMobile(context)?40:50 : 0.005,
-      title: dataModel[index].isNew! ?AppTags.neW.tr:"",
+      farLength: (dataModel[index].isNew ?? false) ? isMobile(context)?20:30 : 0.01,
+      nearLength: (dataModel[index].isNew ?? false) ?  isMobile(context)?40:50 : 0.005,
+      title: (dataModel[index].isNew ?? false) ?AppTags.neW.tr:"",
       titleStyle:  TextStyle(
         fontSize:  isMobile(context)?10.sp:7.sp,
         fontFamily: 'Poppins',
@@ -62,7 +60,7 @@ class ShopProductCard extends StatelessWidget {
                     .toString(),
               },
             );
-            Get.find<DetailsPageController>().isFavoriteLocal.value = dataModel[index].isFavourite;
+            Get.find<DetailsPageController>().isFavoriteLocal.value = dataModel[index].isFavourite ?? false;
           },
           child: Stack(
             children: [
@@ -76,7 +74,7 @@ class ShopProductCard extends StatelessWidget {
                         Row(
                           children: [
                             dataModel[index].specialDiscountType == 'flat'
-                                ? num.parse(dataModel[index].specialDiscount) ==
+                                ? (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) ==
                                         0.0
                                     ? const SizedBox()
                                     : Container(
@@ -97,8 +95,7 @@ class ShopProductCard extends StatelessWidget {
                                       )
                                 : dataModel[index].specialDiscountType ==
                                         'percentage'
-                                    ? num.parse(
-                                                dataModel[index].specialDiscount) ==
+                                    ? (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) ==
                                             0.0
                                         ? const SizedBox()
                                         : Container(
@@ -122,22 +119,20 @@ class ShopProductCard extends StatelessWidget {
                                     : Container(),
                           ],
                         ),
-                        num.parse(dataModel[index].specialDiscount) == 0.0
+                        (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) == 0.0
                             ? const SizedBox()
                             : SizedBox(width: 5.w),
                         dataModel[index].currentStock == 0
                             ? Container(
-                                height: 20.h,
+                                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                                 decoration: BoxDecoration(
                                   color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(3.r)),
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    AppTags.stockOut.tr,
-                                    style: isMobile(context)?AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
-                                  ),
+                                child: Text(
+                                  AppTags.stockOut.tr,
+                                  style: isMobile(context)?AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
                                 ),
                               )
                             : const SizedBox(),
@@ -183,13 +178,13 @@ class ShopProductCard extends StatelessWidget {
                   Padding(
                      padding: EdgeInsets.symmetric(horizontal: 7.w),
                     child: Center(
-                      child: num.parse(dataModel[index].specialDiscount) == 0.0
+                      child: (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) == 0.0
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   currencyConverterController
-                                      .convertCurrency(dataModel[index].price!),
+                                      .convertCurrency((dataModel[index].price ?? '0')),
                                   style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle: AppThemeData.todayDealDiscountPriceStyleTab,
                                 ),
                               ],
@@ -199,13 +194,13 @@ class ShopProductCard extends StatelessWidget {
                               children: [
                                 Text(
                                   currencyConverterController
-                                      .convertCurrency(dataModel[index].price!),
+                                      .convertCurrency((dataModel[index].price ?? '0')),
                                   style:isMobile(context)? AppThemeData.todayDealOriginalPriceStyle:AppThemeData.todayDealOriginalPriceStyleTab,
                                 ),
                                 SizedBox(width: 5.w,),
                                 Text(
                                   currencyConverterController.convertCurrency(
-                                      dataModel[index].discountPrice!),
+                                      (dataModel[index].discountPrice ?? '0')),
                                   style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle: AppThemeData.todayDealDiscountPriceStyleTab,
                                 ),
                               ],
@@ -217,162 +212,21 @@ class ShopProductCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Config.groceryCartMode?
-              dataModel![index].hasVariant ? const SizedBox(): Obx(() => Positioned(
-                  bottom: isMobile(context)? 50.h:52.h,
-                  right: 10,
-                  child: Container(
-                    height: isMobile(context)?26.h:30.h,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.25),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(28.r),
-                      ),
-                    ),
-                    child: _cartController.incrementProduct(dataModel![index].id)==-1?Obx(() => InkWell(
-                      onTap: () async {
-                        int cartMinOrder = dataModel![index].minimumOrderQuantity!;
-                        _cartController.addToCart(
-                          productId:  dataModel[index].id!.toString(),
-                          quantity: cartMinOrder.toString(),
-                          variantsIds: "",
-                          variantsNames: "",
-                        );
-                      },
-                      child: Container(
-                        height: isMobile(context) ?24.h:15.h,
-                        width: isMobile(context) ? 24.w : 18.w,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppThemeData.cartItemBoxDecorationColor,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(25.r),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              spreadRadius: 3,
-                              blurRadius: 2,
-                              color:
-                              AppThemeData.boxShadowColor.withOpacity(0.1),
-                              offset: const Offset(0, 0),
-                            )
-                          ],
-                        ),
-                        child: _cartController.isCartUpdating &&
-                            _cartController.updatingCartId ==
-                                dataModel![index].id.toString() &&
-                            _cartController.isIncreasing
-                            ? const CircularProgressIndicator(
-                            strokeWidth: 1)
-                            : Icon(
-                          Icons.add,
-                          size: 16.r,
-                          color: AppThemeData.cartItemIconColor,
-                        ),
-                      ),
-                    )):Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                              int indexProduct  = _cartController.incrementProduct(dataModel![index].id);
-                              int cartMinOrder = dataModel![index].minimumOrderQuantity!;
-                              int? baseQny = _cartController.addToCartListModel.data!.carts![indexProduct].quantity;
-                              if (cartMinOrder < baseQny!) {
-                                _cartController.updateCartProduct(
-                                    increasing: false,
-                                    cartId: _cartController.addToCartListModel.data!.carts![indexProduct].id.toString(),
-                                    quantity: -1);
-                              }else{
-                                _cartController.deleteAProductFromCart(
-                                    productId: _cartController.addToCartListModel.data!.carts![indexProduct].id.toString());
-                              }
-                            },
-                            child: Container(
-                              height: isMobile(context)?23.h:25.h,
-                              width: isMobile(context) ? 23.w : 17.w,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                color: AppThemeData.cartItemBoxDecorationColor,
-                                shape: BoxShape.circle,
-                              ),
-                              child: _cartController.isCartUpdating &&
-                                  _cartController.updatingCartId ==
-                                      dataModel![index].id.toString() &&
-                                  !_cartController.isIncreasing
-                                  ? const CircularProgressIndicator(
-                                  strokeWidth: 1)
-                                  : Icon(
-                                Icons.remove,
-                                size: 16.r,
-                                color: AppThemeData.cartItemIconColor,
-                              ),
-                            ),
-                          ),
-
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 500),
-                            transitionBuilder:
-                                (Widget child, Animation<double> animation) {
-                              return ScaleTransition(
-                                scale: animation,
-                                child: child,
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 3),
-                              child: Text(
-                                _cartController.addToCartListModel.data!.carts![_cartController.incrementProduct(dataModel![index].id)].quantity.toString(),
-                                style: isMobile(context)
-                                    ? AppThemeData.priceTextStyle_14
-                                    : AppThemeData.titleTextStyle_11Tab,
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              int? indexProduct  = _cartController.incrementProduct(dataModel![index].id);
-                              int cartStock = dataModel![index].currentStock;
-                              int cartMinOrder = dataModel![index].minimumOrderQuantity;
-                              if (cartMinOrder < cartStock) {
-                                _cartController.updateCartProduct(
-                                    increasing: true,
-                                    cartId: _cartController.addToCartListModel.data!.carts![indexProduct].id.toString(),
-                                    quantity: 1);
-                              }
-                            },
-                            child: Container(
-                              height: isMobile(context)?23.h:25.h,
-                              width: isMobile(context) ? 23.w : 17.w,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: AppThemeData.cartItemBoxDecorationColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(30.r),
-                                ),
-                              ),
-                              child: _cartController.isCartUpdating &&
-                                  _cartController.updatingCartId ==
-                                      dataModel![index].id.toString() &&
-                                  _cartController.isIncreasing
-                                  ? const CircularProgressIndicator(
-                                  strokeWidth: 1)
-                                  : Icon(
-                                Icons.add,
-                                size: 16.r,
-                                color: AppThemeData.cartItemIconColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-              ),
-              ):const SizedBox()
+              Positioned(
+                bottom: isMobile(context) ? 50.h : 52.h,
+                right: 8,
+                child: GestureDetector(
+                  onTap: () {},
+                  behavior: HitTestBehavior.opaque,
+                  child: ProductCartControl(
+                    productId: dataModel![index].id ?? 0,
+                    title: dataModel![index].title ?? '',
+                    minOrderQty: dataModel![index].minimumOrderQuantity ?? 1,
+                    currentStock: dataModel![index].currentStock ?? 0,
+                    hasVariant: dataModel![index].hasVariant ?? false,
+                  ),
+                ),
+              )
             ],
           ),
         ),

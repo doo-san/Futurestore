@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,7 +43,7 @@ class _SearchProductState extends State<SearchProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: isMobile(context)? AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppThemeData.productBoxDecorationColor,
         elevation: 0,
         leading: InkWell(
             onTap: () {
@@ -51,7 +51,7 @@ class _SearchProductState extends State<SearchProduct> {
             },
             child: const Icon(
               Icons.arrow_back_rounded,
-              color: Colors.black,
+              color: Colors.white,
             )),
         title: Container(
           height: 35.h,
@@ -63,7 +63,7 @@ class _SearchProductState extends State<SearchProduct> {
                 color: AppThemeData.boxShadowColor.withOpacity(0.2),
                 spreadRadius: 0,
                 blurRadius: 20,
-                offset: const Offset(0, 15), 
+                offset: const Offset(0, 15),
               ),
             ],
           ),
@@ -100,13 +100,13 @@ class _SearchProductState extends State<SearchProduct> {
           IconButton(
             padding: EdgeInsets.all(4.r),
             icon: SvgPicture.asset(Images.searchBar,
-              color: Colors.black,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),
             onPressed: () => _listenTextChange(searchFieldController.text),
           ),
         ],
       ):AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: AppThemeData.productBoxDecorationColor,
       elevation: 0,
         toolbarHeight: 60.h,
         leadingWidth: 40.w,
@@ -116,7 +116,7 @@ class _SearchProductState extends State<SearchProduct> {
           },
           child: Icon(
             Icons.arrow_back_rounded,
-            color: Colors.black,
+            color: Colors.white,
             size: isMobile(context)? 18.r:25.r,
           )),
       title: Container(
@@ -129,7 +129,7 @@ class _SearchProductState extends State<SearchProduct> {
               color: const Color(0xff404040).withOpacity(0.2),
               spreadRadius: 0,
               blurRadius: 20,
-              offset: const Offset(0, 15), 
+              offset: const Offset(0, 15),
             ),
           ],
         ),
@@ -165,7 +165,7 @@ class _SearchProductState extends State<SearchProduct> {
       actions: [
         IconButton(
           icon: SvgPicture.asset(Images.searchBar,
-            color: Colors.black,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
             width: 25.w,
             height: 25.h,
           ),

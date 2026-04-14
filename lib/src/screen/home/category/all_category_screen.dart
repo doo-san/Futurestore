@@ -16,15 +16,20 @@ class AllCategory extends StatefulWidget {
 
 class _AllCategoryState extends State<AllCategory> {
   AllCategoryProductModel? allCategoryModel = AllCategoryProductModel();
+  bool hasError = false;
 
-  //var allCategoryModel;
   int page = 1;
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
   final GlobalKey refreshKey = GlobalKey();
 
   Future getAllCategory() async {
-    allCategoryModel = await Repository().getAllCategoryContent(page: page);
+    try {
+      hasError = false;
+      allCategoryModel = await Repository().getAllCategoryContent(page: page);
+    } catch (e) {
+      hasError = true;
+    }
     setState(() {});
   }
 
@@ -39,25 +44,41 @@ class _AllCategoryState extends State<AllCategory> {
     final orientation = MediaQuery.of(context).orientation;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
           ),
-
           onPressed: () {
             Get.back();
-          }, 
+          },
         ),
         centerTitle: true,
         title: Text(
           AppTags.allCategory.tr,
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
       ),
-      body: allCategoryModel!.data != null
+      body: hasError
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.wifi_off_rounded, size: 48, color: Colors.grey),
+                  const SizedBox(height: 12),
+                  const Text('Impossible de charger les catégories',
+                      style: TextStyle(color: Colors.grey)),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: getAllCategory,
+                    child: const Text('Réessayer'),
+                  ),
+                ],
+              ),
+            )
+          : allCategoryModel!.data != null
           ? SmartRefresher(
               key: refreshKey,
               controller: refreshController,

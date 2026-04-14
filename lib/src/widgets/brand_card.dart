@@ -117,18 +117,15 @@ class BrandCard extends StatelessWidget {
                         : SizedBox(width: 5.w),
                     data.currentStock == 0
                         ? Container(
-                          width: 65.w,
-                          height: 20.h,
+                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                           decoration: BoxDecoration(
                             color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
                             borderRadius:
                             BorderRadius.all(Radius.circular(3.r)),
                           ),
-                          child: Center(
-                            child: Text(
-                              AppTags.stockOut.tr,
-                              style: AppThemeData.todayDealNewStyle,
-                            ),
+                          child: Text(
+                            AppTags.stockOut.tr,
+                            style: AppThemeData.todayDealNewStyle,
                           ),
                         )
                         : const SizedBox(),

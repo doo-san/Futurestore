@@ -1,4 +1,4 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+﻿import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:yoori_ecommerce/src/_route/routes.dart';
@@ -22,7 +22,7 @@ class RechargeConfirmationScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           AppTags.confirmation.tr,
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
       ),
       body: SizedBox(

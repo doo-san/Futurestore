@@ -11,7 +11,7 @@ class FavouriteData {
   FavouriteData.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
-    data = Data.fromJson(json['data']);
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -32,12 +32,16 @@ class Data {
   late final List<FavouriteProducts> favouriteProducts;
 
   Data.fromJson(Map<String, dynamic> json) {
-    favouriteShop = List.from(json['favourite_shop'])
-        .map((e) => FavouriteShop.fromJson(e))
-        .toList();
-    favouriteProducts = List.from(json['favourite_products'])
-        .map((e) => FavouriteProducts.fromJson(e))
-        .toList();
+    favouriteShop = json['favourite_shop'] != null
+        ? List.from(json['favourite_shop'])
+            .map((e) => FavouriteShop.fromJson(e))
+            .toList()
+        : [];
+    favouriteProducts = json['favourite_products'] != null
+        ? List.from(json['favourite_products'])
+            .map((e) => FavouriteProducts.fromJson(e))
+            .toList()
+        : [];
   }
 
   Map<String, dynamic> toJson() {

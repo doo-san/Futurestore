@@ -1,4 +1,4 @@
-import 'package:country_pickers/country.dart';
+﻿import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_picker_dropdown.dart';
 import 'package:country_pickers/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ class PhoneLoginScreen extends StatelessWidget {
     String phoneCode = "880";
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: const BackButton(color: Colors.black),
         centerTitle: true,
@@ -87,9 +87,9 @@ class PhoneLoginScreen extends StatelessWidget {
                           padding: EdgeInsets.only(left: 20.w),
                           child: CountryPickerDropdown(
                             isFirstDefaultIfInitialValueNotProvided: false,
-                            initialValue:
-                            LocalDataHelper().getConfigData().data!.appConfig!.defaultCountry!.isNotEmpty?
-                            LocalDataHelper().getConfigData().data!.appConfig!.defaultCountry!:'BD',
+                            initialValue: (LocalDataHelper().getConfigData().data?.appConfig?.defaultCountry?.isNotEmpty ?? false)
+                                ? LocalDataHelper().getConfigData().data!.appConfig!.defaultCountry!
+                                : 'BD',
                             isExpanded: true,
                             itemBuilder: (Country country) => Row(
                               children: <Widget>[
@@ -131,7 +131,7 @@ class PhoneLoginScreen extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () async {
-                        if(LocalDataHelper().getConfigData().data!.appConfig!.disableOtp!){
+                        if(LocalDataHelper().getConfigData().data?.appConfig?.disableOtp ?? false){
                           await phoneAuthController.sendOtpLogin(phoneNumber: "+$phoneCode${phoneController.text}");
                         }else{
                           await phoneAuthController.phoneLogin(phoneNumber: "+$phoneCode${phoneController.text}");

@@ -14,7 +14,7 @@ import '../../widgets/network_image_checker.dart';
 
 class CategoryScreen extends StatelessWidget {
   CategoryScreen({super.key});
-  final _catController = Get.put(CategoryContentController());
+  final _catController = Get.find<CategoryContentController>();
 
   // ✅ création du controller
   final ProductByCategoryController productController =
@@ -22,8 +22,58 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() =>
-        _catController.isLoading ? const ShimmerCategoryContent() : _mainUi(context));
+    return Obx(() {
+      if (_catController.isLoading) {
+        return const ShimmerCategoryContent();
+      }
+      if (_catController.hasError.value || _catController.categoryList.isEmpty) {
+        return _errorUi(context);
+      }
+      return _mainUi(context);
+    });
+  }
+
+  Widget _errorUi(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.wifi_off_rounded, size: 64.r, color: Colors.grey.shade400),
+              SizedBox(height: 16.h),
+              Text(
+                AppTags.noInternetConnection.tr,
+                style: TextStyle(
+                  fontSize: isMobile(context) ? 16.sp : 14.sp,
+                  color: Colors.grey.shade600,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              SizedBox(height: 20.h),
+              ElevatedButton(
+                onPressed: () => _catController.getCatProducts(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppThemeData.buttonColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                ),
+                child: Text(
+                  'Réessayer',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isMobile(context) ? 14.sp : 12.sp,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
 
@@ -79,7 +129,7 @@ class CategoryScreen extends StatelessWidget {
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment.center,
                                                       children: [
-                                                        _catController.featuredCategory.value.icon!.isNotEmpty?Icon(
+                                                        (_catController.featuredCategory.value.icon ?? '').isNotEmpty?Icon(
                                                           MdiIcons.fromString(
                                                             _catController.featuredCategory.value.icon!.substring(8),
                                                           ),
@@ -144,13 +194,12 @@ class CategoryScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10.r),
                                   ),
-                                  image: DecorationImage(
+                                  image: (_catController.featuredCategory.value.banner ?? '').isNotEmpty ? DecorationImage(
                                     image: NetworkImage(
-                                      _catController
-                                          .featuredCategory.value.banner!,
+                                      _catController.featuredCategory.value.banner!,
                                     ),
                                     fit: BoxFit.fill,
-                                  ),
+                                  ) : null,
                                   boxShadow: [
                                     BoxShadow(
                                       spreadRadius: 30.r,
@@ -178,8 +227,8 @@ class CategoryScreen extends StatelessWidget {
                                     vertical: 8.h,
                                   ),
                                   shrinkWrap: true,
-                                  itemCount: _catController.featuredCategory.value
-                                      .featuredSubCategories!.length,
+                                  itemCount: (_catController.featuredCategory.value
+                                      .featuredSubCategories ?? []).length,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount:
@@ -196,15 +245,15 @@ class CategoryScreen extends StatelessWidget {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (_) => ProductByCategory(
-                                              id: _catController
+                                              id: (_catController
                                                   .featuredCategory
                                                   .value
-                                                  .featuredSubCategories![index]
+                                                  .featuredSubCategories ?? [])[index]
                                                   .id,
-                                              title: _catController
+                                              title: (_catController
                                                   .featuredCategory
                                                   .value
-                                                  .featuredSubCategories![index]
+                                                  .featuredSubCategories ?? [])[index]
                                                   .title,
                                             ),
                                           ),
@@ -236,23 +285,20 @@ class CategoryScreen extends StatelessWidget {
                                             children: [
                                               Expanded(
                                                 child: NetworkImageCheckerWidget(
-                                                  image: _catController
+                                                  image: (_catController
                                                       .featuredCategory
                                                       .value
-                                                      .featuredSubCategories![
-                                                          index]
+                                                      .featuredSubCategories ?? [])[index]
                                                       .image,
                                                 ),
                                               ),
                                               Center(
                                                 child: Text(
-                                                  _catController
+                                                  ((_catController
                                                       .featuredCategory
                                                       .value
-                                                      .featuredSubCategories![
-                                                          index]
-                                                      .title
-                                                      .toString(),
+                                                      .featuredSubCategories ?? [])[index]
+                                                      .title ?? ''),
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
                                                   style: isMobile(context)? AppThemeData.categoryTitleTextStyle_12:AppThemeData.categoryTitleTextStyle_9Tab,
@@ -284,15 +330,14 @@ class CategoryScreen extends StatelessWidget {
                                   color: const Color(0xffDBE8C2),
                                   borderRadius:
                                       const BorderRadius.all(Radius.circular(10)),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      _catController
-                                          .categoryList[
-                                              _catController.index.value]
-                                          .banner!,
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
+                                  image: (_catController.categoryList[_catController.index.value].banner ?? '').isNotEmpty
+                                      ? DecorationImage(
+                                          image: NetworkImage(
+                                            _catController.categoryList[_catController.index.value].banner!,
+                                          ),
+                                          fit: BoxFit.fill,
+                                        )
+                                      : null,
                                   boxShadow: [
                                     BoxShadow(
                                       spreadRadius: 30.r,
@@ -310,17 +355,17 @@ class CategoryScreen extends StatelessWidget {
                               Expanded(
                                 child: ListView.builder(
                                   shrinkWrap: true,
-                                  itemCount: _catController
+                                  itemCount: (_catController
                                       .categoryList[_catController.index.value]
-                                      .subCategories!
+                                      .subCategories ?? [])
                                       .length,
                                   itemBuilder: (_, subCtIndex) {
                                     return _catController
                                             .categoryList[
                                                 _catController.index.value]
                                             .subCategories![subCtIndex]
-                                            .childCategories!
-                                            .isNotEmpty
+                                            .childCategories
+                                            ?.isNotEmpty == true
                                         ? InkWell(
                                             onTap: () {
                                               Navigator.of(context).push(
@@ -510,7 +555,7 @@ class CategoryScreen extends StatelessWidget {
                                                                 .index.value]
                                                         .subCategories![
                                                             subCtIndex]
-                                                        .id!,
+                                                        .id,
                                                     title: _catController
                                                         .categoryList[
                                                             _catController
@@ -590,7 +635,7 @@ class CategoryScreen extends StatelessWidget {
                                                                     "Poppins_Medium"),
                                                           ),
                                                           Text(
-                                                            "${AppTags.totalProduct.tr}: ${_catController.categoryList[_catController.index.value].subCategories![subCtIndex].childCategories!.length}",
+                                                            "${AppTags.totalProduct.tr}: ${(_catController.categoryList[_catController.index.value].subCategories![subCtIndex].childCategories ?? []).length}",
                                                             style: TextStyle(
                                                               fontSize: isMobile(context)? 12.sp:10.sp,
                                                               fontFamily:
@@ -638,7 +683,7 @@ class CategoryScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _catController.categoryList[index].icon!.isNotEmpty?Icon(
+                  (_catController.categoryList[index].icon ?? '').isNotEmpty?Icon(
                     MdiIcons.fromString(
                       _catController.categoryList[index].icon!.substring(8),
                     ),

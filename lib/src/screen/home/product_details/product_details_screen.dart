@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart' as badges;
+﻿import 'package:badges/badges.dart' as badges;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:yoori_ecommerce/src/utils/image_url_helper.dart';
@@ -101,12 +101,12 @@ class DetailsPage extends StatelessWidget {
 
   AppBar mobileAppbar() {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFFF0008),
       elevation: 0,
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back,
-          color: Colors.black,
+          color: Colors.white,
         ),
         onPressed: () {
           Get.back();
@@ -115,7 +115,7 @@ class DetailsPage extends StatelessWidget {
       centerTitle: true,
       title: Text(
         AppTags.productDetails.tr,
-        style: AppThemeData.headerTextStyle_16,
+        style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
       ),
       actions: [
         Row(
@@ -209,7 +209,7 @@ class DetailsPage extends StatelessWidget {
 
   AppBar tabAppbar() {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFFF0008),
       toolbarHeight: 60.h,
       leadingWidth: 40.w,
       elevation: 0,
@@ -388,9 +388,8 @@ class DetailsPage extends StatelessWidget {
                                   children: [
                                     detailsModel.data!.specialDiscountType ==
                                             'flat'
-                                        ? double.parse(detailsModel
-                                                    .data!.specialDiscount) ==
-                                                0.000
+                                        ? (double.tryParse((detailsModel.data!.specialDiscount ?? '').replaceAll(',', '')) ?? 0) ==
+                                                0.0
                                             ? const SizedBox()
                                             : Container(
                                                 height: 20.h,
@@ -416,9 +415,8 @@ class DetailsPage extends StatelessWidget {
                                         : detailsModel.data!
                                                     .specialDiscountType ==
                                                 'percentage'
-                                            ? double.parse(detailsModel.data!
-                                                        .specialDiscount) ==
-                                                    0.000
+                                            ? (double.tryParse((detailsModel.data!.specialDiscount ?? '').replaceAll(',', '')) ?? 0) ==
+                                                    0.0
                                                 ? const SizedBox()
                                                 : Container(
                                                     height: 20.h,
@@ -2210,7 +2208,7 @@ class DetailsPage extends StatelessWidget {
                                           context: context,
                                           enableDrag: true,
                                           isScrollControlled: true,
-                                          backgroundColor: Colors.transparent,
+                                          backgroundColor: const Color(0xFFFF0008),
                                           builder: (context) => Material(
                                             child: SafeArea(
                                               top: false,

@@ -62,7 +62,7 @@ class VideoProductVerticalCard extends StatelessWidget {
                     SizedBox(
                       height: 5.h,
                     ),
-                    num.parse(dataModel![index].specialDiscount) == 0.0 ?
+                    (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) == 0.0 ?
                     Row(
                       children: [
                         Text(

@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -32,12 +32,12 @@ class Settings extends StatelessWidget {
     controller.getAppLanguageList();
     return Scaffold(
       appBar:isMobile(context)? AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Get.back();
@@ -46,17 +46,17 @@ class Settings extends StatelessWidget {
         centerTitle: true,
         title: Text(
           AppTags.settings.tr,
-          style: AppThemeData.settingsTitleStyle,
+          style: AppThemeData.settingsTitleStyle.copyWith(color: Colors.white),
         ),
       ): AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFFF0008),
       elevation: 0,
       toolbarHeight: 60.h,
       leadingWidth: 40.w,
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Colors.black,
+          color: Colors.white,
           size: 25.r,
         ),
 
@@ -67,7 +67,7 @@ class Settings extends StatelessWidget {
       centerTitle: true,
       title: Text(
         AppTags.settings.tr,
-        style: AppThemeData.headerTextStyle_14,
+        style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
       ),
     ),
       body: SingleChildScrollView(
@@ -81,7 +81,7 @@ class Settings extends StatelessWidget {
                 children: [
                   Text(
                     AppTags.languages.tr,
-                    style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                    style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                   ),
                   Center(
                     child: Obx(
@@ -89,7 +89,7 @@ class Settings extends StatelessWidget {
                         isExpanded: false,
                         value: controller.locale.value,
                         icon: const Icon(Icons.arrow_drop_down_outlined),
-                        style:isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                        style:isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                         iconSize: 24.r,
                         underline: const SizedBox(),
                         hint: SizedBox(
@@ -125,7 +125,7 @@ class Settings extends StatelessWidget {
                 children: [
                   Text(
                     AppTags.notification.tr,
-                    style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                    style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                   ),
                   Center(
                     child: Obx(
@@ -163,7 +163,7 @@ class Settings extends StatelessWidget {
                   children: [
                     Text(
                       AppTags.currency.tr,
-                      style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                      style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                     ),
                     Container(
                       height: 42.h,
@@ -172,7 +172,7 @@ class Settings extends StatelessWidget {
                         child: DropdownButton(
                           iconSize: isMobile(context)?18.r:25.r,
                           isExpanded: false,
-                          style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                          style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                           value: settingController.selectedCurrency.value,
                           onChanged: (newValue) {
                             int index = settingController.getIndex(newValue);
@@ -217,7 +217,7 @@ class Settings extends StatelessWidget {
                 child: ListTile(
                   title: Text(
                     AppTags.shareThisApp.tr,
-                    style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                    style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                   ),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
@@ -236,7 +236,7 @@ class Settings extends StatelessWidget {
                 child:  ListTile(
                   title: Text(
                     AppTags.address.tr,
-                    style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                    style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                   ),
                   trailing:  Icon(
                     Icons.arrow_forward_ios,
@@ -257,7 +257,7 @@ class Settings extends StatelessWidget {
                 child: ListTile(
                   title: Text(
                     AppTags.rateThisApp.tr,
-                    style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                    style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                   ),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
@@ -276,23 +276,18 @@ class Settings extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
                 onTap: () {
-                  Get.toNamed(
-                    Routes.wvScreen,
-                    parameters: {
-                      'url':
-                          LocalDataHelper().getConfigData().data!.pages![3].link!,
-                      'title': LocalDataHelper()
-                          .getConfigData()
-                          .data!
-                          .pages![3]
-                          .title!,
-                    },
-                  );
+                  final pages = LocalDataHelper().getConfigData().data?.pages;
+                  if (pages != null && pages.length > 3) {
+                    Get.toNamed(Routes.wvScreen, parameters: {
+                      'url': pages[3].link ?? '',
+                      'title': pages[3].title ?? '',
+                    });
+                  }
                 },
                 child: ListTile(
                   title: Text(
                     AppTags.termsCondition.tr,
-                    style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                    style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                   ),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
@@ -305,23 +300,18 @@ class Settings extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
                 onTap: () {
-                  Get.toNamed(
-                    Routes.wvScreen,
-                    parameters: {
-                      'url':
-                          LocalDataHelper().getConfigData().data!.pages![4].link!,
-                      'title': LocalDataHelper()
-                          .getConfigData()
-                          .data!
-                          .pages![4]
-                          .title!,
-                    },
-                  );
+                  final pages = LocalDataHelper().getConfigData().data?.pages;
+                  if (pages != null && pages.length > 4) {
+                    Get.toNamed(Routes.wvScreen, parameters: {
+                      'url': pages[4].link ?? '',
+                      'title': pages[4].title ?? '',
+                    });
+                  }
                 },
                 child: ListTile(
                   title: Text(
                     AppTags.privacyPolicy.tr,
-                    style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                    style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                   ),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
@@ -334,23 +324,18 @@ class Settings extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
                 onTap: () {
-                  Get.toNamed(
-                    Routes.wvScreen,
-                    parameters: {
-                      'url':
-                          LocalDataHelper().getConfigData().data!.pages![5].link!,
-                      'title': LocalDataHelper()
-                          .getConfigData()
-                          .data!
-                          .pages![5]
-                          .title!,
-                    },
-                  );
+                  final pages = LocalDataHelper().getConfigData().data?.pages;
+                  if (pages != null && pages.length > 5) {
+                    Get.toNamed(Routes.wvScreen, parameters: {
+                      'url': pages[5].link ?? '',
+                      'title': pages[5].title ?? '',
+                    });
+                  }
                 },
                 child: ListTile(
                   title: Text(
                     AppTags.aboutThisApp.tr,
-                    style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                    style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                   ),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
@@ -363,23 +348,18 @@ class Settings extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
                 onTap: () {
-                  Get.toNamed(
-                    Routes.wvScreen,
-                    parameters: {
-                      'url':
-                          LocalDataHelper().getConfigData().data!.pages![6].link!,
-                      'title': LocalDataHelper()
-                          .getConfigData()
-                          .data!
-                          .pages![6]
-                          .title!,
-                    },
-                  );
+                  final pages = LocalDataHelper().getConfigData().data?.pages;
+                  if (pages != null && pages.length > 6) {
+                    Get.toNamed(Routes.wvScreen, parameters: {
+                      'url': pages[6].link ?? '',
+                      'title': pages[6].title ?? '',
+                    });
+                  }
                 },
                 child: ListTile(
                   title: Text(
                     AppTags.contactUS.tr,
-                    style: isMobile(context)? AppThemeData.settingsTitleStyle:AppThemeData.settingsTitleStyleTab,
+                    style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
                   ),
                   trailing: Icon(
                     Icons.arrow_forward_ios,

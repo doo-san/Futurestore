@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yoori_ecommerce/src/servers/repository.dart';
+import '../../../controllers/category_count_controller.dart';
 import '../../../models/all_category_product_model.dart';
 import '../../../utils/app_theme_data.dart';
 import '../../../utils/app_tags.dart';
@@ -22,6 +23,7 @@ class _ProductCategoryState extends State<ProductCategory> {
   int _index = 0;
   bool _featuredIndex = true;
   bool isLoading = false;
+  final _countController = Get.put(CategoryCountController());
 
   @override
   void initState() {
@@ -34,6 +36,13 @@ class _ProductCategoryState extends State<ProductCategory> {
     setState(() {
       isLoading = true;
     });
+    final ids = (allCategoryProductModel?.data?.categories
+                ?.expand((c) => c.subCategories?.map((s) => s.id ?? 0) ?? <int>[])
+                .where((id) => id > 0)
+                .toList() ??
+            <int>[])
+        .cast<int>();
+    _countController.prefetchCounts(ids);
   }
 
   @override
@@ -43,21 +52,21 @@ class _ProductCategoryState extends State<ProductCategory> {
     return isLoading
         ? Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: const Color(0xFFFF0008),
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   Get.back();
-                }, 
+                },
               ),
               centerTitle: true,
               title: Text(
                 AppTags.allCategory.tr,
-                style: AppThemeData.headerTextStyle_16,
+                style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
               ),
             ),
             body: SafeArea(
@@ -613,10 +622,10 @@ class _ProductCategoryState extends State<ProductCategory> {
                                                                     fontFamily:
                                                                         "Poppins_Medium"),
                                                               ),
-                                                              Text(
-                                                                "${AppTags.totalProduct.tr}: ${allCategoryProductModel!.data!.categories![_index].subCategories![subCtIndex].childCategories!.length}",
-                                                                style: isMobile(context)? AppThemeData.walletTextStyle_12:AppThemeData.walletTextStyle_10Tab
-                                                              ),
+                                                              Obx(() => Text(
+                                                                "${AppTags.totalProduct.tr}: ${_countController.getCount(allCategoryProductModel!.data!.categories![_index].subCategories![subCtIndex].id ?? 0)}",
+                                                                style: isMobile(context)? AppThemeData.walletTextStyle_12:AppThemeData.walletTextStyle_10Tab,
+                                                              )),
                                                             ],
                                                           ),
                                                         ),

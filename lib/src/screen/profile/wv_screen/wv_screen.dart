@@ -1,4 +1,4 @@
-import 'dart:collection';
+﻿import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +23,12 @@ class WVScreen extends StatelessWidget {
     return Obx(
       () => Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color(0xFFFF0008),
           elevation: 0,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
             ),
             onPressed: () {
               Get.back();
@@ -37,7 +37,7 @@ class WVScreen extends StatelessWidget {
           centerTitle: true,
           title: Text(
           title,
-            style: AppThemeData.headerTextStyle_16,
+            style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
           ),
         ),
         body: WillPopScope(

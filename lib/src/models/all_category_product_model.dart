@@ -178,6 +178,7 @@ class SubCategories {
   String? banner;
   String? title;
   String? image;
+  int? productsCount;
   List<ChildCategories>? childCategories;
 
   SubCategories(
@@ -188,6 +189,7 @@ class SubCategories {
       this.banner,
       this.title,
       this.image,
+      this.productsCount,
       this.childCategories});
 
   SubCategories.fromJson(Map<String, dynamic> json) {
@@ -198,6 +200,7 @@ class SubCategories {
     banner = json['banner'];
     title = json['title'];
     image = json['image'];
+    productsCount = json['products_count'];
     if (json['child_categories'] != null) {
       childCategories = <ChildCategories>[];
       json['child_categories'].forEach((v) {
@@ -215,6 +218,7 @@ class SubCategories {
     data['banner'] = banner;
     data['title'] = title;
     data['image'] = image;
+    data['products_count'] = productsCount;
     if (childCategories != null) {
       data['child_categories'] =
           childCategories!.map((v) => v.toJson()).toList();
@@ -231,6 +235,7 @@ class ChildCategories {
   String? banner;
   String? title;
   String? image;
+  int? productsCount;
 
   ChildCategories({
     this.id,
@@ -240,6 +245,7 @@ class ChildCategories {
     this.banner,
     this.title,
     this.image,
+    this.productsCount,
   });
 
   ChildCategories.fromJson(Map<String, dynamic> json) {
@@ -250,6 +256,7 @@ class ChildCategories {
     banner = json['banner'];
     title = json['title'];
     image = json['image'];
+    productsCount = json['products_count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -261,7 +268,7 @@ class ChildCategories {
     data['banner'] = banner;
     data['title'] = title;
     data['image'] = image;
-
+    data['products_count'] = productsCount;
     return data;
   }
 }

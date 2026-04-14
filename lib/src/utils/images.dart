@@ -34,7 +34,7 @@ class Images {
   static String get shoppingBag => 'shopping_bag'.svg;
   static String get notificationProfile => 'notification_profile'.svg;
   static String get twitter => 'twitter'.svg;
-  static String get instagram => 'instagram'.svg;
+  static String get instagram => 'assets/icons/details/instagram.svg';
 
   static String get whatsappLogo => 'whatsapp_logo'.svg;
   static String get category => 'category'.svg;

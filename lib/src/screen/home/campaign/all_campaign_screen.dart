@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pagination_view/pagination_view.dart';
@@ -37,12 +37,12 @@ class _AllCampaignState extends State<AllCampaign> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: isMobile(context) ?  AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color(0xFFFF0008),
           elevation: 0,
           leading: IconButton(
             icon:  Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
               size: isMobile(context) ? 15.r:20.r,
             ),
 
@@ -53,17 +53,17 @@ class _AllCampaignState extends State<AllCampaign> {
           centerTitle: true,
           title: Text(
             AppTags.allCampaign.tr,
-            style: AppThemeData.headerTextStyle_16,
+            style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
           ),
         ):AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color(0xFFFF0008),
           elevation: 0,
           toolbarHeight: 60.h,
           leadingWidth: 40.w,
           leading: IconButton(
             icon:  Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
               size: 25.r,
             ),
 
@@ -74,7 +74,7 @@ class _AllCampaignState extends State<AllCampaign> {
           centerTitle: true,
           title: Text(
             AppTags.allCampaign.tr,
-            style: AppThemeData.headerTextStyleTab,
+            style: AppThemeData.headerTextStyleTab.copyWith(color: Colors.white),
           ),
         ),
         body: PaginationView<Data>(

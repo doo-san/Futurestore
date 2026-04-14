@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -42,12 +42,12 @@ class _ProductByCampaignState extends State<ProductByCampaign> {
           )
         : Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: const Color(0xFFFF0008),
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   Get.back();
@@ -56,7 +56,7 @@ class _ProductByCampaignState extends State<ProductByCampaign> {
               centerTitle: true,
               title: Text(
                 AppTags.campaign.tr,
-                style: AppThemeData.headerTextStyle_16,
+                style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
               ),
             ),
             body: GridView.builder(
@@ -143,19 +143,16 @@ class _ProductByCampaignState extends State<ProductByCampaign> {
                             ),
                             productByCampaignModel.data![index].currentStock == 0
                                 ? Container(
-                                    width: 60.w,
-                                    height: 16.h,
+                                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFFF51E46)
                                           .withOpacity(0.06),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(3.r)),
                                     ),
-                                    child: Center(
-                                      child: Text(
-                                        AppTags.stockOut.tr,
-                                        style: AppThemeData.todayDealNewStyle,
-                                      ),
+                                    child: Text(
+                                      AppTags.stockOut.tr,
+                                      style: AppThemeData.todayDealNewStyle,
                                     ),
                                   )
                                 : const SizedBox(),

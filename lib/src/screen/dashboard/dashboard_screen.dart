@@ -61,7 +61,7 @@ class DashboardScreen extends StatelessWidget {
                     height: 28.h,
                     width: 28.w,
                   ),
-                  label: "Home",
+                  label: "Accueil",
                   backgroundColor: Colors.white),
               BottomNavigationBarItem(
                   activeIcon: _bottomNavIconBuilder(
@@ -76,7 +76,7 @@ class DashboardScreen extends StatelessWidget {
                     height: 21.h,
                     width: 21.w,
                   ),
-                  label: "Category",
+                  label: "Catégories",
                   backgroundColor: Colors.white),
               BottomNavigationBarItem(
                   activeIcon: _bottomNavIconBuilder(
@@ -93,7 +93,7 @@ class DashboardScreen extends StatelessWidget {
                     width: 21.w,
                     isCart: true,
                   ),
-                  label: "Cart",
+                  label: "Panier",
                   backgroundColor: Colors.white),
               BottomNavigationBarItem(
                   activeIcon: _bottomNavIconBuilder(
@@ -108,7 +108,7 @@ class DashboardScreen extends StatelessWidget {
                     height: 21.h,
                     width: 21.w,
                   ),
-                  label: "Favorite",
+                  label: "Favoris",
                   backgroundColor: Colors.white),
               BottomNavigationBarItem(
                 activeIcon: _bottomNavIconBuilder(
@@ -123,7 +123,7 @@ class DashboardScreen extends StatelessWidget {
                   height: 21.h,
                   width: 21.w,
                 ),
-                label: "Profile",
+                label: "Profil",
                 backgroundColor: Colors.white,
               ),
             ],

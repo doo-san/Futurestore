@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,14 +27,14 @@ class MyDownload extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
             size: 22.r,
           ),
           onPressed: () {
             Get.back();
           },
         ),
-        title: Text(AppTags.myDownload.tr,style: AppThemeData.headerTextStyle_16,),
+        title: Text(AppTags.myDownload.tr,style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),),
       ):AppBar(
         backgroundColor: AppThemeData.myRewardAppBarColor,
         elevation: 0,
@@ -46,14 +46,14 @@ class MyDownload extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
             size: 22.r,
           ),
           onPressed: () {
             Get.back();
           },
         ),
-        title: Text(AppTags.myDownload.tr,style: AppThemeData.headerTextStyleTab,),
+        title: Text(AppTags.myDownload.tr,style: AppThemeData.headerTextStyleTab.copyWith(color: Colors.white),),
       ),
       body: Obx(()=> myDownloadController.myDownloadModel.value.downloadUrl!=null? SizedBox(
           height: size.height,

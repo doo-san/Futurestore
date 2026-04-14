@@ -62,7 +62,9 @@ class CurrencyConverterController extends GetxController implements GetxService 
   }
 
   String convertCurrency(dynamic price) {
-    final amount = double.tryParse(price.toString()) ?? 0.0;
+    // Strip thousands separators (e.g. "150,000.000" → "150000.000")
+    final cleaned = price?.toString().replaceAll(',', '') ?? '0';
+    final amount = double.tryParse(cleaned) ?? 0.0;
     final convertedAmount = appCurrencyCode == 'USD' ? amount : amount * exchangeRate;
 
     // ── Format FCFA (XOF) ────────────────────────────────────────────────────

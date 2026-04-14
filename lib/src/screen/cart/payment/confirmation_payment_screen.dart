@@ -1,4 +1,4 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+﻿import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:yoori_ecommerce/src/_route/routes.dart';
 import '../../../controllers/dashboard_controller.dart';
@@ -27,7 +27,7 @@ class PaymentConfirmationScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           AppTags.confirmation.tr,
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
       ),
       body: SizedBox(

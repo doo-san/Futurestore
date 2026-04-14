@@ -13,7 +13,7 @@ import '../../config.dart';
 ///   https://futurestoresn.com/images/product/xyz.jpg
 ///
 /// Laisser à `false` si les images fonctionnent déjà correctement.
-const bool _stripPublicPrefix = true;
+const bool _stripPublicPrefix = false;
 
 // ──────────────────────────────────────────────────────────────────────────────
 // URL DE BASE

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -23,7 +23,7 @@ class ProfileWithoutLoginScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           AppTags.profile.tr,
-          style: isMobile(context)?AppThemeData.headerTextStyle_16:AppThemeData.headerTextStyleTab,
+          style: isMobile(context)?AppThemeData.headerTextStyle_16.copyWith(color: Colors.white):AppThemeData.headerTextStyleTab.copyWith(color: Colors.white),
         ),
         actions: [
           Padding(

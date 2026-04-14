@@ -89,9 +89,9 @@ class PhoneRegistrationScreen extends StatelessWidget {
                         padding: EdgeInsets.only(left: 20.w),
                         child: CountryPickerDropdown(
                           isFirstDefaultIfInitialValueNotProvided: false,
-                          initialValue:
-                          LocalDataHelper().getConfigData().data!.appConfig!.defaultCountry!.isNotEmpty?
-                          LocalDataHelper().getConfigData().data!.appConfig!.defaultCountry!:'BD',
+                          initialValue: (LocalDataHelper().getConfigData().data?.appConfig?.defaultCountry?.isNotEmpty ?? false)
+                              ? LocalDataHelper().getConfigData().data!.appConfig!.defaultCountry!
+                              : 'BD',
                           isExpanded: true,
                           itemBuilder: (Country country) => Row(
                             children: <Widget>[
@@ -131,8 +131,9 @@ class PhoneRegistrationScreen extends StatelessWidget {
                 height: 48.h,
                 child: ElevatedButton(
                   onPressed: () async {
-                    printLog(LocalDataHelper().getConfigData().data!.appConfig!.disableOtp!);
-                    if(LocalDataHelper().getConfigData().data!.appConfig!.disableOtp!){
+                    final disableOtp = LocalDataHelper().getConfigData().data?.appConfig?.disableOtp ?? false;
+                    printLog(disableOtp);
+                    if(disableOtp){
                       printLog("Yes Otp disable");
                       await phoneAuthController.sendOtpRegistration(
                           firstName: firstNameController.text,
@@ -156,7 +157,7 @@ class PhoneRegistrationScreen extends StatelessWidget {
                   child: phoneAuthController.isLoading.value? Padding(
                     padding: EdgeInsets.all(14.r),
                     child: Text(
-                      LocalDataHelper().getConfigData().data!.appConfig!.disableOtp!?AppTags.login.tr:AppTags.getOTP.tr,
+                      (LocalDataHelper().getConfigData().data?.appConfig?.disableOtp ?? false) ? AppTags.login.tr : AppTags.getOTP.tr,
                       style: isMobile(context)? AppThemeData.buttonTextStyle_14:AppThemeData.buttonTextStyle_11Tab,
                     ),
                   ): const CircularProgressIndicator(),

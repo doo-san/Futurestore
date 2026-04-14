@@ -23,8 +23,8 @@ class VideoProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeScreenContentController = Get.put(HomeScreenController());
     return Ribbon(
-      farLength: dataModel![index].isNew! ? isMobile(context)?20:40 : 0.01,
-      nearLength: dataModel![index].isNew! ? isMobile(context)?40:80 : 0.005,
+      farLength: (dataModel![index].isNew ?? false) ? isMobile(context)?20:40 : 0.01,
+      nearLength: (dataModel![index].isNew ?? false) ? isMobile(context)?40:80 : 0.005,
       title: AppTags.neW.tr,
       titleStyle: TextStyle(
         fontSize: isMobile(context)?10.sp:7.sp,
@@ -59,7 +59,7 @@ class VideoProductCard extends StatelessWidget {
                   Row(
                     children: [
                       dataModel![index].specialDiscountType == 'flat'
-                          ? num.parse(dataModel![index].specialDiscount) ==
+                          ? (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) ==
                           0.0
                           ? const SizedBox()
                           : Container(
@@ -80,8 +80,7 @@ class VideoProductCard extends StatelessWidget {
                           )
                           : dataModel![index].specialDiscountType ==
                           'percentage'
-                          ? num.parse(
-                          dataModel![index].specialDiscount) ==
+                          ? (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) ==
                           0.0
                           ? const SizedBox()
                           : Container(
@@ -106,18 +105,15 @@ class VideoProductCard extends StatelessWidget {
                           ? const SizedBox()
                           : SizedBox(width: 5.w),
                       dataModel![index].currentStock == 0 ? Container(
-                        width: 65.w,
-                        height: 20.h,
+                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                         decoration: BoxDecoration(
                           color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
                           borderRadius:
                           BorderRadius.all(Radius.circular(3.r)),
                         ),
-                        child: Center(
-                          child: Text(
-                            AppTags.stockOut.tr,
-                            style: isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
-                          ),
+                        child: Text(
+                          AppTags.stockOut.tr,
+                          style: isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
                         ),
                       )
                           : const SizedBox(),
@@ -169,7 +165,7 @@ class VideoProductCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 18.w),
               child: Center(
-                child: num.parse(dataModel![index].specialDiscount) == 0.0
+                child: (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) == 0.0
                     ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

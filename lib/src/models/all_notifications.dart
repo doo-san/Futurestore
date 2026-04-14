@@ -9,9 +9,11 @@ class AllNotifications {
   late final Data data;
 
   AllNotifications.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    message = json['message'];
-    data = Data.fromJson(json['data']);
+    success = json['success'] ?? false;
+    message = json['message']?.toString() ?? "";
+    data = json['data'] != null
+        ? Data.fromJson(json['data'])
+        : Data(notifications: []);
   }
 
   Map<String, dynamic> toJson() {
@@ -30,9 +32,11 @@ class Data {
   late final List<Notifications> notifications;
 
   Data.fromJson(Map<String, dynamic> json) {
-    notifications = List.from(json['notifications'])
-        .map((e) => Notifications.fromJson(e))
-        .toList();
+    notifications = json['notifications'] != null
+        ? List.from(json['notifications'])
+            .map((e) => Notifications.fromJson(e))
+            .toList()
+        : [];
   }
 
   Map<String, dynamic> toJson() {
@@ -61,15 +65,15 @@ class Notifications {
   late final DateTime createdAt;
 
   Notifications.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    userId = json['user_id'];
-    url = json['url'];
-    status = json['status'];
-    details = json['details'];
-    if (json['created_at'] != null) {
-      createdAt = DateTime.parse(json['created_at']);
-    }
+    id = json['id'] ?? 0;
+    title = json['title']?.toString() ?? "";
+    userId = json['user_id'] ?? 0;
+    url = json['url']?.toString() ?? "";
+    status = json['status']?.toString() ?? "";
+    details = json['details']?.toString() ?? "";
+    createdAt = json['created_at'] != null
+        ? DateTime.tryParse(json['created_at']) ?? DateTime.now()
+        : DateTime.now();
   }
 
   Map<String, dynamic> toJson() {

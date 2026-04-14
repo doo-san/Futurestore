@@ -69,7 +69,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       ? HomeScreenContent()
       : Scaffold(
       appBar: AppBar(
-        title: const Text("Verify your email"),
+        title: const Text("Vérifiez votre e-mail"),
         centerTitle: true,
         elevation: 0,
 
@@ -79,7 +79,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text("Verification email is sent to you!!",
+          Text("Un e-mail de vérification vous a été envoyé !",
               // textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20.sp),
               textAlign: TextAlign.center),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,12 +22,12 @@ class InvoiceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:isMobile(context)? AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Get.back();
@@ -36,17 +36,17 @@ class InvoiceScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           trackingId.toString(),
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
       ): AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         toolbarHeight: 60.h,
         leadingWidth: 40.w,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
             size: 25.r,
           ),
           onPressed: () {
@@ -55,7 +55,7 @@ class InvoiceScreen extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(trackingId.toString(),
-          style: AppThemeData.headerTextStyle_14,
+          style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
         ),
       ),
       body: Obx(()=> invoiceScreenController.isLoading.value
@@ -206,139 +206,160 @@ class InvoiceScreen extends StatelessWidget {
                       ),
                     ),
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "${AppTags.name.tr}:",
-                          style:  TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                          style: TextStyle(
+                            fontSize: isMobile(context) ? 13.sp : 10.sp,
                             fontFamily: "Poppins Medium",
                           ),
                         ),
-                        Text(
-                          invoiceScreenController.trackingOrderModel!
-                              .data!.order!.billingAddress!.name!
-                              .toString(),
-                          style: TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                        SizedBox(width: 8.w),
+                        Flexible(
+                          child: Text(
+                            invoiceScreenController.trackingOrderModel!
+                                .data!.order!.billingAddress!.name!
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: isMobile(context) ? 13.sp : 10.sp,
+                            ),
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
                         ),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "${AppTags.email.tr}:",
                           style: TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                            fontSize: isMobile(context) ? 13.sp : 10.sp,
                             fontFamily: "Poppins Medium",
                           ),
                         ),
-                        Text(
-                          invoiceScreenController.trackingOrderModel!
-                              .data!.order!.billingAddress!.email!
-                              .toString(),
-                          style: TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                        SizedBox(width: 8.w),
+                        Flexible(
+                          child: Text(
+                            invoiceScreenController.trackingOrderModel!
+                                .data!.order!.billingAddress!.email!
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: isMobile(context) ? 13.sp : 10.sp,
+                            ),
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
                         ),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          children: [
-                            Text(
-                              "${AppTags.shippingAddress.tr}:",
-                              style: TextStyle(
-                                fontSize: isMobile(context)? 13.sp:10.sp,
-                                fontFamily: "Poppins Medium",
-                              ),
-                            ),
-                          ],
+                        Text(
+                          "${AppTags.shippingAddress.tr}:",
+                          style: TextStyle(
+                            fontSize: isMobile(context) ? 13.sp : 10.sp,
+                            fontFamily: "Poppins Medium",
+                          ),
                         ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: 200.w,
-                              child: Text(
-                                invoiceScreenController.trackingOrderModel!.data!.order!
-                                    .billingAddress!.address
-                                    .toString(),
-                                style: TextStyle(
-                                  fontSize: isMobile(context)? 13.sp:10.sp,
-                                ),
-                                maxLines: 2,
-                                textAlign: TextAlign.end,
-                              ),
+                        SizedBox(width: 8.w),
+                        Flexible(
+                          child: Text(
+                            invoiceScreenController.trackingOrderModel!
+                                .data!.order!.billingAddress!.address
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: isMobile(context) ? 13.sp : 10.sp,
                             ),
-                          ],
+                            maxLines: 3,
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "${AppTags.orderDate.tr}:",
-                          style:  TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                          style: TextStyle(
+                            fontSize: isMobile(context) ? 13.sp : 10.sp,
                             fontFamily: "Poppins Medium",
                           ),
                         ),
-                        Text(
-                          invoiceScreenController.trackingOrderModel!.data!.order!.date!
-                              .toString(),
-                          style:  TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                        SizedBox(width: 8.w),
+                        Flexible(
+                          child: Text(
+                            invoiceScreenController.trackingOrderModel!
+                                .data!.order!.date!
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: isMobile(context) ? 13.sp : 10.sp,
+                            ),
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "${AppTags.paymentStatus.tr}:",
-                          style:  TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                          style: TextStyle(
+                            fontSize: isMobile(context) ? 13.sp : 10.sp,
                             fontFamily: "Poppins Medium",
                           ),
                         ),
-                        Text(
-                          invoiceScreenController.trackingOrderModel!
-                              .data!.order!.paymentStatus!
-                              .toString(),
-                          style:  TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                        SizedBox(width: 8.w),
+                        Flexible(
+                          child: Text(
+                            invoiceScreenController.trackingOrderModel!
+                                .data!.order!.paymentStatus!
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: isMobile(context) ? 13.sp : 10.sp,
+                            ),
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "${AppTags.deliveryStatus.tr}:",
-                          style:  TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                          style: TextStyle(
+                            fontSize: isMobile(context) ? 13.sp : 10.sp,
                             fontFamily: "Poppins Medium",
                           ),
                         ),
-                        Text(
-                          invoiceScreenController.trackingOrderModel!
-                              .data!.order!.orderStatus
-                              .toString(),
-                          style: TextStyle(
-                            fontSize: isMobile(context)? 13.sp:10.sp,
+                        SizedBox(width: 8.w),
+                        Flexible(
+                          child: Text(
+                            invoiceScreenController.trackingOrderModel!
+                                .data!.order!.orderStatus
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: isMobile(context) ? 13.sp : 10.sp,
+                            ),
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],

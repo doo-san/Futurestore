@@ -144,6 +144,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                SizedBox(height: 8.h),
                               Text(
                                 _list[index]["title"],
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
                                 style: TextStyle(
                                     color: _index == index
                                         ? Colors.white

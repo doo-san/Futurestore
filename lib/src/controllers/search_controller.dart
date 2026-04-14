@@ -2,6 +2,7 @@ import 'package:get/state_manager.dart';
 import 'package:yoori_ecommerce/src/models/search_product_model.dart';
 import 'package:yoori_ecommerce/src/servers/repository.dart';
 import 'package:yoori_ecommerce/src/utils/analytics_helper.dart';
+import 'package:yoori_ecommerce/src/utils/constants.dart';
 
 
 class ProductSearchController extends GetxController {
@@ -25,10 +26,11 @@ class ProductSearchController extends GetxController {
             eventTitle: "Search",
             additionalData: {"searchTag": searchValue});
       } else {
-        searchResult.data = [];
+        _searchResult.value = SearchProductModel()..data = [];
       }
-    } catch (_) {
-      searchResult.data = [];
+    } catch (e) {
+      printLog('ProductSearchController search error: $e');
+      _searchResult.value = SearchProductModel()..data = [];
     } finally {
       _isSearching(false);
     }
@@ -40,7 +42,7 @@ class ProductSearchController extends GetxController {
 
   @override
   void onInit() {
-    searchResult.data = [];
+    _searchResult.value = SearchProductModel()..data = [];
     super.onInit();
   }
 }

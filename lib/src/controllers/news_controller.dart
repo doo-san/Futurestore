@@ -70,7 +70,7 @@ class NewsController extends GetxController {
   }
 
   void progressUpdate(value) {
-    progress = value;
+    progress = (value as num).toDouble();
     update();
   }
 

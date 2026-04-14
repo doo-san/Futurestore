@@ -164,7 +164,6 @@ class HomeScreenController extends GetxController implements GetxService {
   @override
   void onInit() {
     super.onInit();
-    LocalDataHelper().clearHomeContent(); // force refresh pour corriger les URLs d'images cachées
     refreshLocalRecent();
     getHomeScreenData();
   }

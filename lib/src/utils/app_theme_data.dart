@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppThemeData {
   //splash screen
-  static const Color splashScreenColor = Color(0xffFFFDF5);
+  static const Color splashScreenColor = Color(0xFFFFFFFF);
   //home
-  static const Color homeAppBarColor = Color(0xffFCB800);
+  static const Color homeAppBarColor = Color(0xFFFF0008);
   //button Color
-  static const Color buttonColor = Color(0xff333333);
+  static const Color buttonColor = Color(0xFFFF0008);
   static const Color buttonTextColor = Color(0xffFFFFFF);
   static const Color buttonShadowColor = Color(0xff333333);
   static const Color okButton = Color(0xFF6DBEA3);
@@ -107,13 +107,13 @@ class AppThemeData {
   static Color trackingUnSelectorColor = const Color(0xff6DBEA3).withOpacity(0.3);
 
   //my reward, my download and wallet
-  static const Color myRewardAppBarColor = Color(0xffF8F8F8);
+  static const Color myRewardAppBarColor = Color(0xFFFF0008);
   static const Color walletBoxBorderColors = Color(0xffF4F4F4);
   static const Color walletBoxColors = Color(0xff56A8C7);
   static const Color awesomeDialogColors = Color(0xff333333);
 
   //loader color
-  static const Color loaderColor = Color(0xffFAB75A);
+  static const Color loaderColor = Color(0xFFFF0008);
 
   //settingScreen
   static const Color settingScreenDividerColor = Color(0xffD8D8D8);

@@ -1,4 +1,4 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+﻿import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:yoori_ecommerce/src/controllers/change_password_controller.dart';
 import 'package:yoori_ecommerce/src/utils/app_tags.dart';
@@ -23,17 +23,17 @@ class ChangePassword extends StatelessWidget {
     return Scaffold(
       appBar: isMobile(context)
           ? AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: const Color(0xFFFF0008),
               elevation: 0,
               leading: const BackButton(color: Colors.black),
               centerTitle: true,
               title: Text(
                 AppTags.changePassword.tr,
-                style: AppThemeData.headerTextStyle_16,
+                style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
               ),
             )
           : AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: const Color(0xFFFF0008),
               elevation: 0,
               toolbarHeight: 60.h,
               leadingWidth: 40.w,
@@ -41,7 +41,7 @@ class ChangePassword extends StatelessWidget {
               centerTitle: true,
               title: Text(
                 AppTags.changePassword.tr,
-                style: AppThemeData.headerTextStyle_14,
+                style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
               ),
             ),
       body: Obx(() =>  _changePasswordController.isLoading.value

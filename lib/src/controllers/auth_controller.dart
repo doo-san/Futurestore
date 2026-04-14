@@ -165,7 +165,7 @@ class AuthController extends GetxController {
     try {
       isLoggingIn.value = true;
 
-      final success = await _repository.signUp(
+      final result = await _repository.signUp(
         firstName: firstNameController.text.trim(),
         lastName: lastNameController.text.trim(),
         email: emailControllers.text.trim(),
@@ -173,7 +173,10 @@ class AuthController extends GetxController {
         confirmPassword: confirmPasswordController.text,
       );
 
-      if (success) {
+      final bool accountCreated = result['accountCreated'] == true;
+      final bool success = result['success'] == true;
+
+      if (success || accountCreated) {
         // Réinitialiser les champs
         firstNameController.clear();
         lastNameController.clear();

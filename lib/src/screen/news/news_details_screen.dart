@@ -1,4 +1,4 @@
-import 'dart:collection';
+﻿import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,21 +27,21 @@ class NewsScreen extends GetView<NewsController> {
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back,
-                color: Colors.black,
+                color: Colors.white,
               ),
               onPressed: () {
                 Get.back();
               }, 
             ),
           ): AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color(0xFFFF0008),
           elevation: 0,
           toolbarHeight: 60.h,
           leadingWidth: 40.w,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
               size: 25.r,
             ),
 

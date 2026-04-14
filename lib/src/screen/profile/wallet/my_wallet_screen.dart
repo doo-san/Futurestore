@@ -1,4 +1,4 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+﻿import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -35,7 +35,7 @@ class MyWalletScreen extends StatelessWidget {
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
+                  color: Colors.white,
                   size: 22.r,
                 ),
                 onPressed: () {
@@ -54,7 +54,7 @@ class MyWalletScreen extends StatelessWidget {
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
+                  color: Colors.white,
                   size: 22.r,
                 ),
                 onPressed: () {
