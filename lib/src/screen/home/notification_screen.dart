@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -28,12 +28,12 @@ class _NotificationContentState extends State<NotificationContent> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: isMobile(context)? AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Get.back();
@@ -42,17 +42,17 @@ class _NotificationContentState extends State<NotificationContent> {
         centerTitle: true,
         title: Text(
           AppTags.notification.tr,
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
       ): AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFFF0008),
       elevation: 0,
       toolbarHeight: 60.h,
       leadingWidth: 40.w,
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Colors.black,
+          color: Colors.white,
           size: 25.r,
         ),
 
@@ -63,7 +63,7 @@ class _NotificationContentState extends State<NotificationContent> {
       centerTitle: true,
       title: Text(
         AppTags.notification.tr,
-        style: AppThemeData.headerTextStyle_14,
+        style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
       ),
     ),
       body: Obx(() => controller.noData.value

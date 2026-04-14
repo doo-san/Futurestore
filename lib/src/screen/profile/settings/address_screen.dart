@@ -1,4 +1,4 @@
-import 'package:country_pickers/country.dart';
+﻿import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_picker_dropdown.dart';
 import 'package:country_pickers/utils/utils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -115,12 +115,12 @@ class _AddressesState extends State<Addresses> {
         ? Scaffold(
       key: scaffoldKey,
       appBar: isMobile(context)? AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Get.back();
@@ -129,7 +129,7 @@ class _AddressesState extends State<Addresses> {
         centerTitle: true,
         title: Text(
           AppTags.addAddress.tr,
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
         actions: [
           Padding(
@@ -159,14 +159,14 @@ class _AddressesState extends State<Addresses> {
           )
         ],
       ):AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         toolbarHeight: 60.h,
         leadingWidth: 40.w,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Get.back();
@@ -175,7 +175,7 @@ class _AddressesState extends State<Addresses> {
         centerTitle: true,
         title: Text(
           AppTags.addAddress.tr,
-          style: AppThemeData.headerTextStyle_14,
+          style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
         ),
         actions: [
           Padding(

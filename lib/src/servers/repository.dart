@@ -58,6 +58,8 @@ import '../utils/validators.dart';
 import '../../config.dart';
 import 'package:yoori_ecommerce/src/data/local_data_helper.dart';
 import '../models/all_brand_model.dart';
+import '../models/chat_seller_model.dart';
+import '../models/chat_message_model.dart';
 import 'network_service.dart';
 import '../models/product_by_category_model.dart';
 import 'dart:convert';
@@ -71,7 +73,7 @@ Map<String, dynamic> safeJson(dynamic data) {
 
 Future<Map<String, dynamic>> safeApiGet(Uri url) async {
   try {
-    final response = await http.get(url);
+    final response = await NetworkService.client.get(url, headers: {"apiKey": Config.apiKey});
 
     if (response.statusCode != 200) {
       return {};
@@ -129,7 +131,7 @@ class Repository {
     };
 
     try {
-      final response = await http.post(url, headers: headers, body: data);
+      final response = await NetworkService.client.post(url, headers: headers, body: data);
       print("firebase auth repository: ${jsonDecode(response.body)}");
       print("status code ${response.statusCode}");
       if (response.statusCode == 200) {
@@ -162,7 +164,7 @@ class Repository {
       'phone': phoneNumber,
     };
     var url = Uri.parse("${NetworkService.apiUrl}/get-login-otp?$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (data['success']) {
@@ -191,7 +193,7 @@ class Repository {
 
     var url =
     Uri.parse("${NetworkService.apiUrl}/verify-login-otp?$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -220,7 +222,7 @@ class Repository {
     printLog(body);
     var url =
     Uri.parse("${NetworkService.apiUrl}/register-by-phone?$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (data['success']) {
@@ -258,7 +260,7 @@ class Repository {
     };
     var url = Uri.parse(
         "${NetworkService.apiUrl}/verify-registration-otp?$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -290,16 +292,30 @@ class Repository {
       'password': password,
     };
     var url = Uri.parse("${NetworkService.apiUrl}/login?$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
-    var data = json.decode(response.body);
-    if (response.statusCode == 200) {
+    Map<String, dynamic> data;
+    try {
+      data = json.decode(response.body);
+    } catch (_) {
+      showErrorToast("Erreur serveur. Veuillez réessayer.");
+      return false;
+    }
+
+    printLog("login status: ${response.statusCode}");
+    printLog("login body: ${response.body.substring(0, response.body.length.clamp(0, 300))}");
+
+    if (response.statusCode == 200 && data['success'] == true) {
       UserDataModel userDataModel = UserDataModel.fromJson(data);
-      LocalDataHelper().saveUserToken(userDataModel.data!.token);
+      final token = userDataModel.data?.token ?? "";
+      if (token.isNotEmpty) {
+        LocalDataHelper().saveUserToken(token);
+      }
       LocalDataHelper().saveUserAllData(userDataModel);
       return true;
     } else {
-      showErrorToast(data["message"]);
+      final message = data["message"]?.toString() ?? "Identifiants incorrects.";
+      showErrorToast(message);
       return false;
     }
   }
@@ -312,7 +328,7 @@ class Repository {
     };
     printLog("$email");
     var url = Uri.parse("${NetworkService.apiUrl}/get-verification-link");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       ForgetPasswordModel forgetPassword = ForgetPasswordModel.fromJson(data);
@@ -331,7 +347,7 @@ class Repository {
     var body = {'email': email, 'otp': otp};
     printLog("$email");
     var url = Uri.parse("${NetworkService.apiUrl}/verify-otp");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       return data['success'];
@@ -358,7 +374,7 @@ class Repository {
     };
     var url =
     Uri.parse("${NetworkService.apiUrl}/create-password?$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       showShortToast(data['message']);
@@ -370,7 +386,7 @@ class Repository {
   }
 
   //User SignUp
-  Future<bool> signUp(
+  Future<Map<String, dynamic>> signUp(
       {required String firstName,
         required String lastName,
         required String email,
@@ -385,19 +401,42 @@ class Repository {
       'password_confirmation': confirmPassword,
     };
     var url = Uri.parse("${NetworkService.apiUrl}/register?$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
-    var data = json.decode(response.body);
+    printLog("signUp status: ${response.statusCode}");
+    printLog("signUp body: ${response.body.substring(0, response.body.length.clamp(0, 300))}");
 
-    printLog(data);
-    if (response.statusCode == 200) {
-      showShortToast(data['message'], bgColor: Colors.green);
-      return data['success'];
-    } else {
-      showErrorToast(data['message']);
-
-      return data['success'];
+    Map<String, dynamic> data;
+    try {
+      data = json.decode(response.body);
+    } catch (_) {
+      // Réponse non-JSON (ex: erreur HTML du serveur)
+      return {'success': false, 'accountCreated': false, 'message': 'Erreur serveur. Veuillez réessayer.'};
     }
+
+    if (response.statusCode == 200 && data['success'] == true) {
+      showShortToast(data['message'] ?? 'Inscription réussie', bgColor: Colors.green);
+      return {'success': true, 'accountCreated': true, 'message': data['message']};
+    }
+
+    // Erreurs de validation (ex: email déjà utilisé, champs invalides)
+    if (response.statusCode == 422 || response.statusCode == 400) {
+      final message = data['message'] ?? 'Données invalides.';
+      showErrorToast(message);
+      return {'success': false, 'accountCreated': false, 'message': message};
+    }
+
+    // Erreur serveur (500) — le compte peut avoir été créé mais l'email a échoué
+    if (response.statusCode == 500 || response.statusCode >= 500) {
+      final message = data['message'] ?? 'Compte créé. Connectez-vous directement.';
+      showShortToast(message, bgColor: Colors.orange);
+      return {'success': false, 'accountCreated': true, 'message': message};
+    }
+
+    // Autre cas
+    final message = data['message'] ?? 'Erreur inconnue.';
+    showErrorToast(message);
+    return {'success': false, 'accountCreated': false, 'message': message};
   }
 
   //User Coupon Send
@@ -409,7 +448,7 @@ class Repository {
     };
     var url = Uri.parse(
         "${NetworkService.apiUrl}/apply-coupon?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       showShortToast(data['message']);
@@ -428,7 +467,7 @@ class Repository {
     };
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/delete-coupon?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
     var data = json.decode(response.body);
 
     if (response.statusCode == 200) {
@@ -448,7 +487,7 @@ class Repository {
     };
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/submit-reply?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -518,7 +557,7 @@ class Repository {
     printLog(body);
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/update-profile?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     printLog("----update profile without image: $data");
@@ -586,7 +625,7 @@ class Repository {
     };
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/change-password?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -607,7 +646,7 @@ class Repository {
       'attribute_ids': "attributeIds",
     };
     var url = Uri.parse("${NetworkService.apiUrl}/find_variant");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -638,7 +677,7 @@ class Repository {
 
     var url = Uri.parse(
         "${NetworkService.apiUrl}/cart-store?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -667,7 +706,7 @@ class Repository {
 
     var url = Uri.parse(
         "${NetworkService.apiUrl}/cart-store?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -687,7 +726,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var body = {'quantity': quantity.toString()};
     var url = Uri.parse("${NetworkService.apiUrl}/cart-update/$cartId");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -723,7 +762,7 @@ class Repository {
     };
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/shipping-addresses?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: bodyData, headers: headers);
+    final response = await NetworkService.client.post(url, body: bodyData, headers: headers);
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       showShortToast(data["message"]);
@@ -757,7 +796,7 @@ class Repository {
     };
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/shipping-addresses/$addressId?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: bodyData, headers: headers);
+    final response = await NetworkService.client.post(url, body: bodyData, headers: headers);
     var data = json.decode(response.body);
     if (response.statusCode == 200) {
       showShortToast(data["message"]);
@@ -802,7 +841,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/shipping-addresses/$addressId/edit?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
     var data = json.decode(response.body.toString());
     if (response.statusCode == 200) {
       editViewModel = EditViewModel.fromJson(data);
@@ -815,29 +854,26 @@ class Repository {
   //Cart Item List
   Future<AddToCartListModel> getCartItemList() async {
     try {
-      final response = await http.get(
+      final response = await NetworkService.client.get(
         ApiConstants.getCartItemList,
+        headers: {"apiKey": Config.apiKey},
       );
 
-      /// 🔒 Protection 2 : data null
-      if (response.data == null) {
+      if (response.statusCode != 200) {
         return AddToCartListModel.empty();
       }
 
-      /// 🔒 Protection 3 : mauvais type
-      if (response.data is! Map<String, dynamic>) {
+      final decoded = json.decode(response.body);
+
+      if (decoded == null || decoded is! Map<String, dynamic>) {
         return AddToCartListModel.empty();
       }
 
-      /// 🔒 Protection 4 : data vide
-      if ((response.data as Map<String, dynamic>)['data'] == null) {
+      if (decoded['data'] == null) {
         return AddToCartListModel.empty();
       }
 
-      /// ✅ Parsing normal
-      return AddToCartListModel.fromJson(
-          safeJson(response.data)
-      );
+      return AddToCartListModel.fromJson(safeJson(decoded));
 
     } catch (e, stack) {
 
@@ -855,7 +891,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/track-order?invoice_no=$trackId&token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
     var data = json.decode(response.body);
     printLog(data);
     if (data['success']) {
@@ -971,7 +1007,7 @@ class Repository {
   Future<SearchProductModel> getSearchProducts(
       {required String searchKey}) async {
     var url =
-        "${NetworkService.apiUrl}/search?key=$searchKey&token=${LocalDataHelper().getUserToken()}&$langCurrCode";
+        "${NetworkService.apiUrl}/search?key=$searchKey&token=${LocalDataHelper().getUserToken() ?? ''}&$langCurrCode";
     final response = await _service.fetchJsonData(url);
     return SearchProductModel.fromJson(response);
   }
@@ -1018,7 +1054,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/products-by-shop/$id?$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
     try {
       var data = json.decode(response.body);
       productByShopModel = ProductByShopModel.fromJson(data);
@@ -1080,7 +1116,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/products-by-campaign/$id?$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
 
     try {
       var data = json.decode(response.body);
@@ -1091,18 +1127,42 @@ class Repository {
     }
   }
 
+  // Nombre de produits par catégorie (pour affichage dans les sous-catégories)
+  Future<int> getProductCountByCategory(int categoryId) async {
+    try {
+      final url =
+          "${NetworkService.apiUrl}/products-by-category/$categoryId?page=1&$langCurrCode";
+      final response = await _service.fetchJsonData(url);
+      if (response == null) return 0;
+      final jsonResponse = Map<String, dynamic>.from(response);
+      // Cas 1 : data est une liste directe
+      if (jsonResponse['data'] is List) {
+        final list = jsonResponse['data'] as List;
+        // Essayer de lire le total depuis metadata si disponible
+        final total = jsonResponse['total'] ?? jsonResponse['meta']?['total'];
+        if (total != null) return (total as num).toInt();
+        return list.length;
+      }
+      // Cas 2 : data est un objet paginé {total, data: [...]}
+      if (jsonResponse['data'] is Map) {
+        final dataMap = jsonResponse['data'] as Map;
+        final total = dataMap['total'];
+        if (total != null) return (total as num).toInt();
+        final items = dataMap['data'];
+        if (items is List) return items.length;
+      }
+      return 0;
+    } catch (_) {
+      return 0;
+    }
+  }
+
   //All Category
   Future<AllCategoryModel?> getAllCategory({int page = 1}) async {
-    AllCategoryModel? allCategoryModel;
-    var headers = {"apiKey": Config.apiKey};
-    var url = Uri.parse(
-        "${NetworkService.apiUrl}/category/all?page=$page&$langCurrCode");
-    final response = await http.get(url, headers: headers);
-
-    var data = json.decode(response.body);
-    allCategoryModel = AllCategoryModel.fromJson(data);
-    return allCategoryModel;
-    }
+    var url = "${NetworkService.apiUrl}/category/all?page=$page&$langCurrCode";
+    final response = await _service.fetchJsonData(url);
+    return AllCategoryModel.fromJson(response);
+  }
 
   //All Category Content
   Future<AllCategoryProductModel?> getAllCategoryContent({int page = 1}) async {
@@ -1145,7 +1205,7 @@ class Repository {
     VisitShopModel? visitShopModel;
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse("${NetworkService.apiUrl}/shop/$shopId?$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
 
     var data = json.decode(response.body.toString());
     try {
@@ -1191,7 +1251,7 @@ class Repository {
     print("PRODUCT ID = $productId");
     print("URL = $url");
 
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
 
     print("STATUS CODE = ${response.statusCode}");
     print("RESPONSE BODY = ${response.body}");
@@ -1222,7 +1282,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/video-shops-details/$slug?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
     try {
       var data = json.decode(response.body);
       videoShoppingDetailsModel = VideoShoppingDetailsModel.fromJson(data);
@@ -1239,7 +1299,7 @@ class Repository {
     ShippingAddressModel shippingAddressModel;
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse("${NetworkService.apiUrl}/user/shipping-addresses?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
 
     try {
       var data = json.decode(response.body);
@@ -1255,7 +1315,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/find/shipping-cost?city_id=$cityId&trx_id=${LocalDataHelper().getCartTrxId()}&token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, headers: headers);
+    final response = await NetworkService.client.post(url, headers: headers);
     try {
       var data = json.decode(response.body);
       Get.find<PaymentController>().trxId.value= AddToCartListModel.fromJson(data).data!.trxId!;
@@ -1270,7 +1330,7 @@ class Repository {
     CountryListModel countryListModel;
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse("${NetworkService.apiUrl}/get-countries?$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
 
     try {
       var data = json.decode(response.body);
@@ -1288,7 +1348,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/get-states/$countryId?$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
     try {
       var data = json.decode(response.body);
       stateListModel = StateListModel.fromJson(data);
@@ -1304,7 +1364,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url =
     Uri.parse("${NetworkService.apiUrl}/get-cities/$stateId?$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
 
     printLog(response.body);
     try {
@@ -1321,7 +1381,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/favourite/$productId?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
     var data = json.decode(response.body);
     return data["success"];
   }
@@ -1331,7 +1391,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/followed-shop/$shopId?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
     var data = json.decode(response.body);
     printLog("===${data["success"]}==");
     return data["success"];
@@ -1345,7 +1405,7 @@ class Repository {
     };
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/like-unlike-review?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
     if (response.statusCode == 200) {
     } else {
       return null;
@@ -1364,8 +1424,9 @@ class Repository {
   Future<CouponAppliedList> getAppliedCouponList() async {
     try {
 
-      final response = await http.get(
+      final response = await NetworkService.client.get(
         Uri.parse(ApiConstants.getAppliedCoupon.toString()),
+        headers: {"apiKey": Config.apiKey},
       );
 
       if (response.statusCode != 200) {
@@ -1394,7 +1455,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/coupons?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.get(url, headers: headers);
+    final response = await NetworkService.client.get(url, headers: headers);
     var data = json.decode(response.body.toString());
     if (response.statusCode == 200) {
       couponListModel = CouponListModel.fromJson(data);
@@ -1409,7 +1470,7 @@ class Repository {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/logout?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
-    final response = await http.post(url, headers: headers);
+    final response = await NetworkService.client.post(url, headers: headers);
     var data = json.decode(response.body.toString());
     if (response.statusCode == 200) {
       showShortToast(data['message']);
@@ -1422,7 +1483,7 @@ class Repository {
   Future<void> getPDF() async {
     var headers = {"apiKey": Config.apiKey};
     try {
-      final response = await http.get(
+      final response = await NetworkService.client.get(
           Uri.parse(
               "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"),
           headers: headers);
@@ -1509,7 +1570,7 @@ class Repository {
     };
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/convert-reward?token=$token&$langCurrCode");
-    final response = await http.post(url, body: body, headers: headers);
+    final response = await NetworkService.client.post(url, body: body, headers: headers);
 
     var data = json.decode(response.body);
     if (data['success']) {
@@ -1609,6 +1670,74 @@ class Repository {
   }
 
   Future<dynamic> getProductByCategoryItem({int? id, required int page}) async {}
+
+  // ─── Chat ───────────────────────────────────────────────────────────────────
+
+  Future<ChatSellerModel?> getChatSellers() async {
+    String? token = LocalDataHelper().getUserToken();
+    if (token == null) return null;
+    try {
+      final url = "${NetworkService.apiUrl}/user/sellers?token=$token&$langCurrCode";
+      final response = await _service.fetchJsonData(url);
+      if (response != null) return ChatSellerModel.fromJson(response);
+    } catch (e) {
+      printLog('getChatSellers error: $e');
+    }
+    return null;
+  }
+
+  Future<ChatMessageModel?> getChatMessages({required int chatRoomId}) async {
+    String? token = LocalDataHelper().getUserToken();
+    if (token == null) return null;
+    try {
+      final url =
+          "${NetworkService.apiUrl}/user/messages?chat_room_id=$chatRoomId&token=$token&$langCurrCode";
+      // The backend returns HTTP 400 even on success (bug in responseWithError usage),
+      // so we use client.get() directly instead of fetchJsonData() to bypass the status check.
+      final response = await NetworkService.client.get(
+        Uri.parse(url),
+        headers: {
+          'Accept': 'application/json',
+          'apiKey': Config.apiKey,
+        },
+      );
+      if (response.body.isNotEmpty) {
+        final decoded = json.decode(response.body);
+        return ChatMessageModel.fromJson(decoded);
+      }
+    } catch (e) {
+      printLog('getChatMessages error: $e');
+    }
+    return null;
+  }
+
+  Future<bool> sendChatMessage({
+    required int receiverId,   // seller's user_id
+    required String message,
+    int? chatRoomId,
+  }) async {
+    String? token = LocalDataHelper().getUserToken();
+    if (token == null) return false;
+    try {
+      final headers = {"apiKey": Config.apiKey};
+      final body = <String, String>{
+        'msg': message,           // field name is 'msg', not 'message'
+        'receiver_id': receiverId.toString(),
+      };
+      if (chatRoomId != null && chatRoomId > 0) {
+        body['chat_room_id'] = chatRoomId.toString();
+      }
+      // Token in query string so jwt.verify middleware can find it (same as GET endpoints)
+      final url = Uri.parse("${NetworkService.apiUrl}/user/send-message?token=$token&$langCurrCode");
+      final response = await NetworkService.client.post(url, headers: headers, body: body);
+      final data = json.decode(response.body);
+      if (data['success'] == true) return true;
+      printLog('sendChatMessage failed: ${data['message']}');
+    } catch (e) {
+      printLog('sendChatMessage error: $e');
+    }
+    return false;
+  }
 }
 
 extension on http.Response {

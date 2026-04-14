@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -27,12 +27,12 @@ class TrackingOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:isMobile(context)? AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () {
             Get.back();
@@ -41,17 +41,17 @@ class TrackingOrder extends StatelessWidget {
         centerTitle: true,
         title: Text(
           AppTags.trackOrder.tr,
-          style: AppThemeData.headerTextStyle_16,
+          style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
         ),
       ): AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFFF0008),
         elevation: 0,
         toolbarHeight: 60.h,
         leadingWidth: 40.w,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: Colors.white,
             size: 25.r,
           ),
 
@@ -62,7 +62,7 @@ class TrackingOrder extends StatelessWidget {
         centerTitle: true,
         title: Text(
           AppTags.trackOrder.tr,
-          style: AppThemeData.headerTextStyle_14,
+          style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
         ),
       ),
       body: ListView(
@@ -270,7 +270,7 @@ class TrackingOrder extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 16.0,top: 16.0),
-            child: Text("Tracking Information",style: Theme.of(context).textTheme.displayLarge!.copyWith(fontWeight: FontWeight.w600,fontSize: 16.sp),),
+            child: Text("Informations de suivi",style: (Theme.of(context).textTheme.displayLarge ?? const TextStyle()).copyWith(fontWeight: FontWeight.w600,fontSize: 16.sp),),
           ),
           Timeline.tileBuilder(
             shrinkWrap: true,
@@ -288,8 +288,9 @@ class TrackingOrder extends StatelessWidget {
             builder: TimelineTileBuilder.connected(
               contentsAlign: ContentsAlign.reverse,
               connectorBuilder: (_, index, __) {
+                final trackStatus = data.order?.orderTrackingStatus ?? 0;
                 return DashedLineConnector(
-                  color: index<data.order!.orderTrackingStatus!?AppThemeData.trackingSelectorColor:AppThemeData.trackingUnSelectorColor,
+                  color: index < trackStatus ? AppThemeData.trackingSelectorColor : AppThemeData.trackingUnSelectorColor,
                   gap: 3,
                 );
               },
@@ -299,12 +300,13 @@ class TrackingOrder extends StatelessWidget {
 
               itemCount: 5,
               indicatorBuilder: (_, index) {
+                final trackStatus = data.order?.orderTrackingStatus ?? 0;
                 return  DotIndicator(
                   size: 20.r,
-                  color: index<data.order!.orderTrackingStatus!?AppThemeData.trackingSelectorColor:AppThemeData.trackingUnSelectorColor,
+                  color: index < trackStatus ? AppThemeData.trackingSelectorColor : AppThemeData.trackingUnSelectorColor,
                   child: Icon(
                     Icons.check,
-                    color: index<data.order!.orderTrackingStatus!?Colors.white:Colors.transparent,
+                    color: index < trackStatus ? Colors.white : Colors.transparent,
                     size: 15.r,
                   ),
                 );

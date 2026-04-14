@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,12 +37,12 @@ class _VoucherListState extends State<VoucherList> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar:isMobile(context)? AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFFFF0008),
           elevation: 0,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
             ),
             onPressed: () {
               Get.back();
@@ -51,17 +51,17 @@ class _VoucherListState extends State<VoucherList> {
           centerTitle: true,
           title: Text(
             AppTags.voucherList.tr,
-            style: AppThemeData.headerTextStyle_16,
+            style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
           ),
         ): AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color(0xFFFF0008),
           elevation: 0,
           toolbarHeight: 60.h,
           leadingWidth: 40.w,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
               size: 25.r,
             ),
 
@@ -72,7 +72,7 @@ class _VoucherListState extends State<VoucherList> {
           centerTitle: true,
           title: Text(
             AppTags.voucherList.tr,
-            style: AppThemeData.headerTextStyle_14,
+            style: AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
           ),
         ),
         body: Obx(
@@ -93,7 +93,7 @@ class _VoucherListState extends State<VoucherList> {
                       padding:  EdgeInsets.symmetric(
                           horizontal: 15.w, vertical: 8.h),
                       child: Container(
-                        height: isMobile(context)? 100.h:120.h,
+                        constraints: BoxConstraints(minHeight: isMobile(context) ? 90.h : 110.h),
                         decoration: BoxDecoration(
                           color: fixedColor[index % fixedColor.length]
                               .withOpacity(0.1),
@@ -107,13 +107,13 @@ class _VoucherListState extends State<VoucherList> {
                               spreadRadius: 0,
                               blurRadius: 30,
                               offset: const Offset(
-                                  0, 15), 
+                                  0, 15),
                             ),
                           ],
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 15.w, vertical: 12.w),
+                              horizontal: 15.w, vertical: 12.h),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -126,6 +126,8 @@ class _VoucherListState extends State<VoucherList> {
                                     Text(
                                         voucherController.couponListModel.value!
                                             .data!.coupons![index].title!,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: fixedColor[
                                               index % fixedColor.length],
@@ -136,6 +138,8 @@ class _VoucherListState extends State<VoucherList> {
                                         voucherController.couponListModel.value!
                                             .data!.coupons![index].endTime
                                             .toString(),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: const Color(0xFF666666),
                                           fontFamily: "Poppins",

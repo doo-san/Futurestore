@@ -1,4 +1,4 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+﻿import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -304,9 +304,9 @@ class _ProfileContentState extends State<ProfileContent> {
           divider(),
           InkWell(
               onTap: () {
-                Get.toNamed(Routes.notificationContent);
+                Get.toNamed(Routes.notificationsMessages);
               },
-              child: mobileViewTile("notification",AppTags.notification.tr)
+              child: mobileViewTile("notification",AppTags.notification.tr + ' & ' + AppTags.messages.tr)
           ),
           divider(),
           InkWell(
@@ -466,9 +466,9 @@ class _ProfileContentState extends State<ProfileContent> {
           divider(),
           InkWell(
               onTap: () {
-                Get.toNamed(Routes.notificationContent);
+                Get.toNamed(Routes.notificationsMessages);
               },
-              child: tabViewTile("notification",AppTags.notification.tr)
+              child: tabViewTile("notification",AppTags.notification.tr + ' & ' + AppTags.messages.tr)
           ),
           divider(),
           InkWell(

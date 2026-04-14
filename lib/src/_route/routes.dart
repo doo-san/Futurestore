@@ -35,6 +35,11 @@ import '../screen/profile/wv_screen/wv_screen.dart';
 
 import '../screen/cart/cart_screen.dart';
 import '../bindings/cart_binding.dart';
+import '../screen/chat/chat_list_screen.dart';
+import '../screen/chat/chat_room_screen.dart';
+import '../bindings/chat_binding.dart';
+import '../screen/home/notifications_messages_screen.dart';
+import '../bindings/notifications_messages_binding.dart';
 
 class Routes {
   static const String splashScreen = '/splashScreen';
@@ -69,6 +74,9 @@ class Routes {
   static const String shopScreen = '/shopScreen';
   static const String detailsVideoShopping = '/detailsVideoShopping';
   static const String videoPlayer = '/videoPlayer';
+  static const String chatList = '/chatList';
+  static const String chatRoom = '/chatRoom';
+  static const String notificationsMessages = '/notificationsMessages';
 
   static var list = [
     GetPage(
@@ -198,6 +206,20 @@ class Routes {
       name: cartContent,
       page: () => const CartScreen(),
       binding: CartBinding(),
+    ),
+    GetPage(
+      name: chatList,
+      page: () => const ChatListScreen(),
+      binding: ChatBinding(),
+    ),
+    GetPage(
+      name: chatRoom,
+      page: () => const ChatRoomScreen(),
+    ),
+    GetPage(
+      name: notificationsMessages,
+      page: () => const NotificationsMessagesScreen(),
+      binding: NotificationsMessagesBinding(),
     ),
   ];
 }

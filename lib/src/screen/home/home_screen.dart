@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,7 +57,7 @@ class HomeScreenContent extends StatelessWidget {
       extendBodyBehindAppBar: false,
       appBar: isMobile(context)
           ? AppBar(
-        backgroundColor: const Color(0xFFFE840C),
+        backgroundColor: AppThemeData.homeAppBarColor,
         elevation: 0,
         leading: Builder(
           builder: (BuildContext context) {
@@ -106,10 +106,13 @@ class HomeScreenContent extends StatelessWidget {
                       horizontal: 10.w, vertical: 8.h),
                   child: const VerticalDivider(thickness: 2),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w),
-                  child: Text(AppTags.searchProduct.tr,
-                      style: AppThemeData.hintTextStyle_13),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: Text(AppTags.searchProduct.tr,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppThemeData.hintTextStyle_13),
+                  ),
                 )
               ],
             ),
@@ -123,12 +126,12 @@ class HomeScreenContent extends StatelessWidget {
               height: 22.h,
               width: 19.w,
             ),
-            onPressed: () => Get.toNamed(Routes.notificationContent),
+            onPressed: () => Get.toNamed(Routes.notificationsMessages),
           ),
         ],
       )
           : AppBar(
-        backgroundColor: const Color(0xFFFE840C),
+        backgroundColor: AppThemeData.homeAppBarColor,
         elevation: 0,
         toolbarHeight: 60.h,
         leadingWidth: 40.w,
@@ -178,10 +181,13 @@ class HomeScreenContent extends StatelessWidget {
                       horizontal: 10.w, vertical: 8.h),
                   child: const VerticalDivider(thickness: 2),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w),
-                  child: Text(AppTags.searchProduct.tr,
-                      style: AppThemeData.hintTextStyle_10Tab),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: Text(AppTags.searchProduct.tr,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppThemeData.hintTextStyle_10Tab),
+                  ),
                 )
               ],
             ),
@@ -196,7 +202,7 @@ class HomeScreenContent extends StatelessWidget {
                 height: 22.h,
                 width: 19.w,
               ),
-              onPressed: () => Get.toNamed(Routes.notificationContent),
+              onPressed: () => Get.toNamed(Routes.notificationsMessages),
             ),
           ),
         ],
