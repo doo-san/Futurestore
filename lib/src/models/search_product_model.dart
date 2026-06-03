@@ -3,21 +3,37 @@ class SearchProductModel {
     this.success,
     this.message,
     this.data,
+    this.currentPage,
+    this.lastPage,
   });
 
   SearchProductModel.fromJson(dynamic json) {
     success = json['success'];
     message = json['message'];
-    if (json['data'] != null) {
+
+    dynamic rawData = json['data'];
+
+    // Réponse paginée : {"data": {"data": [...], "meta": {...}}}
+    if (rawData is Map) {
+      final meta = rawData['meta'];
+      currentPage = (meta?['current_page'] ?? rawData['current_page'] ?? 1) as int?;
+      lastPage = (meta?['last_page'] ?? rawData['last_page']) as int?;
+      rawData = rawData['data'];
+    }
+
+    if (rawData is List) {
       data = [];
-      json['data'].forEach((v) {
+      for (final v in rawData) {
         data?.add(SearchProductData.fromJson(v));
-      });
+      }
     }
   }
+
   bool? success;
   String? message;
   List<SearchProductData>? data;
+  int? currentPage;
+  int? lastPage;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

@@ -34,10 +34,10 @@ class PhoneRegistrationScreen extends StatelessWidget {
             SizedBox(
               height: 50.h,
             ),
-            SizedBox(
-        width: 180.w,
-              height: 150.h,
-               child: Image.asset(Images.logo),
+            Image.asset(
+              Images.logo,
+              width: 220.w,
+              fit: BoxFit.contain,
             ),
             SizedBox(
               height: 50.h,

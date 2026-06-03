@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:yoori_ecommerce/src/controllers/currency_converter_controller.dart';
 import 'package:yoori_ecommerce/src/controllers/voucher_controller.dart';
@@ -114,6 +113,7 @@ class _VoucherListState extends State<VoucherList> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 15.w, vertical: 12.h),
+                          child: IntrinsicHeight(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -181,6 +181,7 @@ class _VoucherListState extends State<VoucherList> {
                                                 backgroundColor: fixedColor[
                                                     index % fixedColor.length],
                                                 elevation: 6,
+                                                padding: EdgeInsets.symmetric(horizontal: 8.w),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(4.r),
@@ -191,20 +192,23 @@ class _VoucherListState extends State<VoucherList> {
                                               ),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
+                                                    MainAxisAlignment.center,
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Text(
                                                     AppTags.copy.tr,
-                                                    //couponListModel!.data!.coupons![index].code!,
                                                     style: TextStyle(
                                                       color: const Color(0xFFFFFFFF),
                                                       fontFamily: "Poppins",
                                                       fontSize: isMobile(context)? 12.sp:9.sp,
                                                     ),
                                                   ),
-                                                  SvgPicture.asset(
-                                                      "assets/icons/copy_.svg"),
+                                                  SizedBox(width: 4.w),
+                                                  Icon(
+                                                    Icons.copy,
+                                                    color: Colors.white,
+                                                    size: isMobile(context) ? 14.r : 11.r,
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -292,6 +296,7 @@ class _VoucherListState extends State<VoucherList> {
                               ),
                             ],
                           ),
+                          ), // IntrinsicHeight
                         ),
                       ),
                     );

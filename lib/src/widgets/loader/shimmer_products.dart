@@ -32,7 +32,7 @@ class _ShimmerProductsState extends State<ShimmerProducts> {
                 mainAxisSpacing: isMobile(context)?15:20,
                 childAspectRatio: 0.74,
               ),
-              itemBuilder: (_, __) => Container(
+              itemBuilder: (_, _) => Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.white,

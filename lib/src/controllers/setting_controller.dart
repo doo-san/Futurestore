@@ -14,10 +14,10 @@ class SettingController extends GetxController {
 
   PackageInfo? packageInfo;
 
-  List<Currencies>? curr;
+  RxList<Currencies> curr = <Currencies>[].obs;
 
   int getIndex(value) {
-    return curr!.indexWhere(((currIndex) => currIndex.code == value));
+    return curr.indexWhere(((currIndex) => currIndex.code == value));
   }
 
   void updateCurrency(value) {
@@ -25,27 +25,44 @@ class SettingController extends GetxController {
   }
 
   void updateCurrencyName(value) {
-    selectedCurrencyName.value = curr![value].name!;
+    selectedCurrencyName.value = curr[value].name!;
   }
 
   void toggle() {
     isToggle.value = isToggle.value ? false : true;
   }
 
-  void handleConfigData() async {
-    return Repository().getConfigData().then((configModel) {
-      LocalDataHelper().saveConfigData(configModel).then((value) {});
-    });
+  void _applySelectedCurrency(String savedCode) {
+    if (curr.isNotEmpty) {
+      final exists = curr.any((c) => c.code == savedCode);
+      selectedCurrency.value = exists ? savedCode : (curr.first.code ?? "XOF");
+    } else {
+      selectedCurrency.value = savedCode;
+    }
+    final idx = curr.isNotEmpty ? getIndex(selectedCurrency.value) : -1;
+    selectedCurrencyName.value = idx >= 0 ? curr[idx].name ?? "Franc CFA" : "Franc CFA";
+  }
+
+  Future<void> _fetchAndRefreshCurrencies() async {
+    try {
+      final configModel = await Repository().getConfigData();
+      await LocalDataHelper().saveConfigData(configModel);
+      final fresh = configModel.data?.currencies ?? [];
+      if (fresh.isNotEmpty) {
+        curr.assignAll(fresh);
+        _applySelectedCurrency(LocalDataHelper().getCurrCode() ?? "XOF");
+      }
+    } catch (_) {}
   }
 
   @override
   void onInit() async {
-    curr = LocalDataHelper().getConfigData().data?.currencies ?? [];
-    selectedCurrency.value = LocalDataHelper().getCurrCode() ?? "USD";
-    selectedCurrencyName.value = selectedCurrencyName.isEmpty
-        ? "US Dollar"
-        : curr![getIndex(selectedCurrencyName)].name.toString();
+    final cached = LocalDataHelper().getConfigData().data?.currencies ?? [];
+    curr.assignAll(cached);
+    final savedCode = LocalDataHelper().getCurrCode() ?? "XOF";
+    _applySelectedCurrency(savedCode);
     packageInfo = await PackageInfo.fromPlatform();
+    _fetchAndRefreshCurrencies();
     super.onInit();
   }
 }

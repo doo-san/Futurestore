@@ -11,6 +11,12 @@ class ChatController extends GetxController {
   final sellersLoading = true.obs;
   final sellersError = false.obs;
 
+  // Admin support chat
+  final adminId = 0.obs;
+  final adminName = ''.obs;
+  final adminChatRoomId = 0.obs;
+  final adminChatLoading = true.obs;
+
   // Current room
   final messages = <ChatMessage>[].obs;
   final messagesLoading = false.obs;
@@ -26,6 +32,23 @@ class ChatController extends GetxController {
   void onInit() {
     super.onInit();
     fetchSellers();
+    fetchAdminChatInfo();
+  }
+
+  Future<void> fetchAdminChatInfo() async {
+    adminChatLoading(true);
+    try {
+      final info = await Repository().getAdminChatInfo();
+      if (info != null) {
+        adminId.value = info['admin_id'] ?? 0;
+        adminName.value = info['admin_name']?.toString() ?? 'Admin Support';
+        adminChatRoomId.value = info['chat_room_id'] ?? 0;
+      }
+    } catch (e) {
+      printLog('fetchAdminChatInfo error: $e');
+    } finally {
+      adminChatLoading(false);
+    }
   }
 
   Future<void> fetchSellers() async {

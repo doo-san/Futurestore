@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,10 +65,10 @@ class LoginScreen extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 180.w,
-              height: 150.h,
-              child: Image.asset(Images.logo),
+            Image.asset(
+              Images.logo,
+              width: 220.w,
+              fit: BoxFit.contain,
             ),
             SizedBox(height: 30.h),
             Text(
@@ -118,31 +119,37 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
 
-              Container(
+              Padding(
                 padding: EdgeInsets.only(right: 30.w, left: 15.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Obx(
-                          () => Row(
-                        children: [
-                          Checkbox(
-                            value: authController.isValue.value,
-                            checkColor: Colors.white,
-                            activeColor: Colors.green,
-                            focusColor:
-                            AppThemeData.buttonShadowColor,
-                            onChanged: (bool? value) {
-                              authController.isValueUpdate(value!);
-                            },
-                          ),
-                          Text(
-                            AppTags.rememberMe.tr,
-                            style: isMobile(context)
-                                ? AppThemeData.categoryTitleTextStyle_12
-                                : AppThemeData.categoryTitleTextStyle_9Tab,
-                          )
-                        ],
+                    Flexible(
+                      child: Obx(
+                        () => Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              value: authController.isValue.value,
+                              checkColor: Colors.white,
+                              activeColor: Colors.green,
+                              focusColor: AppThemeData.buttonShadowColor,
+                              onChanged: (bool? value) {
+                                authController.isValueUpdate(value!);
+                              },
+                            ),
+                            Flexible(
+                              child: Text(
+                                AppTags.rememberMe.tr,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: isMobile(context)
+                                    ? AppThemeData.categoryTitleTextStyle_12
+                                    : AppThemeData.categoryTitleTextStyle_9Tab,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     InkWell(
@@ -150,8 +157,7 @@ class LoginScreen extends StatelessWidget {
                         Get.toNamed(Routes.forgetPassword);
                       },
                       child: Padding(
-                        padding:
-                        EdgeInsets.symmetric(vertical: 8.h),
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
                         child: Text(
                           AppTags.forgotPassword.tr,
                           style: isMobile(context)
@@ -159,7 +165,7 @@ class LoginScreen extends StatelessWidget {
                               : AppThemeData.todayDealNewStyle,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -198,7 +204,55 @@ class LoginScreen extends StatelessWidget {
                       buttonTittle: AppTags.signIn.tr),
                 ),
               ),
-              SizedBox(height: 30.h),
+              SizedBox(height: 24.h),
+
+              // ── Social login ──────────────────────────────
+              if (Config.enableGoogleLogin || Platform.isIOS)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30.w),
+                  child: Row(
+                    children: [
+                      Expanded(child: Divider(color: Colors.grey.shade300)),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                        child: Text(
+                          AppTags.orContinueWith.tr,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12.sp,
+                            fontFamily: "Poppins",
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Divider(color: Colors.grey.shade300)),
+                    ],
+                  ),
+                ),
+
+              if (Config.enableGoogleLogin || Platform.isIOS)
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (Config.enableGoogleLogin) ...[
+                        _SocialButton(
+                          icon: Images.google,
+                          onTap: authController.signInWithGoogle,
+                        ),
+                        if (Platform.isIOS) SizedBox(width: 16.w),
+                      ],
+                      if (Platform.isIOS)
+                        _SocialButton(
+                          icon: Images.appleLogo,
+                          onTap: authController.signInWithApple,
+                        ),
+                    ],
+                  ),
+                ),
+              // ─────────────────────────────────────────────
+
+              SizedBox(height: 10.h),
               // ✅ BACK TO SHOPPING
               Center(
                 child: InkWell(
@@ -237,6 +291,39 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SocialButton extends StatelessWidget {
+  final String icon;
+  final VoidCallback onTap;
+
+  const _SocialButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12.r),
+      child: Container(
+        width: 56.w,
+        height: 56.h,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Center(
+          child: SvgPicture.asset(icon, width: 24.w, height: 24.h),
+        ),
+      ),
     );
   }
 }

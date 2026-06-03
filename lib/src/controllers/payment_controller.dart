@@ -14,9 +14,12 @@ class PaymentController extends GetxController {
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
     crossPlatform: InAppWebViewOptions(
         useShouldOverrideUrlLoading: true,
-        mediaPlaybackRequiresUserGesture: false),
+        mediaPlaybackRequiresUserGesture: false,
+        javaScriptCanOpenWindowsAutomatically: true,
+    ),
     android: AndroidInAppWebViewOptions(
       useHybridComposition: true,
+      supportMultipleWindows: true,
     ),
     ios: IOSInAppWebViewOptions(
       allowsInlineMediaPlayback: true,

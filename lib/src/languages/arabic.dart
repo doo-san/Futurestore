@@ -298,5 +298,6 @@ const Map<String, String> arSA = {
   "noBrand" : "لم يتم العثور على علامة تجارية",
   "emptyOrderHistory" : "محفوظات الطلبات الفارغة",
   "backToShopping": "العودة إلى التسوق",
-  "noRewardAvailableYet": "لا توجد مكافأة متاحة بعد"
+  "noRewardAvailableYet": "لا توجد مكافأة متاحة بعد",
+  "orContinueWith": "أو تابع مع"
 };

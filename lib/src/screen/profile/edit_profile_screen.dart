@@ -43,10 +43,10 @@ class _EditProfileState extends State<EditProfile> {
     XFile? image;
     if (type == "camera") {
       image = await ImagePicker()
-          .pickImage(source: ImageSource.camera, imageQuality: 10);
+          .pickImage(source: ImageSource.camera);
     } else {
       image = await ImagePicker()
-          .pickImage(source: ImageSource.gallery, imageQuality: 25);
+          .pickImage(source: ImageSource.gallery);
     }
     if (image != null) {
       setState(() {

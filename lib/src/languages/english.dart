@@ -297,5 +297,6 @@ const Map<String, String> enUS = {
   "noProduct": "No product found",
   "noBrand" : "No brand found",
   "emptyOrderHistory" : "Empty Order history",
-  "noRewardAvailableYet": "No reward available yet"
+  "noRewardAvailableYet": "No reward available yet",
+  "orContinueWith": "Or continue with"
 };

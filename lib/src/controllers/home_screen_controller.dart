@@ -6,6 +6,7 @@ import 'package:yoori_ecommerce/src/models/home_data_model.dart';
 import 'package:yoori_ecommerce/src/data/local_data_helper.dart';
 import 'package:yoori_ecommerce/src/servers/repository.dart';
 import 'package:yoori_ecommerce/src/utils/app_theme_data.dart';
+import 'package:yoori_ecommerce/src/utils/constants.dart';
 
 class HomeScreenController extends GetxController implements GetxService {
   PageController pageController = PageController();
@@ -131,7 +132,7 @@ class HomeScreenController extends GetxController implements GetxService {
       LocalDataHelper().saveHomeContent(homeData);
 
     } catch (e) {
-      print("❌ HomeScreenController.getHomeScreenData erreur: $e");
+      printLog("❌ HomeScreenController.getHomeScreenData erreur: $e");
       hasError(true);
       _showErrorDialog('Impossible de charger la page d\'accueil.\nVérifiez votre connexion internet.');
     } finally {
@@ -149,7 +150,7 @@ class HomeScreenController extends GetxController implements GetxService {
       LocalDataHelper().saveHomeContent(homeData);
 
     } catch (e) {
-      print("❌ HomeScreenController.getHomeDataFromServer erreur: $e");
+      printLog("❌ HomeScreenController.getHomeDataFromServer erreur: $e");
       hasError(true);
       _showErrorDialog('Impossible de rafraîchir les données.\nVérifiez votre connexion internet.');
     } finally {

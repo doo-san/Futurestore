@@ -54,7 +54,8 @@ class ShopCardWidget extends StatelessWidget {
                       imageUrl: shop.banner.toString(),
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      errorWidget: (_, __, ___) => Container(
+                      filterQuality: FilterQuality.high,
+                      errorWidget: (_, _, _) => Container(
                         color: Colors.grey.shade200,
                         child: const Center(
                           child: Icon(Icons.store_outlined, color: Colors.grey),
@@ -91,6 +92,7 @@ class ShopCardWidget extends StatelessWidget {
                           shop.shopName!,
                           style: isMobile(context)? AppThemeData.titleTextStyle_14.copyWith(fontSize: 13.sp):AppThemeData.titleTextStyle_11Tab,
                           maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -122,7 +124,8 @@ class ShopCardWidget extends StatelessWidget {
                   height: 60.h,
                   width: isMobile(context) ? 60.w : 38.w,
                   fit: BoxFit.cover,
-                  errorWidget: (_, __, ___) => Container(
+                  filterQuality: FilterQuality.high,
+                  errorWidget: (_, _, _) => Container(
                     color: Colors.grey.shade300,
                     child: const Center(
                       child: Icon(Icons.store, color: Colors.grey),

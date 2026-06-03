@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:yoori_ecommerce/src/utils/image_url_helper.dart';
 import 'package:get/get.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -26,7 +25,6 @@ import '../../../utils/constants.dart';
 import 'package:yoori_ecommerce/src/utils/responsive.dart';
 import '../../../utils/validators.dart';
 import '../../../widgets/button_widget.dart';
-import '../../../widgets/loader/shimmer_details_page.dart';
 import '../../../widgets/wholesale_data_widget.dart';
 import '../../dashboard/dashboard_screen.dart';
 import 'description_image_view.dart';
@@ -366,8 +364,9 @@ class DetailsPage extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: buildImageUrl(detailsModel.data!.images![index]),
                                     fit: BoxFit.contain,
-                                    placeholder: (_, __) => const Center(child: CircularProgressIndicator(strokeWidth: 1.5)),
-                                    errorWidget: (_, __, ___) => Image.asset('assets/logos/logo.png', fit: BoxFit.contain),
+                                    filterQuality: FilterQuality.high,
+                                    placeholder: (_, _) => const Center(child: CircularProgressIndicator(strokeWidth: 1.5)),
+                                    errorWidget: (_, _, _) => Image.asset('assets/logos/logo.png', fit: BoxFit.contain),
                                   ),
                                 ),
                               );
@@ -1384,9 +1383,7 @@ class DetailsPage extends StatelessWidget {
                                             Get.toNamed(
                                               Routes.wvScreen,
                                               parameters: {
-                                                'url': detailsModel
-                                                    .data!.links!.facebook
-                                                    .toString(),
+                                                'url': 'https://www.facebook.com/share/1D2mYVZ6k7/',
                                                 'title': "Facebook",
                                               },
                                             );
@@ -1415,9 +1412,7 @@ class DetailsPage extends StatelessWidget {
                                             Get.toNamed(
                                               Routes.wvScreen,
                                               parameters: {
-                                                'url': detailsModel
-                                                    .data!.links!.instagram
-                                                    .toString(),
+                                                'url': 'https://www.instagram.com/futurestoresn',
                                                 'title': "Instagram",
                                               },
                                             );
@@ -1442,10 +1437,13 @@ class DetailsPage extends StatelessWidget {
                                         ),
                                         SizedBox(width: 8.w),
                                         InkWell(
-                                          onTap: () {
-                                            launchUrl(Uri.parse(detailsModel.data!.links!.whatsapp.toString()),
-                                              mode: LaunchMode.externalApplication,
-                                            );
+                                          onTap: () async {
+                                            final whatsappUri = Uri.parse('whatsapp://send?phone=221784742328');
+                                            if (await canLaunchUrl(whatsappUri)) {
+                                              launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+                                            } else {
+                                              launchUrl(Uri.parse('https://wa.me/221784742328'), mode: LaunchMode.externalApplication);
+                                            }
                                           },
                                           child: Container(
                                             height:
@@ -1472,91 +1470,6 @@ class DetailsPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 10.h),
-                            //Specification
-                            detailsModel.data!.isClassified!
-                                ? const SizedBox()
-                                : Container(
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: AppThemeData.borderSideColor,
-                                      ),
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(3.r)),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(10.r),
-                                      child: Column(
-                                        children: [
-                                          Obx(
-                                            () => InkWell(
-                                              onTap: () async {
-                                                detailsController.openFile(
-                                                    detailsModel
-                                                        .data!.specifications);
-                                                detailsController
-                                                    .isSpecificUpdate();
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                      "${AppTags.specifications.tr}:",
-                                                      style: isMobile(context)
-                                                          ? AppThemeData
-                                                              .titleTextStyle_14
-                                                          : AppThemeData
-                                                              .titleTextStyle_11Tab),
-                                                  detailsController
-                                                          .isSpecific.value
-                                                      ? Icon(Icons.remove,
-                                                          size: 16.r,
-                                                          color: AppThemeData.detailsIconColor)
-                                                      : Icon(Icons.add,
-                                                          size: 16.r,
-                                                          color: AppThemeData.detailsIconColor)
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Obx(
-                                            () => detailsController
-                                                    .isSpecific.value
-                                                ? Column(
-                                                    children: [
-                                                      detailsModel
-                                                              .data!
-                                                              .specifications!
-                                                              .isNotEmpty
-                                                          ? SizedBox(
-                                                              height: 400.h,
-                                                              child: SfPdfViewer
-                                                                  .network(detailsModel
-                                                                      .data!
-                                                                      .specifications!
-                                                                      .toString()),
-                                                            )
-                                                          : Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(8.r),
-                                                              child: Text(
-                                                                AppTags.noSpecifications.tr,
-                                                                style: AppThemeData.labelTextStyle_12tab.copyWith(fontFamily: "Poppins"),
-                                                              ),
-                                                            )
-                                                    ],
-                                                  )
-                                                : const Row(),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
                             SizedBox(height: 10.h),
 
                             //Description
@@ -1636,8 +1549,9 @@ class DetailsPage extends StatelessWidget {
                                                                       child: CachedNetworkImage(
                                                         imageUrl: buildImageUrl(detailsModel.data!.descriptionImages![detailsController.pageView.value].toString()),
                                                         fit: BoxFit.fitWidth,
-                                                        placeholder: (_, __) => const Center(child: CircularProgressIndicator(strokeWidth: 1.5)),
-                                                        errorWidget: (_, __, ___) => Image.asset('assets/logos/logo.png', fit: BoxFit.contain),
+                                                        filterQuality: FilterQuality.high,
+                                                        placeholder: (_, _) => const Center(child: CircularProgressIndicator(strokeWidth: 1.5)),
+                                                        errorWidget: (_, _, _) => Image.asset('assets/logos/logo.png', fit: BoxFit.contain),
                                                       ),
                                                                     ),
                                                                   ),
@@ -2746,7 +2660,7 @@ class DetailsPage extends StatelessWidget {
                   height: 8.7.h,
                 ),
                 RatingBar.builder(
-                  initialRating: detailsModel.data!.isReviewed!? double.parse(detailsModel.data!.reviews![detailsController.userReviewIndex()!].rating.toString()):1,
+                  initialRating: detailsModel.data!.isReviewed!? double.parse(detailsModel.data!.reviews![detailsController.userReviewIndex()].rating.toString()):1,
                   minRating: 1,
                   direction: Axis.horizontal,
                   allowHalfRating: true,
@@ -2853,7 +2767,7 @@ class DetailsPage extends StatelessWidget {
                         width: 1.w,
                       ),
                     ),
-                    hintText: detailsModel.data!.isReviewed!? detailsModel.data!.reviews![detailsController.userReviewIndex()!].title.toString(): AppTags.reviewTitle.tr,
+                    hintText: detailsModel.data!.isReviewed!? detailsModel.data!.reviews![detailsController.userReviewIndex()].title.toString(): AppTags.reviewTitle.tr,
                     hintStyle: const TextStyle(color: Colors.grey),
                   ),
                 ),
@@ -2886,7 +2800,7 @@ class DetailsPage extends StatelessWidget {
                           color: AppThemeData.borderSideColor, width: 1.w),
                     ),
                     hintText:
-                      detailsModel.data!.isReviewed!? detailsModel.data!.reviews![detailsController.userReviewIndex()!].comment: AppTags.review.tr,
+                      detailsModel.data!.isReviewed!? detailsModel.data!.reviews![detailsController.userReviewIndex()].comment: AppTags.review.tr,
                     hintStyle: const TextStyle(color: Colors.grey),
                   ),
                 )
@@ -2904,9 +2818,9 @@ class DetailsPage extends StatelessWidget {
                         await detailsController.postReviewSubmit(
                             productId:
                             detailsModel.data!.form!.productId!.toString(),
-                            title: titleController.text.isEmpty? detailsModel.data!.reviews![detailsController.userReviewIndex()!].title.toString(): titleController.text,
-                            comment: writeReviewController.text.isEmpty? detailsModel.data!.reviews![detailsController.userReviewIndex()!].comment.toString(): writeReviewController.text,
-                            rating: detailsController.rating.isNaN? detailsModel.data!.reviews![detailsController.userReviewIndex()!].rating.toString(): detailsController.rating.toString(),
+                            title: titleController.text.isEmpty? detailsModel.data!.reviews![detailsController.userReviewIndex()].title.toString(): titleController.text,
+                            comment: writeReviewController.text.isEmpty? detailsModel.data!.reviews![detailsController.userReviewIndex()].comment.toString(): writeReviewController.text,
+                            rating: detailsController.rating.isNaN? detailsModel.data!.reviews![detailsController.userReviewIndex()].rating.toString(): detailsController.rating.toString(),
                             image: detailsController.image
                         ).then((value) {
                           detailsController.getProductDetails(int.parse(productId));
@@ -3029,8 +2943,4 @@ class DetailsPage extends StatelessWidget {
           ),
         ),
       );
-}
-
-extension on Rx<ProductDetailsModel> {
-  Null get data => null;
 }

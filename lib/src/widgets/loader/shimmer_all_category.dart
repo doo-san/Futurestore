@@ -25,7 +25,7 @@ class ShimmerAllCategory extends StatelessWidget {
                 mainAxisSpacing: 16,
                 childAspectRatio: 0.8,
               ),
-              itemBuilder: (_, __) => Container(
+              itemBuilder: (_, _) => Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.white,

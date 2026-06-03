@@ -89,6 +89,129 @@ class _CartScreenState extends State<CartScreen> {
             )
           ),
 
+          // Section coupon
+          Obx(() {
+            final appliedCoupons = _cartController.appliedCouponList.data ?? [];
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Coupons appliqués
+                  if (appliedCoupons.isNotEmpty) ...[
+                    ...appliedCoupons.map((coupon) => Container(
+                      margin: EdgeInsets.only(bottom: 6.h),
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8F5E9),
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(color: const Color(0xFF4CAF50), width: 1),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.local_offer, color: const Color(0xFF4CAF50), size: 16.r),
+                              SizedBox(width: 6.w),
+                              Text(
+                                coupon.title ?? '',
+                                style: TextStyle(
+                                  color: const Color(0xFF2E7D32),
+                                  fontSize: isMobile(context) ? 13.sp : 10.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () => _cartController.removeCoupon(
+                              couponId: coupon.couponId ?? 0,
+                            ),
+                            child: Icon(Icons.close, color: Colors.red.shade400, size: 18.r),
+                          ),
+                        ],
+                      ),
+                    )),
+                    SizedBox(height: 4.h),
+                  ],
+                  // Champ de saisie coupon
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: couponController,
+                          style: TextStyle(fontSize: isMobile(context) ? 13.sp : 10.sp),
+                          decoration: InputDecoration(
+                            hintText: AppTags.couponApply.tr,
+                            hintStyle: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: isMobile(context) ? 13.sp : 10.sp,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 12.w, vertical: 10.h,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: BorderSide(
+                                color: AppThemeData.productBoxDecorationColor,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Obx(() => _cartController.isAplyingCoupon
+                          ? SizedBox(
+                              width: 44.w,
+                              height: 44.h,
+                              child: const Center(
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            )
+                          : ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppThemeData.productBoxDecorationColor,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 14.w, vertical: 12.h,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                              ),
+                              onPressed: () {
+                                final code = couponController.text.trim();
+                                if (code.isNotEmpty) {
+                                  _cartController.applyCouponCode(code: code);
+                                  couponController.clear();
+                                }
+                              },
+                              child: Text(
+                                AppTags.apply.tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: isMobile(context) ? 13.sp : 10.sp,
+                                ),
+                              ),
+                            )),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                ],
+              ),
+            );
+          }),
+
           // 🔐 CALCULATION CARD (SAFE)
           Padding(
             padding: EdgeInsets.only(
@@ -145,6 +268,14 @@ class _CartScreenState extends State<CartScreen> {
                               "0"),
                       context,
                     ),
+                    if ((calculations?.formattedCouponDiscount ?? "0") != "0")
+                      _couponDiscountRow(
+                        AppTags.coupon.tr,
+                        currencyConverterController.convertCurrency(
+                          calculations?.formattedCouponDiscount ?? "0",
+                        ),
+                        context,
+                      ),
                     const Divider(),
                     _priceRow(
                       AppTags.total.tr,
@@ -208,6 +339,35 @@ class _CartScreenState extends State<CartScreen> {
           style: isMobile(context)
               ? AppThemeData.titleTextStyle_14
               : AppThemeData.titleTextStyle_11Tab,
+        ),
+      ],
+    );
+  }
+
+  Widget _couponDiscountRow(
+      String title, String value, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.local_offer, color: const Color(0xFF4CAF50), size: 14.r),
+            SizedBox(width: 4.w),
+            Text(
+              title,
+              style: (isMobile(context)
+                  ? AppThemeData.titleTextStyle_14
+                  : AppThemeData.titleTextStyle_11Tab)
+                  .copyWith(color: const Color(0xFF2E7D32)),
+            ),
+          ],
+        ),
+        Text(
+          '- $value',
+          style: (isMobile(context)
+              ? AppThemeData.titleTextStyle_14
+              : AppThemeData.titleTextStyle_11Tab)
+              .copyWith(color: const Color(0xFF2E7D32)),
         ),
       ],
     );

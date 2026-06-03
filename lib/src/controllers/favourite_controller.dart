@@ -55,6 +55,7 @@ class FavouriteController extends GetxController {
     return Repository().getFavoriteProduct().then((value) {
       if (value == null) {
         _data = null;
+        _isLoading(false);
         return;
       }
       _data?.value = value;

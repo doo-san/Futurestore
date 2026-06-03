@@ -297,4 +297,5 @@ const Map<String, String> bnBD = {
   "noBrand" : "কোন ব্র্যান্ড পাওয়া যায়নি",
   "emptyOrderHistory" : "খালি অর্ডার ইতিহাস",
   "noRewardAvailableYet": "এখনও কোন পুরস্কার উপলব্ধ নেই",
+  "orContinueWith": "অথবা চালিয়ে যান"
 };

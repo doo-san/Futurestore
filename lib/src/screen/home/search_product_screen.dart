@@ -23,6 +23,7 @@ class _SearchProductState extends State<SearchProduct> {
   TextEditingController searchFieldController = TextEditingController();
   final ProductSearchController _searchController = Get.put(ProductSearchController());
   Timer? _debounceTimer;
+  final ScrollController _scrollController = ScrollController();
 
   void _listenTextChange(String value) {
     _debounceTimer?.cancel();
@@ -32,10 +33,25 @@ class _SearchProductState extends State<SearchProduct> {
     });
   }
 
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      _searchController.loadMore();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
   @override
   void dispose() {
     _debounceTimer?.cancel();
     searchFieldController.dispose();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -195,28 +211,38 @@ class _SearchProductState extends State<SearchProduct> {
                       ),
                     ),
                   )
-                : SizedBox(
-                    //height: 600,
-                    child: GridView.builder(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 15.w, vertical: 8.h),
-                      shrinkWrap: true,
-                      itemCount: _searchController.searchResult.data != null
-                          ? _searchController.searchResult.data!.length
-                          : 0,
-                      gridDelegate:
-                           SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: isMobile(context)? 2:3,
-                        childAspectRatio: 0.68,
-                        mainAxisSpacing: isMobile(context)? 15:20,
-                        crossAxisSpacing: isMobile(context)? 15:20,
+                : CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 15.w, vertical: 8.h),
+                        sliver: SliverGrid(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) => SearchProductCard(
+                              data: _searchController.searchResult.data![index],
+                            ),
+                            childCount: _searchController.searchResult.data?.length ?? 0,
+                          ),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: isMobile(context) ? 2 : 3,
+                            childAspectRatio: 0.68,
+                            mainAxisSpacing: isMobile(context) ? 15 : 20,
+                            crossAxisSpacing: isMobile(context) ? 15 : 20,
+                          ),
+                        ),
                       ),
-                      itemBuilder: (context, index) {
-                        return SearchProductCard(
-                          data: _searchController.searchResult.data![index],
-                        );
-                      },
-                    ),
+                      SliverToBoxAdapter(
+                        child: Obx(() => _searchController.isLoadingMore
+                            ? Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16.h),
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : const SizedBox.shrink()),
+                      ),
+                    ],
                   ),
       ),
     );

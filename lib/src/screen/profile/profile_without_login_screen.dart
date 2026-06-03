@@ -90,63 +90,71 @@ class ProfileWithoutLoginScreen extends StatelessWidget {
             SizedBox(
               height: 32.sp,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 135.w,
-                  height: 42.h,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Get.toNamed(Routes.logIn);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:  AppThemeData.buttonShadowColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 5,
-                      shadowColor: AppThemeData.buttonShadowColor,
-                    ),
-                    child: Text(
-                      AppTags.signIn.tr,
-                      style: TextStyle(
-                        fontSize: isMobile(context)? 14.sp:11.sp,
-                        fontFamily: "Poppins",
-                        color: AppThemeData.lightBackgroundColor,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 15.h,
-                ),
-                SizedBox(
-                  width: 135.w,
-                  height: 42.h,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Get.toNamed(Routes.signUp);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppThemeData.buttonShadowColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      elevation: 5,
-                      shadowColor: AppThemeData.lightBackgroundColor,
-                    ),
-                    child: Text(
-                      AppTags.signUp.tr,
-                      style: TextStyle(
-                        fontSize: isMobile(context)? 14.sp:11.sp,
-                        fontFamily: "Poppins",
-                        color: AppThemeData.lightBackgroundColor,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 48.h,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.toNamed(Routes.logIn);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppThemeData.buttonShadowColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          elevation: 5,
+                          shadowColor: AppThemeData.buttonShadowColor,
+                        ),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            AppTags.signIn.tr,
+                            style: TextStyle(
+                              fontSize: isMobile(context) ? 14.sp : 11.sp,
+                              fontFamily: "Poppins",
+                              color: AppThemeData.lightBackgroundColor,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: SizedBox(
+                      height: 48.h,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.toNamed(Routes.signUp);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppThemeData.buttonShadowColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          elevation: 5,
+                          shadowColor: AppThemeData.lightBackgroundColor,
+                        ),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            AppTags.signUp.tr,
+                            style: TextStyle(
+                              fontSize: isMobile(context) ? 14.sp : 11.sp,
+                              fontFamily: "Poppins",
+                              color: AppThemeData.lightBackgroundColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 30.h,

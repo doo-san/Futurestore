@@ -1,13 +1,14 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:yoori_ecommerce/src/models/user_data_model.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:yoori_ecommerce/src/servers/repository.dart';
 import 'package:yoori_ecommerce/src/data/local_data_helper.dart';
-import 'package:yoori_ecommerce/src/utils/constants.dart';
 import 'package:yoori_ecommerce/src/_route/routes.dart';
 
 class AuthController extends GetxController {
@@ -235,25 +236,58 @@ class AuthController extends GetxController {
     }
   }
 
-  // ================= FACEBOOK LOGIN =================
+  // ================= APPLE LOGIN =================
 
-  Future<void> facebookLogin() async {
+  String _generateNonce([int length = 32]) {
+    const charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+        .join();
+  }
+
+  String _sha256ofString(String input) {
+    final bytes = utf8.encode(input);
+    return sha256.convert(bytes).toString();
+  }
+
+  Future<void> signInWithApple() async {
     try {
       isLoggingIn.value = true;
 
-      final loginResult = await FacebookAuth.instance.login();
+      final rawNonce = _generateNonce();
+      final nonce = _sha256ofString(rawNonce);
 
-      final credential = FacebookAuthProvider.credential(
-        loginResult.accessToken?.tokenString ?? "",
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: nonce,
       );
 
-      await _auth.signInWithCredential(credential);
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        rawNonce: rawNonce,
+        accessToken: appleCredential.authorizationCode,
+      );
 
+      await _auth.signInWithCredential(oauthCredential);
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code != AuthorizationErrorCode.canceled) {
+        Get.snackbar("Erreur", e.message);
+      }
     } catch (e) {
       Get.snackbar("Erreur", e.toString());
     } finally {
       isLoggingIn.value = false;
     }
+  }
+
+  // ================= FACEBOOK LOGIN =================
+
+  Future<void> facebookLogin() async {
+    Get.snackbar("Info", "Facebook login is currently unavailable");
   }
 
   // ================= LOGOUT =================

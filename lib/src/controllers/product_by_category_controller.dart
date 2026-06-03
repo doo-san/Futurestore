@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:yoori_ecommerce/src/utils/constants.dart';
 import '../servers/repository.dart';
 import '../models/product_by_category_model.dart';
 
@@ -21,7 +22,7 @@ class ProductByCategoryController extends GetxController {
 
       isLoading(true);
 
-      print("Loading category: $categoryId page: $page");
+      printLog("Loading category: $categoryId page: $page");
 
       final result = await _repository.getProductsByCategory(
         categoryId: categoryId,
@@ -35,11 +36,11 @@ class ProductByCategoryController extends GetxController {
         page++;
       }
 
-      print("Products loaded: ${products.length}");
+      printLog("Products loaded: ${products.length}");
 
     } catch (e) {
 
-      print("ERROR loading products: $e");
+      printLog("ERROR loading products: $e");
 
     } finally {
 

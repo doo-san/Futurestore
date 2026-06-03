@@ -43,6 +43,7 @@ class AppTags {
   static const String newUser = "newUser";
   static const String signInTermsAndCondition = "signInTermsAndCondition";
   static const String backToShopping = "backToShopping";
+  static const String orContinueWith = "orContinueWith";
   static const String notLoggedIn = "notLoggedIn";
   static const String noContent = "noContent";
   static const String verifyNumber = "verifyNumber";

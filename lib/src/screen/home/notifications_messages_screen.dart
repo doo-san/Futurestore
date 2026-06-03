@@ -265,7 +265,10 @@ class _MessagesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.sellersLoading.value) {
+      final isLoading =
+          controller.sellersLoading.value || controller.adminChatLoading.value;
+
+      if (isLoading) {
         return const Center(child: CircularProgressIndicator());
       }
       if (controller.sellersError.value) {
@@ -289,7 +292,11 @@ class _MessagesTab extends StatelessWidget {
           ),
         );
       }
-      if (controller.sellers.isEmpty) {
+
+      final hasAdmin = controller.adminId.value > 0;
+      final hasConversations = controller.sellers.isNotEmpty || hasAdmin;
+
+      if (!hasConversations) {
         return Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -306,15 +313,30 @@ class _MessagesTab extends StatelessWidget {
           ),
         );
       }
+
+      // Build list: admin support tile first, then seller tiles.
+      final itemCount =
+          controller.sellers.length + (hasAdmin ? 1 : 0);
+
       return RefreshIndicator(
         color: AppThemeData.productBoxDecorationColor,
-        onRefresh: controller.fetchSellers,
+        onRefresh: () async {
+          await Future.wait([
+            controller.fetchSellers(),
+            controller.fetchAdminChatInfo(),
+          ]);
+        },
         child: ListView.separated(
-          itemCount: controller.sellers.length,
-          separatorBuilder: (context2, i) =>
+          itemCount: itemCount,
+          separatorBuilder: (_, i) =>
               Divider(height: 1, color: Colors.grey.shade200),
           itemBuilder: (context, index) {
-            final seller = controller.sellers[index];
+            // Index 0 is admin support when available.
+            if (hasAdmin && index == 0) {
+              return _AdminSupportTile(controller: controller);
+            }
+            final sellerIndex = hasAdmin ? index - 1 : index;
+            final seller = controller.sellers[sellerIndex];
             return ListTile(
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
@@ -355,5 +377,54 @@ class _MessagesTab extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+// ─── Tile "Support Admin" ────────────────────────────────────────────────────
+
+class _AdminSupportTile extends StatelessWidget {
+  final ChatController controller;
+  const _AdminSupportTile({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding:
+          EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+      leading: CircleAvatar(
+        radius: 24.r,
+        backgroundColor: const Color(0xFFFF0008),
+        child: Icon(Icons.support_agent, color: Colors.white, size: 26.r),
+      ),
+      title: Text(
+        controller.adminName.value.isNotEmpty
+            ? controller.adminName.value
+            : 'Support Admin',
+        style: AppThemeData.titleTextStyle_14,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Text(
+        'Contacter le support',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppThemeData.titleTextStyle_13.copyWith(color: Colors.grey),
+      ),
+      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      onTap: () async {
+        await controller.openChatRoom(
+          controller.adminChatRoomId.value,
+          controller.adminId.value,
+          controller.adminName.value.isNotEmpty
+              ? controller.adminName.value
+              : 'Support Admin',
+        );
+        // After opening the room, refresh the admin chat room ID in case a new
+        // room was just created by the first message.
+        Get.toNamed(Routes.chatRoom)?.then((_) {
+          controller.fetchAdminChatInfo();
+        });
+      },
+    );
   }
 }

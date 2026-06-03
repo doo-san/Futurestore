@@ -44,6 +44,7 @@ class NetworkImageCheckerWidget extends StatelessWidget {
         fit: fit,
         width: width,
         height: height,
+        headers: kImageHeaders,
         placeholderBuilder: (_) => SizedBox(
           width: width,
           height: height,
@@ -57,6 +58,8 @@ class NetworkImageCheckerWidget extends StatelessWidget {
       fit: fit,
       width: width,
       height: height,
+      httpHeaders: kImageHeaders,
+      filterQuality: FilterQuality.high,
       placeholder: (context, url) => SizedBox(
         width: width,
         height: height,

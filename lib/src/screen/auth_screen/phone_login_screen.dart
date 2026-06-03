@@ -38,10 +38,10 @@ class PhoneLoginScreen extends StatelessWidget {
               SizedBox(
                 height: 22.5.h,
               ),
-              SizedBox(
-                   width: 180.w,
-                height: 150.h,
-                 child: Image.asset(Images.logo),
+              Image.asset(
+                Images.logo,
+                width: 220.w,
+                fit: BoxFit.contain,
               ),
               SizedBox(
                 height: 74.4.h,

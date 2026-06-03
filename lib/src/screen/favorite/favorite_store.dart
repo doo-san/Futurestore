@@ -69,6 +69,7 @@ class FavoriteStore extends StatelessWidget {
                                 image: NetworkImage(
                                   favouriteData.data!.favouriteShop[index].banner.toString(),
                                 ),
+                                onError: (_, __) {},
                               ),
                             ),
                             child: Column(
@@ -84,9 +85,9 @@ class FavoriteStore extends StatelessWidget {
                                       clipBehavior: Clip.none,
                                       children: [
                                         Container(
-                                          height: isMobile(context)? 100.h:120.h,
                                           color: AppThemeData.campaignBoxColor.withOpacity(0.85),
                                           child: Column(
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
                                               SizedBox(height:isMobile(context)? 30.h:45.h,),
                                               Padding(
@@ -178,6 +179,7 @@ class FavoriteStore extends StatelessWidget {
                                                       .favouriteShop[index].logo
                                                       .toString(),
                                                 ),
+                                                onError: (_, __) {},
                                               ),
                                             ),
                                           ),

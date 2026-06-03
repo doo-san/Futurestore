@@ -148,13 +148,14 @@ class ShopProductCard extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: dataModel[index].image ?? "",
                         fit: BoxFit.cover,
-                        placeholder: (_, __) => Container(
+                        filterQuality: FilterQuality.high,
+                        placeholder: (_, _) => Container(
                           color: Colors.grey.shade100,
                           child: const Center(
                             child: CircularProgressIndicator(strokeWidth: 1.5),
                           ),
                         ),
-                        errorWidget: (_, __, ___) => Container(
+                        errorWidget: (_, _, _) => Container(
                           color: Colors.grey.shade100,
                           child: Image.asset(
                             'assets/logos/logo.png',

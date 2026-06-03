@@ -84,7 +84,7 @@ class DetailsPageController extends GetxController {
 
   Null get currentProductId => null;
   Future<void> getImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery,imageQuality: 20);
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       image = File(pickedFile.path);
       imagePath = pickedFile.path;

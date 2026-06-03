@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../config.dart';
 import 'package:yoori_ecommerce/src/_route/routes.dart';
 import '../../../controllers/currency_converter_controller.dart';
@@ -169,28 +170,32 @@ class Settings extends StatelessWidget {
                       height: 42.h,
                       alignment: Alignment.center,
                       child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          iconSize: isMobile(context)?18.r:25.r,
-                          isExpanded: false,
-                          style: isMobile(context)? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black):AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
-                          value: settingController.selectedCurrency.value,
-                          onChanged: (newValue) {
-                            int index = settingController.getIndex(newValue);
-                            settingController.updateCurrency(newValue);
-                            settingController.updateCurrencyName(index);
-                            LocalDataHelper().saveCurrency(
-                                settingController.selectedCurrency.value);
-                            currencyConverterController.fetchCurrencyData();
-                          },
-                          items: settingController.curr!.map(
-                            (curr) {
-                              return DropdownMenuItem(
-                                value: curr.code,
-                                child: Text(curr.name.toString()),
-                              );
-                            },
-                          ).toList(),
-                        ),
+                        child: settingController.curr.isEmpty
+                            ? Text(settingController.selectedCurrency.value,
+                                style: isMobile(context)
+                                    ? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black)
+                                    : AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black))
+                            : DropdownButton(
+                                iconSize: isMobile(context) ? 18.r : 25.r,
+                                isExpanded: false,
+                                style: isMobile(context)
+                                    ? AppThemeData.settingsTitleStyle.copyWith(color: Colors.black)
+                                    : AppThemeData.settingsTitleStyleTab.copyWith(color: Colors.black),
+                                value: settingController.selectedCurrency.value,
+                                onChanged: (newValue) {
+                                  int index = settingController.getIndex(newValue);
+                                  settingController.updateCurrency(newValue);
+                                  settingController.updateCurrencyName(index);
+                                  LocalDataHelper().saveCurrency(settingController.selectedCurrency.value);
+                                  currencyConverterController.fetchCurrencyData();
+                                },
+                                items: settingController.curr.map((curr) {
+                                  return DropdownMenuItem(
+                                    value: curr.code,
+                                    child: Text(curr.name.toString()),
+                                  );
+                                }).toList(),
+                              ),
                       ),
                     ),
                   ],
@@ -276,13 +281,10 @@ class Settings extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
                 onTap: () {
-                  final pages = LocalDataHelper().getConfigData().data?.pages;
-                  if (pages != null && pages.length > 3) {
-                    Get.toNamed(Routes.wvScreen, parameters: {
-                      'url': pages[3].link ?? '',
-                      'title': pages[3].title ?? '',
-                    });
-                  }
+                  Get.toNamed(Routes.wvScreen, parameters: {
+                    'url': 'https://futurestoresn.com/page/terms-conditions',
+                    'title': AppTags.termsCondition.tr,
+                  });
                 },
                 child: ListTile(
                   title: Text(
@@ -300,13 +302,10 @@ class Settings extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
                 onTap: () {
-                  final pages = LocalDataHelper().getConfigData().data?.pages;
-                  if (pages != null && pages.length > 4) {
-                    Get.toNamed(Routes.wvScreen, parameters: {
-                      'url': pages[4].link ?? '',
-                      'title': pages[4].title ?? '',
-                    });
-                  }
+                  Get.toNamed(Routes.wvScreen, parameters: {
+                    'url': 'https://futurestoresn.com/page/privacy-policy',
+                    'title': AppTags.privacyPolicy.tr,
+                  });
                 },
                 child: ListTile(
                   title: Text(
@@ -324,13 +323,10 @@ class Settings extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
                 onTap: () {
-                  final pages = LocalDataHelper().getConfigData().data?.pages;
-                  if (pages != null && pages.length > 5) {
-                    Get.toNamed(Routes.wvScreen, parameters: {
-                      'url': pages[5].link ?? '',
-                      'title': pages[5].title ?? '',
-                    });
-                  }
+                  Get.toNamed(Routes.wvScreen, parameters: {
+                    'url': 'https://futurestoresn.com/page/about',
+                    'title': AppTags.aboutThisApp.tr,
+                  });
                 },
                 child: ListTile(
                   title: Text(
@@ -347,13 +343,12 @@ class Settings extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
-                onTap: () {
-                  final pages = LocalDataHelper().getConfigData().data?.pages;
-                  if (pages != null && pages.length > 6) {
-                    Get.toNamed(Routes.wvScreen, parameters: {
-                      'url': pages[6].link ?? '',
-                      'title': pages[6].title ?? '',
-                    });
+                onTap: () async {
+                  final whatsappUrl = Uri.parse('whatsapp://send?phone=221784742328');
+                  if (await canLaunchUrl(whatsappUrl)) {
+                    await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+                  } else {
+                    await launchUrl(Uri.parse('https://wa.me/221784742328'), mode: LaunchMode.externalApplication);
                   }
                 },
                 child: ListTile(

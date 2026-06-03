@@ -70,6 +70,12 @@ class CartContentController extends GetxController {
 
         _addToCartListModel.value = value;
 
+        // Synchronise le trx_id local avec celui du serveur
+        final trxId = value.data?.trxId;
+        if (trxId != null && trxId.isNotEmpty) {
+          LocalDataHelper().saveCartTrxId(trxId);
+        }
+
       } else {
 
         _addToCartListModel.value =
@@ -79,7 +85,7 @@ class CartContentController extends GetxController {
     } catch (e, stack) {
 
       printLog("Cart Error: $e");
-      print(stack);
+      printLog(stack.toString());
 
       _addToCartListModel.value =
           AddToCartListModel.empty();
@@ -199,7 +205,7 @@ class CartContentController extends GetxController {
     } catch (e, stack) {
 
       printLog("Coupon Error: $e");
-      print(stack);
+      printLog(stack.toString());
 
       _appliedCouponList.value = CouponAppliedList();
     }
@@ -213,12 +219,28 @@ class CartContentController extends GetxController {
         couponCode: code,
       );
 
-      await getAppliedCouponList();
+      await Future.wait([
+        getAppliedCouponList(),
+        getCartList(isShowLoading: false),
+      ]);
 
     } catch (e) {
       printLog("Apply Coupon Error: $e");
     }
 
     _isAplyingCoupon(false);
+  }
+
+  Future removeCoupon({required int couponId}) async {
+    try {
+      await Repository().postCouponDelete(couponId: couponId);
+
+      await Future.wait([
+        getAppliedCouponList(),
+        getCartList(isShowLoading: false),
+      ]);
+    } catch (e) {
+      printLog("Remove Coupon Error: $e");
+    }
   }
 }

@@ -73,7 +73,7 @@ class ChatListScreen extends StatelessWidget {
           onRefresh: controller.fetchSellers,
           child: ListView.separated(
             itemCount: controller.sellers.length,
-            separatorBuilder: (_, __) =>
+            separatorBuilder: (_, _) =>
                 Divider(height: 1, color: Colors.grey.shade200),
             itemBuilder: (context, index) {
               final seller = controller.sellers[index];

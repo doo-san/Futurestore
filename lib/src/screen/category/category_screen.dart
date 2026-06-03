@@ -586,65 +586,52 @@ class CategoryScreen extends StatelessWidget {
                                                 ),
                                                 child: Row(
                                                   children: [
-                                                    Column(
-                                                      children: [
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    8.r),
-                                                            child: NetworkImageCheckerWidget(
-                                                              image: _catController
-                                                                  .categoryList[
-                                                                      _catController
-                                                                          .index
-                                                                          .value]
-                                                                  .subCategories![
-                                                                      subCtIndex]
-                                                                  .banner,
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
+                                                    SizedBox(
+                                                      width: 65.w,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.all(8.r),
+                                                        child: NetworkImageCheckerWidget(
+                                                          image: _catController
+                                                              .categoryList[_catController.index.value]
+                                                              .subCategories![subCtIndex]
+                                                              .banner,
+                                                        ),
+                                                      ),
                                                     ),
                                                     Expanded(
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            _catController
-                                                                .categoryList[
-                                                                    _catController
-                                                                        .index
-                                                                        .value]
-                                                                .subCategories![
-                                                                    subCtIndex]
-                                                                .title
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                fontSize: isMobile(context)? 12.sp:10.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontFamily:
-                                                                    "Poppins_Medium"),
-                                                          ),
-                                                          Text(
-                                                            "${AppTags.totalProduct.tr}: ${(_catController.categoryList[_catController.index.value].subCategories![subCtIndex].childCategories ?? []).length}",
-                                                            style: TextStyle(
-                                                              fontSize: isMobile(context)? 12.sp:10.sp,
-                                                              fontFamily:
-                                                                  "Poppins",
-                                                              color: const Color(
-                                                                  0xFF666666),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              _catController
+                                                                  .categoryList[_catController.index.value]
+                                                                  .subCategories![subCtIndex]
+                                                                  .title
+                                                                  .toString(),
+                                                              maxLines: 2,
+                                                              overflow: TextOverflow.ellipsis,
+                                                              style: TextStyle(
+                                                                fontSize: isMobile(context) ? 12.sp : 10.sp,
+                                                                fontWeight: FontWeight.w600,
+                                                                fontFamily: "Poppins_Medium",
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ],
+                                                            SizedBox(height: 4.h),
+                                                            Text(
+                                                              "${AppTags.totalProduct.tr}: ${(_catController.categoryList[_catController.index.value].subCategories![subCtIndex].childCategories ?? []).length}",
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                              style: TextStyle(
+                                                                fontSize: isMobile(context) ? 11.sp : 9.sp,
+                                                                fontFamily: "Poppins",
+                                                                color: const Color(0xFF666666),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ],

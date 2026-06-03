@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../servers/repository.dart';
 import '../models/product_details_model.dart';
+import '../utils/constants.dart';
 
 class DetailsPageController extends GetxController {
 
@@ -25,18 +26,18 @@ class DetailsPageController extends GetxController {
 
       currentProductId = productId;
 
-      print("LOAD PRODUCT DETAILS ID = $productId");
+      printLog("LOAD PRODUCT DETAILS ID = $productId");
 
       final result =
       await _repository.getProductDetails(int.parse(productId));
 
       productDetail = result;
 
-      print("PRODUCT DETAILS LOADED");
+      printLog("PRODUCT DETAILS LOADED");
 
     } catch (e) {
 
-      print("DETAILS ERROR: $e");
+      printLog("DETAILS ERROR: $e");
 
     }
 

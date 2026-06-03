@@ -9,6 +9,7 @@ import '../../controllers/currency_converter_controller.dart';
 import '../../controllers/home_screen_controller.dart';
 import 'package:yoori_ecommerce/src/utils/app_tags.dart';
 import '../../utils/app_theme_data.dart';
+import 'package:yoori_ecommerce/src/utils/image_url_helper.dart';
 import 'package:yoori_ecommerce/src/utils/responsive.dart';
 import 'product_cart_control.dart';
 
@@ -81,7 +82,8 @@ class HomeProductCard extends StatelessWidget {
                                     ? (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) ==
                                     0.0
                                     ? const SizedBox()
-                                    : Container(
+                                    : Flexible(
+                                  child: Container(
                                   height: 20.h,
                                   decoration: BoxDecoration(
                                     color: AppThemeData.productBoxDecorationColor
@@ -91,18 +93,25 @@ class HomeProductCard extends StatelessWidget {
                                     ),
                                   ),
                                   child: Center(
-                                    child: Text(
-                                      "${currencyConverterController.convertCurrency(dataModel![index].specialDiscount!)} OFF",
-                                      style:isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 3.w),
+                                      child: Text(
+                                        "${currencyConverterController.convertCurrency(dataModel![index].specialDiscount!)} OFF",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style:isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                      ),
                                     ),
                                   ),
+                                ),
                                 )
                                     : dataModel![index].specialDiscountType ==
                                     'percentage'
                                     ? (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) ==
                                     0.0
                                     ? const SizedBox()
-                                    : Container(
+                                    : Flexible(
+                                  child: Container(
                                   height: 20.h,
                                   decoration: BoxDecoration(
                                     color: AppThemeData.productBoxDecorationColor
@@ -112,12 +121,18 @@ class HomeProductCard extends StatelessWidget {
                                     ),
                                   ),
                                   child: Center(
-                                    child: Text(
-                                      "${homeScreenContentController.removeTrailingZeros(dataModel![index].specialDiscount)}% OFF",
-                                      textAlign: TextAlign.center,
-                                      style:isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 3.w),
+                                      child: Text(
+                                        "${homeScreenContentController.removeTrailingZeros(dataModel![index].specialDiscount)}% OFF",
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style:isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                      ),
                                     ),
                                   ),
+                                ),
                                 )
                                     : Container(),
                                 dataModel![index].specialDiscount == 0
@@ -151,13 +166,15 @@ class HomeProductCard extends StatelessWidget {
                           child: CachedNetworkImage(
                             imageUrl: dataModel![index].image ?? "",
                             fit: BoxFit.cover,
-                            placeholder: (_, __) => Container(
+                            httpHeaders: kImageHeaders,
+                            filterQuality: FilterQuality.high,
+                            placeholder: (_, _) => Container(
                               color: Colors.grey.shade100,
                               child: const Center(
                                 child: CircularProgressIndicator(strokeWidth: 1.5),
                               ),
                             ),
-                            errorWidget: (_, __, ___) => Container(
+                            errorWidget: (_, _, _) => Container(
                               color: Colors.grey.shade100,
                               child: Image.asset(
                                 'assets/logos/logo.png',
@@ -196,10 +213,14 @@ class HomeProductCard extends StatelessWidget {
                                   ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    currencyConverterController
-                                        .convertCurrency(dataModel![index].price!),
-                                    style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle:AppThemeData.todayDealDiscountPriceStyleTab,
+                                  Flexible(
+                                    child: Text(
+                                      currencyConverterController
+                                          .convertCurrency(dataModel![index].price!),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle:AppThemeData.todayDealDiscountPriceStyleTab,
+                                    ),
                                   ),
                                 ],
                               ) : Row(

@@ -96,7 +96,8 @@ class CategoryProductCard extends StatelessWidget {
                         child: CachedNetworkImage(
                           imageUrl: image,
                           fit: BoxFit.contain,
-                          placeholder: (_, __) => Container(
+                          filterQuality: FilterQuality.high,
+                          placeholder: (_, _) => Container(
                             color: const Color(0xFFF5F5F5),
                             child: Center(
                               child: SizedBox(
@@ -109,7 +110,7 @@ class CategoryProductCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          errorWidget: (_, __, ___) => Container(
+                          errorWidget: (_, _, _) => Container(
                             color: const Color(0xFFF0F0F0),
                             child: Center(
                               child: Icon(

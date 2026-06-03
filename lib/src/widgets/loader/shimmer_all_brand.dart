@@ -25,7 +25,7 @@ class ShimmerAllBrand extends StatelessWidget {
                 mainAxisSpacing: isMobile(context)?16:20,
                 childAspectRatio: 1,
               ),
-              itemBuilder: (_, __) => Shimmer.fromColors(
+              itemBuilder: (_, _) => Shimmer.fromColors(
                 highlightColor: Colors.grey[300]!,
                 baseColor: Colors.grey[200]!,
                 child: Container(

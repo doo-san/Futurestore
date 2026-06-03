@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:yoori_ecommerce/src/utils/constants.dart';
 import 'package:yoori_ecommerce/src/models/config_model.dart';
 import 'package:yoori_ecommerce/src/models/home_data_model.dart';
 import 'package:yoori_ecommerce/src/models/profile_data_model.dart';
@@ -38,7 +39,7 @@ class LocalDataHelper {
     final data = box.read("config_model");
 
     if (data == null) {
-      print("⚠️ CONFIG_MODEL NOT FOUND IN LOCAL STORAGE");
+      printLog("⚠️ CONFIG_MODEL NOT FOUND IN LOCAL STORAGE");
       return ConfigModel.fromJson({
         "success": false,
         "data": {}
@@ -46,7 +47,7 @@ class LocalDataHelper {
     }
 
     if (data is! Map<String, dynamic>) {
-      print("⚠️ CONFIG_MODEL INVALID FORMAT");
+      printLog("⚠️ CONFIG_MODEL INVALID FORMAT");
       return ConfigModel.fromJson({
         "success": false,
         "data": {}

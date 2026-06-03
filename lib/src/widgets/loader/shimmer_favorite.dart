@@ -26,7 +26,7 @@ class ShimmerFavorite extends StatelessWidget {
                 mainAxisSpacing: 16.w,
                 childAspectRatio: isMobile(context)? 0.8:0.7,
               ),
-              itemBuilder: (_, __) => Container(
+              itemBuilder: (_, _) => Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -42,19 +42,16 @@ class ShimmerFavorite extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-
-                      Shimmer.fromColors(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Shimmer.fromColors(
                         highlightColor: Colors.grey[300]!,
                         baseColor: Colors.grey[200]!,
                         child: Padding(
-                          padding:  EdgeInsets.all(8.r),
+                          padding: EdgeInsets.all(8.r),
                           child: Container(
-                            height: 150.h,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius:
@@ -62,9 +59,9 @@ class ShimmerFavorite extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      SizedBox(height: 10.h,),
-                      Shimmer.fromColors(
+                    ),
+                    SizedBox(height: 10.h,),
+                    Shimmer.fromColors(
                         highlightColor: Colors.grey[300]!,
                         baseColor: Colors.grey[200]!,
                         child: Padding(
@@ -81,7 +78,6 @@ class ShimmerFavorite extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
               ),
             ),
           ),

@@ -300,4 +300,5 @@ const Map<String, String> frFR = {
   "popularVideo": "Vidéo populaire",
   "doNotMatchCredential": "Les identifiants ne correspondent pas",
   "customProduct": "Produit personnalisé",
+  "orContinueWith": "Ou continuer avec",
 };

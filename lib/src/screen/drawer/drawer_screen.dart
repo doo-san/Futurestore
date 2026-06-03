@@ -127,12 +127,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
                           Scaffold.of(context).closeDrawer();
                         },
                         child: Container(
-                          height: 70.h,
                           width: 112.w,
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
                           color: _index == index
                               ? AppThemeData.drawerBoxColor
                               : Colors.white,
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset(
@@ -141,19 +142,20 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                     ? Colors.white
                                     : AppThemeData.drawerIconColor.withOpacity(1.0),
                               ),
-                               SizedBox(height: 8.h),
+                              SizedBox(height: 6.h),
                               Text(
                                 _list[index]["title"],
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: _index == index
                                         ? Colors.white
                                         : AppThemeData.headlineTextColor,
                                     fontFamily: 'Poppins',
-                                  fontSize: isMobile(context)? 13.w:9.w
+                                    fontSize: isMobile(context) ? 11.sp : 9.sp,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

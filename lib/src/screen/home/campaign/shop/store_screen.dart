@@ -323,6 +323,7 @@ class StoreScreen extends StatelessWidget {
                           imageUrl: visitShopModel!.data!.store![brandIndex]
                               .popularBrands![index]
                               .thumbnail!,
+                          filterQuality: FilterQuality.high,
                         ),
                       ),
                     ),
@@ -416,6 +417,7 @@ class StoreScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                             fit: BoxFit.cover,
+                            filterQuality: FilterQuality.high,
                             image: CachedNetworkImageProvider(
                                 visitShopModel!.data!.store![bannerIndex]
                                     .banners![index]

@@ -90,7 +90,8 @@ class _ProfileContentState extends State<ProfileContent> {
                     width: isMobile(context) ? 74.w : 50.w,
                     height: 74.h,
                     fit: BoxFit.cover,
-                    errorWidget: (_, __, ___) => Container(
+                    filterQuality: FilterQuality.high,
+                    errorWidget: (_, _, _) => Container(
                       width: isMobile(context) ? 74.w : 50.w,
                       height: 74.h,
                       color: Colors.grey.shade300,

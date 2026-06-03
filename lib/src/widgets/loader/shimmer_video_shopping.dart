@@ -72,7 +72,7 @@ class ShimmerVideoShopping extends StatelessWidget {
                         mainAxisSpacing: isMobile(context) ? 15 : 20,
                         childAspectRatio: 0.73,
                       ),
-                      itemBuilder: (_, __) => Container(
+                      itemBuilder: (_, _) => Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: Colors.white,

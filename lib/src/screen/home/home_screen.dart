@@ -9,8 +9,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yoori_ecommerce/src/_route/routes.dart';
 import 'package:yoori_ecommerce/src/models/home_data_model.dart';
+import 'package:yoori_ecommerce/src/utils/constants.dart';
 import 'package:yoori_ecommerce/src/utils/images.dart';
-import '../../controllers/cart_content_controller.dart';
 import '../../controllers/currency_converter_controller.dart';
 import '../../controllers/details_screen_controller.dart';
 import '../../controllers/home_screen_controller.dart';
@@ -34,7 +34,6 @@ import 'category/offer_ending_product_screen.dart';
 import 'category/product_by_brand_screen.dart';
 import 'category/product_by_category_screen.dart';
 import 'category/product_by_shop_screen.dart';
-import 'category/recent_view_product_screen.dart';
 import 'category/today_deals_screen.dart';
 import 'category/top_shop_screen.dart';
 import 'video_shopping/all_video_shopping.dart';
@@ -44,7 +43,6 @@ class HomeScreenContent extends StatelessWidget {
 
   final DashboardController homeScreenController =
   Get.find<DashboardController>();
-  final _cartController = Get.find<CartContentController>();
   final homeScreenContentController = Get.find<HomeScreenController>();
   final detailsPageController = Get.lazyPut(
         () => DetailsPageController(),
@@ -339,7 +337,8 @@ class HomeScreenContent extends StatelessWidget {
                                 ? CachedNetworkImage(
                               imageUrl: item.image!,
                               fit: BoxFit.cover,
-                              errorWidget: (_, __, ___) => Container(
+                              filterQuality: FilterQuality.high,
+                              errorWidget: (_, _, _) => Container(
                                 color: Colors.grey.shade200,
                                 child: const Icon(Icons.image_not_supported_outlined, color: Colors.grey),
                               ),
@@ -403,7 +402,7 @@ class HomeScreenContent extends StatelessWidget {
         ),
         SizedBox(height: 4.h),
         SizedBox(
-          height: 95.h,
+          height: 105.h,
           child: ListView.builder(
             padding: EdgeInsets.only(right: 15.w),
             scrollDirection: Axis.horizontal,
@@ -411,6 +410,8 @@ class HomeScreenContent extends StatelessWidget {
             itemCount: items.length,
             itemBuilder: (context, index) {
               final item = items[index];
+              final title = item.title?.toString() ?? '';
+              final displayTitle = title.length > 4 ? '${title.substring(0, 4)}...' : title;
               return InkWell(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -425,7 +426,10 @@ class HomeScreenContent extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 15.w),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          SizedBox(height: 8.h),
                           Container(
                             width: 60.w,
                             height: 60.h,
@@ -452,7 +456,7 @@ class HomeScreenContent extends StatelessWidget {
                           SizedBox(
                             width: 58.w,
                             child: Text(
-                              item.title.toString(),
+                              displayTitle,
                               maxLines: 1,
                               textAlign: TextAlign.center,
                               style: isMobile(context)
@@ -624,7 +628,8 @@ class HomeScreenContent extends StatelessWidget {
                       child: item.thumbnail != null
                           ? CachedNetworkImage(
                               imageUrl: item.thumbnail!,
-                              errorWidget: (_, __, ___) => Container(
+                              filterQuality: FilterQuality.high,
+                              errorWidget: (_, _, _) => Container(
                                 color: Colors.grey.shade200,
                                 child: const Icon(Icons.image_not_supported_outlined, color: Colors.grey),
                               ),
@@ -710,7 +715,8 @@ class HomeScreenContent extends StatelessWidget {
                             ? CachedNetworkImage(
                           imageUrl: item.banner!,
                           fit: BoxFit.cover,
-                          errorWidget: (_, __, ___) => Container(
+                          filterQuality: FilterQuality.high,
+                          errorWidget: (_, _, _) => Container(
                             color: Colors.grey.shade200,
                             child: const Icon(Icons.image_not_supported_outlined, color: Colors.grey),
                           ),
@@ -832,6 +838,7 @@ class HomeScreenContent extends StatelessWidget {
                         image: data.thumbnail != null
                             ? DecorationImage(
                             fit: BoxFit.cover,
+                            filterQuality: FilterQuality.high,
                             image: CachedNetworkImageProvider(
                                 data.thumbnail!))
                             : null,
@@ -865,7 +872,8 @@ class HomeScreenContent extends StatelessWidget {
                   imageUrl: url,
                   width: MediaQuery.of(context).size.width - 30,
                   fit: BoxFit.cover,
-                  errorWidget: (_, __, ___) => Container(color: Colors.grey.shade200),
+                  filterQuality: FilterQuality.high,
+                  errorWidget: (_, _, _) => Container(color: Colors.grey.shade200),
                 )
               : Container(color: Colors.grey.shade200),
         ),
@@ -887,7 +895,8 @@ class HomeScreenContent extends StatelessWidget {
                   imageUrl: url,
                   width: MediaQuery.of(context).size.width - 30,
                   fit: BoxFit.cover,
-                  errorWidget: (_, __, ___) => Container(color: Colors.grey.shade200),
+                  filterQuality: FilterQuality.high,
+                  errorWidget: (_, _, _) => Container(color: Colors.grey.shade200),
                 )
               : Container(color: Colors.grey.shade200),
         ),
@@ -956,6 +965,7 @@ class HomeScreenContent extends StatelessWidget {
                       image: item.banner != null
                           ? DecorationImage(
                           fit: BoxFit.cover,
+                          filterQuality: FilterQuality.high,
                           image: CachedNetworkImageProvider(item.banner!))
                           : null,
                       borderRadius:
@@ -1252,6 +1262,7 @@ class HomeScreenContent extends StatelessWidget {
                                   image: item.thumbnail != null
                                       ? DecorationImage(
                                       fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high,
                                       image: CachedNetworkImageProvider(
                                           item.thumbnail!))
                                       : null,
@@ -1277,6 +1288,7 @@ class HomeScreenContent extends StatelessWidget {
                                           : AppThemeData
                                           .titleTextStyle_11Tab,
                                       maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                     SizedBox(height: 4.h),
                                     Text(
@@ -1285,6 +1297,7 @@ class HomeScreenContent extends StatelessWidget {
                                           ? AppThemeData.qsTextStyle_12
                                           : AppThemeData.qsTextStyle_9Tab,
                                       maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
@@ -1321,14 +1334,19 @@ class HomeScreenContent extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
+            Flexible(
+              child: Row(
               children: [
-                Padding(
+                Flexible(
+                  child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.w),
                   child: Text(AppTags.todayDeal.tr,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                       style: isMobile(context)
                           ? AppThemeData.headerTextStyle
                           : AppThemeData.headerTextStyleTab),
+                ),
                 ),
                 SizedBox(width: 10.w),
                 CountdownTimer(
@@ -1362,6 +1380,7 @@ class HomeScreenContent extends StatelessWidget {
                   },
                 ),
               ],
+              ),
             ),
             InkWell(
               onTap: () => Get.to(() => const TodayDeal()),
@@ -1566,7 +1585,7 @@ class HomeScreenContent extends StatelessWidget {
                               width: double.infinity,
                               fit: BoxFit.cover,
 
-                              errorBuilder: (_, __, ___) =>
+                              errorBuilder: (_, _, _) =>
                               const Icon(Icons.image, size: 50),
                             ),
                           ),
@@ -1899,7 +1918,7 @@ class HomeScreenContent extends StatelessWidget {
       case 'video_shopping':
         return videoShopping(index, context);
       default:
-        print("⚠️ Section non gérée: '$sectionType'");
+        printLog("⚠️ Section non gérée: '$sectionType'");
         return const SizedBox.shrink();
     }
   }

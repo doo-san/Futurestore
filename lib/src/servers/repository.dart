@@ -61,8 +61,6 @@ import '../models/all_brand_model.dart';
 import '../models/chat_seller_model.dart';
 import '../models/chat_message_model.dart';
 import 'network_service.dart';
-import '../models/product_by_category_model.dart';
-import 'dart:convert';
 
 
 Map<String, dynamic> safeJson(dynamic data) {
@@ -87,7 +85,7 @@ Future<Map<String, dynamic>> safeApiGet(Uri url) async {
 
     return {};
   } catch (e) {
-    print("API ERROR: $e");
+    printLog("API ERROR: $e");
     return {};
   }
 }
@@ -132,10 +130,10 @@ class Repository {
 
     try {
       final response = await NetworkService.client.post(url, headers: headers, body: data);
-      print("firebase auth repository: ${jsonDecode(response.body)}");
-      print("status code ${response.statusCode}");
+      printLog("firebase auth repository: ${jsonDecode(response.body)}");
+      printLog("status code ${response.statusCode}");
       if (response.statusCode == 200) {
-        print("block 200");
+        printLog("block 200");
         var jsonData = jsonDecode(response.body);
         if (jsonData['success']) {
           UserDataModel userDataModel = UserDataModel.fromJson(jsonData);
@@ -294,16 +292,17 @@ class Repository {
     var url = Uri.parse("${NetworkService.apiUrl}/login?$langCurrCode");
     final response = await NetworkService.client.post(url, body: body, headers: headers);
 
+    printLog("LOGIN STATUS: ${response.statusCode}");
+    printLog("LOGIN BODY: ${response.body.substring(0, response.body.length.clamp(0, 500))}");
+
     Map<String, dynamic> data;
     try {
       data = json.decode(response.body);
-    } catch (_) {
+    } catch (e) {
+      printLog("LOGIN JSON DECODE ERROR: $e");
       showErrorToast("Erreur serveur. Veuillez réessayer.");
       return false;
     }
-
-    printLog("login status: ${response.statusCode}");
-    printLog("login body: ${response.body.substring(0, response.body.length.clamp(0, 300))}");
 
     if (response.statusCode == 200 && data['success'] == true) {
       UserDataModel userDataModel = UserDataModel.fromJson(data);
@@ -442,14 +441,21 @@ class Repository {
   //User Coupon Send
   Future applyCouponCode({String? couponCode}) async {
     var headers = {"apiKey": Config.apiKey};
+    final trxId = LocalDataHelper().getCartTrxId();
     var body = {
       'coupon_code': couponCode,
-      'trx_id': LocalDataHelper().getCartTrxId()
+      'trx_id': trxId ?? '',
     };
+
+    printLog("🎟️ COUPON REQUEST => code=$couponCode | trx_id=$trxId | token=${LocalDataHelper().getUserToken()}");
+
     var url = Uri.parse(
         "${NetworkService.apiUrl}/apply-coupon?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
     final response = await NetworkService.client.post(url, body: body, headers: headers);
     var data = json.decode(response.body);
+
+    printLog("🎟️ COUPON RESPONSE => status=${response.statusCode} | body=${response.body}");
+
     if (response.statusCode == 200) {
       showShortToast(data['message']);
     } else {
@@ -877,8 +883,8 @@ class Repository {
 
     } catch (e, stack) {
 
-      print("CART REPOSITORY ERROR: $e");
-      print(stack);
+      printLog("CART REPOSITORY ERROR: $e");
+      printLog(stack);
 
       /// 🔒 Protection finale
       return AddToCartListModel.empty();
@@ -941,9 +947,9 @@ class Repository {
 
     final model = HomeDataModel.fromJson(response);
 
-    print("✅ HomeDataModel parsé — ${model.data?.length ?? 0} sections");
+    printLog("✅ HomeDataModel parsé — ${model.data?.length ?? 0} sections");
     model.data?.asMap().forEach((index, section) {
-      print("  [$index] sectionType='${section.sectionType}'");
+      printLog("  [$index] sectionType='${section.sectionType}'");
     });
 
     return model;
@@ -1005,9 +1011,9 @@ class Repository {
 
   // //Search Product
   Future<SearchProductModel> getSearchProducts(
-      {required String searchKey}) async {
+      {required String searchKey, int page = 1}) async {
     var url =
-        "${NetworkService.apiUrl}/search?key=$searchKey&token=${LocalDataHelper().getUserToken() ?? ''}&$langCurrCode";
+        "${NetworkService.apiUrl}/search?key=$searchKey&page=$page&token=${LocalDataHelper().getUserToken() ?? ''}&$langCurrCode";
     final response = await _service.fetchJsonData(url);
     return SearchProductModel.fromJson(response);
   }
@@ -1079,11 +1085,11 @@ class Repository {
 
       final response = await _service.fetchJsonData(url);
 
-      print("===== PRODUCTS BY CATEGORY RESPONSE =====");
-      print(response);
+      printLog("===== PRODUCTS BY CATEGORY RESPONSE =====");
+      printLog(response);
 
       if (response == null) {
-        print("Response is NULL");
+        printLog("Response is NULL");
         return [];
       }
 
@@ -1093,13 +1099,13 @@ class Repository {
       final model =
       product.ProductByCategoryModel.fromJson(jsonResponse);
 
-      print("Loaded products count: ${model.data.length}");
+      printLog("Loaded products count: ${model.data.length}");
 
       return model.data;
 
     } catch (e) {
 
-      print("ERROR getProductsByCategory: $e");
+      printLog("ERROR getProductsByCategory: $e");
 
       return [];
 
@@ -1247,14 +1253,14 @@ class Repository {
             "&$langCurrCode"
     );
 
-    print("===== LOAD PRODUCT DETAILS =====");
-    print("PRODUCT ID = $productId");
-    print("URL = $url");
+    printLog("===== LOAD PRODUCT DETAILS =====");
+    printLog("PRODUCT ID = $productId");
+    printLog("URL = $url");
 
     final response = await NetworkService.client.get(url, headers: headers);
 
-    print("STATUS CODE = ${response.statusCode}");
-    print("RESPONSE BODY = ${response.body}");
+    printLog("STATUS CODE = ${response.statusCode}");
+    printLog("RESPONSE BODY = ${response.body}");
 
     if (response.statusCode != 200) {
       throw Exception("Server error: ${response.statusCode}");
@@ -1377,7 +1383,7 @@ class Repository {
   }
 
   //isFavourite
-  Future<bool> addOrRemoveFromFavoriteList(var productId) async {
+  Future<bool> addOrRemoveFromFavoriteList(dynamic productId) async {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/favourite/$productId?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
@@ -1387,7 +1393,7 @@ class Repository {
   }
 
   //Follow Unfollow
-  Future<bool> followOrUnfollowShopList(var shopId) async {
+  Future<bool> followOrUnfollowShopList(dynamic shopId) async {
     var headers = {"apiKey": Config.apiKey};
     var url = Uri.parse(
         "${NetworkService.apiUrl}/user/followed-shop/$shopId?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
@@ -1423,9 +1429,16 @@ class Repository {
   //Coupon list
   Future<CouponAppliedList> getAppliedCouponList() async {
     try {
+      final trxId = LocalDataHelper().getCartTrxId() ?? '';
+      final url = Uri.parse(
+          "${NetworkService.apiUrl}/applied-coupons"
+          "?token=${LocalDataHelper().getUserToken()}"
+          "&lang=${LocalDataHelper().getLangCode() ?? 'fr'}"
+          "&curr=${LocalDataHelper().getCurrCode() ?? 'XOF'}"
+          "&trx_id=$trxId");
 
       final response = await NetworkService.client.get(
-        Uri.parse(ApiConstants.getAppliedCoupon.toString()),
+        url,
         headers: {"apiKey": Config.apiKey},
       );
 
@@ -1443,7 +1456,7 @@ class Repository {
 
     } catch (e) {
 
-      print("COUPON ERROR: $e");
+      printLog("COUPON ERROR: $e");
 
       return CouponAppliedList.empty();
     }
@@ -1512,8 +1525,10 @@ class Repository {
             "${NetworkService.apiUrl}/user/notifications?page=$page&token=$token&$langCurrCode";
         return _service.fetchJsonData(url).then((response) {
           if (response != null) return AllNotifications.fromJson(response);
-        }).catchError(
-                (err) => printLog('All notification data fetching error: $err'));
+        }).catchError((err) {
+          printLog('All notification data fetching error: $err');
+          return null;
+        });
       } catch (e) {
         throw Exception("Data not found");
       }
@@ -1532,8 +1547,10 @@ class Repository {
         return _service.fetchJsonData(url).then((response) {
           printLog("---------getMyWallet: $response");
           if (response != null) return MyWalletModel.fromJson(response);
-        }).catchError(
-                (err) => printLog('All my wallet data fetching error: $err'));
+        }).catchError((err) {
+          printLog('All my wallet data fetching error: $err');
+          return null;
+        });
       } catch (e) {
         throw Exception("Data not found");
       }
@@ -1553,8 +1570,10 @@ class Repository {
           printLog("---------getMyReward: $response");
           log("The url is $url");
           if (response != null) return MyRewardModel.fromJson(response);
-        }).catchError(
-                (err) => printLog('All my reward data fetching error: $err'));
+        }).catchError((err) {
+          printLog('All my reward data fetching error: $err');
+          return null;
+        });
       } catch (e) {
         throw Exception("Data not found");
       }
@@ -1595,8 +1614,10 @@ class Repository {
         return _service.fetchJsonData(url).then((response) {
           printLog("---------getMyDownload: $response");
           if (response != null) return MyDownloadModel.fromJson(response);
-        }).catchError(
-                (err) => printLog('All my download data fetching error: $err'));
+        }).catchError((err) {
+          printLog('All my download data fetching error: $err');
+          return null;
+        });
       } catch (e) {
         throw Exception("Data not found");
       }
@@ -1616,8 +1637,10 @@ class Repository {
             if (response["success"]) return true;
           }
           return false;
-        }).catchError(
-                (err) => printLog('All notification data fetching error: $err'));
+        }).catchError((err) {
+          printLog('All notification data fetching error: $err');
+          return false;
+        });
       } catch (e) {
         throw Exception("Data not found");
       }
@@ -1637,8 +1660,10 @@ class Repository {
             if (response["success"]) return true;
           }
           return false;
-        }).catchError(
-                (err) => printLog('All notification data fetching error: $err'));
+        }).catchError((err) {
+          printLog('All notification data fetching error: $err');
+          return false;
+        });
       } catch (e) {
         throw Exception("Data not found");
       }
@@ -1662,7 +1687,10 @@ class Repository {
             }
             return false;
           },
-        ).catchError((err) => printLog('error: $err'));
+        ).catchError((err) {
+          printLog('error: $err');
+          return false;
+        });
       } catch (e) {
         throw Exception("Data not found");
       }
@@ -1692,21 +1720,26 @@ class Repository {
     try {
       final url =
           "${NetworkService.apiUrl}/user/messages?chat_room_id=$chatRoomId&token=$token&$langCurrCode";
-      // The backend returns HTTP 400 even on success (bug in responseWithError usage),
-      // so we use client.get() directly instead of fetchJsonData() to bypass the status check.
-      final response = await NetworkService.client.get(
-        Uri.parse(url),
-        headers: {
-          'Accept': 'application/json',
-          'apiKey': Config.apiKey,
-        },
-      );
-      if (response.body.isNotEmpty) {
-        final decoded = json.decode(response.body);
-        return ChatMessageModel.fromJson(decoded);
-      }
+      final response = await _service.fetchJsonData(url);
+      if (response != null) return ChatMessageModel.fromJson(response);
     } catch (e) {
       printLog('getChatMessages error: $e');
+    }
+    return null;
+  }
+
+  // Returns {admin_id, admin_name, chat_room_id} or null on failure.
+  Future<Map<String, dynamic>?> getAdminChatInfo() async {
+    String? token = LocalDataHelper().getUserToken();
+    if (token == null) return null;
+    try {
+      final url = "${NetworkService.apiUrl}/user/admin-chat?token=$token&$langCurrCode";
+      final response = await _service.fetchJsonData(url);
+      if (response != null && response['success'] == true) {
+        return response['data'] as Map<String, dynamic>?;
+      }
+    } catch (e) {
+      printLog('getAdminChatInfo error: $e');
     }
     return null;
   }
@@ -1738,10 +1771,6 @@ class Repository {
     }
     return false;
   }
-}
-
-extension on http.Response {
-  Null get data => null;
 }
 
 class ApiConstants {

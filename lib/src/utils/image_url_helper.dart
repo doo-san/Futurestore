@@ -1,5 +1,9 @@
 import '../../config.dart';
 
+/// Headers HTTP à inclure dans toutes les requêtes d'images réseau.
+/// Nécessaire pour passer la protection Cloudflare du serveur.
+final Map<String, String> kImageHeaders = {'apiKey': Config.apiKey};
+
 // ──────────────────────────────────────────────────────────────────────────────
 // CONFIGURATION
 // ──────────────────────────────────────────────────────────────────────────────

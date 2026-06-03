@@ -14,7 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await initialConfig();
-  await Firebase.initializeApp(options: FirebaseOptions(apiKey: "AIzaSyD7vAFkMRVOiw9fORy7_7ZpAlHYUfAALDY", appId: "1:858468987379:android:7b34f664705fb937012286", messagingSenderId: "858468987379", projectId: "yoori-ecommerce"));
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());

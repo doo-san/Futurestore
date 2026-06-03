@@ -131,7 +131,8 @@ class VideoProductCard extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: dataModel![index].image!,
                   fit: BoxFit.cover,
-                  errorWidget: (_, __, ___) => Container(
+                  filterQuality: FilterQuality.high,
+                  errorWidget: (_, _, _) => Container(
                     color: Colors.grey.shade200,
                     child: const Center(
                       child: Icon(Icons.image_not_supported_outlined, color: Colors.grey),

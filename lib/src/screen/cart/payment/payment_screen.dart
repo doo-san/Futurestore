@@ -27,17 +27,19 @@ class PaymentScreen extends GetView<PaymentController> {
   Widget build(BuildContext context) {
     return GetBuilder<PaymentController>(
       builder: (paymentController) {
-        printLog("-------   ${NetworkService.apiUrl}/payment?trx_id=${Get.find<PaymentController>().trxId.value}&token=$token&$langCurrCode");
-        printLog("-------   ${NetworkService.apiUrl}/payment?trx_id=${Get.find<PaymentController>().trxId.value}&$langCurrCode");
+        printLog("-------   ${NetworkService.apiUrl}/payment?trx_id=$trxId&$langCurrCode");
         return Scaffold(
           extendBody: true,
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: AppThemeData.homeAppBarColor,
             elevation: 0,
             centerTitle: true,
+            iconTheme: const IconThemeData(color: Colors.white),
             title: Text(
               AppTags.paymentGateway.tr,
-              style: isMobile(context)? AppThemeData.headerTextStyle_16.copyWith(color: Colors.white):AppThemeData.headerTextStyle_16.copyWith(fontSize: 13.sp),
+              style: isMobile(context)
+                  ? AppThemeData.headerTextStyle_16.copyWith(color: Colors.white)
+                  : AppThemeData.headerTextStyle_16.copyWith(fontSize: 13.sp, color: Colors.white),
             ),
           ),
           body: SafeArea(
@@ -50,10 +52,9 @@ class PaymentScreen extends GetView<PaymentController> {
                       InAppWebView(
                         key: paymentController.webViewKey,
                         initialUrlRequest: URLRequest(
-                          url: token.isNotEmpty? WebUri("${NetworkService.apiUrl}/payment?trx_id=${Get.find<PaymentController>().trxId.value}&token=$token&$langCurrCode"
-                          ): WebUri("${NetworkService.apiUrl}/payment?trx_id=${Get.find<PaymentController>().trxId.value}&$langCurrCode"
-                          ),
-
+                          url: token.isNotEmpty
+                              ? WebUri("${NetworkService.apiUrl}/payment?trx_id=$trxId&token=$token&$langCurrCode")
+                              : WebUri("${NetworkService.apiUrl}/payment?trx_id=$trxId&$langCurrCode"),
                         ),
                         initialUserScripts:
                             UnmodifiableListView<UserScript>([]),
@@ -63,8 +64,15 @@ class PaymentScreen extends GetView<PaymentController> {
                         onWebViewCreated: (controller) {
                           paymentController.webViewController = controller;
                         },
+                        onCreateWindow: (controller, createWindowAction) async {
+                          final url = createWindowAction.request.url;
+                          if (url != null) {
+                            controller.loadUrl(urlRequest: URLRequest(url: url));
+                          }
+                          return true;
+                        },
                         onLoadStart: (controller, url) {
-                          print(url);
+                          printLog(url.toString());
                           if (url == Uri.parse("${Config.apiServerUrl}/payment-success")) {
                             Get.offAllNamed(Routes.paymentConfirm);
                           }
@@ -105,6 +113,17 @@ class PaymentScreen extends GetView<PaymentController> {
                               .then((value) => debugPrint(
                                   'Page finished loading Javascript'))
                               .catchError((onError) => debugPrint('$onError'));
+
+                          paymentController.webViewController!
+                              .evaluateJavascript(
+                                  source: "(function() { "
+                                      "var style = document.createElement('style');"
+                                      "style.innerHTML = '.btn-primary, .paymentBTNFixed { background-color: #FF0008 !important; border-color: #FF0008 !important; color: #ffffff !important; } .btn-primary:disabled, .paymentBTNFixed.disable_btn { background-color: #FF0008 !important; border-color: #FF0008 !important; color: #ffffff !important; opacity: 0.85; }';"
+                                      "document.head.appendChild(style);"
+                                      "})()")
+                              .then((value) => debugPrint(
+                                  'Payment button style injected'))
+                              .catchError((onError) => debugPrint('$onError'));
                         },
                         onLoadError: (controller, url, code, message) {
                           paymentController.pullToRefreshController
@@ -129,28 +148,43 @@ class PaymentScreen extends GetView<PaymentController> {
                         bottom: 100.h,
                         child: Column(
                           children: [
-                            paymentController.showButton
-                                ? SizedBox(
-                                    width: 160.w,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Get.toNamed(Routes.dashboardScreen);
-                                      },
-                                      child: Text(AppTags.continueShopping.tr),
+                            if (paymentController.showButton) ...[
+                              SizedBox(
+                                width: 160.w,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppThemeData.homeAppBarColor,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
                                     ),
-                                  )
-                                : Container(),
-                            paymentController.showButton
-                                ? SizedBox(
-                                    width: 160.w,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Get.toNamed(Routes.categoryContent);
-                                      },
-                                      child: Text(AppTags.viewOrder.tr),
+                                  ),
+                                  onPressed: () => Get.toNamed(Routes.dashboardScreen),
+                                  child: Text(
+                                    AppTags.continueShopping.tr,
+                                    style: TextStyle(fontSize: 13.sp, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 8.h),
+                              SizedBox(
+                                width: 160.w,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppThemeData.homeAppBarColor,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
                                     ),
-                                  )
-                                : Container(),
+                                  ),
+                                  onPressed: () => Get.toNamed(Routes.categoryContent),
+                                  child: Text(
+                                    AppTags.viewOrder.tr,
+                                    style: TextStyle(fontSize: 13.sp, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ),

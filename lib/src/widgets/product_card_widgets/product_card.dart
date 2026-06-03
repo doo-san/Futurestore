@@ -8,6 +8,7 @@ import '../../controllers/currency_converter_controller.dart';
 import '../../controllers/home_screen_controller.dart';
 import 'package:yoori_ecommerce/src/utils/app_tags.dart';
 import '../../utils/app_theme_data.dart';
+import 'package:yoori_ecommerce/src/utils/image_url_helper.dart';
 import 'package:yoori_ecommerce/src/utils/responsive.dart';
 
 class ProductCard extends StatelessWidget {
@@ -144,13 +145,15 @@ class ProductCard extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: dataModel.data![index].image ?? "",
                     fit: BoxFit.cover,
-                    placeholder: (_, __) => Container(
+                    httpHeaders: kImageHeaders,
+                    filterQuality: FilterQuality.high,
+                    placeholder: (_, _) => Container(
                       color: Colors.grey.shade100,
                       child: const Center(
                         child: CircularProgressIndicator(strokeWidth: 1.5),
                       ),
                     ),
-                    errorWidget: (_, __, ___) => Container(
+                    errorWidget: (_, _, _) => Container(
                       color: Colors.grey.shade100,
                       child: Image.asset(
                         'assets/logos/logo.png',

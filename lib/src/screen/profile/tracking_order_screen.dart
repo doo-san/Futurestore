@@ -165,7 +165,7 @@ class TrackingOrder extends StatelessWidget {
                         ),
                         builder: TimelineTileBuilder.connected(
                           contentsAlign: ContentsAlign.reverse,
-                          connectorBuilder: (_, index, __) {
+                          connectorBuilder: (_, index, _) {
                             if (trackingOrderController.trackingOrderModel!
                                 .data!.order!.isOrderDelivered!) {
                               return const DashedLineConnector(
@@ -212,7 +212,7 @@ class TrackingOrder extends StatelessWidget {
                               );
                             }
                           },
-                          itemExtentBuilder: (_, __) => 80.h,
+                          itemExtentBuilder: (_, _) => 80.h,
                           contentsBuilder: (context, index) =>
                               orderTrackDetails(
                             trackingOrderController.trackingOrderModel!.data!
@@ -287,14 +287,14 @@ class TrackingOrder extends StatelessWidget {
             ),
             builder: TimelineTileBuilder.connected(
               contentsAlign: ContentsAlign.reverse,
-              connectorBuilder: (_, index, __) {
+              connectorBuilder: (_, index, _) {
                 final trackStatus = data.order?.orderTrackingStatus ?? 0;
                 return DashedLineConnector(
                   color: index < trackStatus ? AppThemeData.trackingSelectorColor : AppThemeData.trackingUnSelectorColor,
                   gap: 3,
                 );
               },
-              itemExtentBuilder: (_, __) => 70.h,
+              itemExtentBuilder: (_, _) => 70.h,
               contentsBuilder: (context, index) =>
                   orderTrackDetails(index,context),
 
