@@ -4,46 +4,19 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../controllers/all_notifications_controller.dart';
-import '../../controllers/chat_controller.dart';
 import '../../models/all_notifications.dart';
 import '../../servers/repository.dart';
 import '../../utils/app_tags.dart';
 import '../../utils/app_theme_data.dart';
 import '../../utils/responsive.dart';
-import '../../widgets/network_image_checker.dart';
 import '../../widgets/notification_widget.dart';
-import '../../_route/routes.dart';
 
-class NotificationsMessagesScreen extends StatefulWidget {
+class NotificationsMessagesScreen extends StatelessWidget {
   const NotificationsMessagesScreen({super.key});
 
   @override
-  State<NotificationsMessagesScreen> createState() =>
-      _NotificationsMessagesScreenState();
-}
-
-class _NotificationsMessagesScreenState
-    extends State<NotificationsMessagesScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // Controllers are registered by NotificationsMessagesBinding via the route.
     final notifController = Get.find<AllNotificationsController>();
-    final chatController = Get.find<ChatController>();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -57,45 +30,16 @@ class _NotificationsMessagesScreenState
         ),
         centerTitle: true,
         title: Text(
-          '${AppTags.notification.tr} & ${AppTags.messages.tr}',
+          AppTags.notification.tr,
           style: isMobile(context)
               ? AppThemeData.headerTextStyle_16.copyWith(color: Colors.white)
               : AppThemeData.headerTextStyle_14.copyWith(color: Colors.white),
         ),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          indicatorWeight: 3,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          labelStyle: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: isMobile(context) ? 14.sp : 11.sp,
-            fontWeight: FontWeight.w600,
-          ),
-          unselectedLabelStyle: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: isMobile(context) ? 14.sp : 11.sp,
-            fontWeight: FontWeight.normal,
-          ),
-          tabs: [
-            Tab(text: AppTags.notification.tr),
-            Tab(text: AppTags.messages.tr),
-          ],
-        ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _NotificationsTab(controller: notifController),
-          _MessagesTab(controller: chatController),
-        ],
-      ),
+      body: _NotificationsTab(controller: notifController),
     );
   }
 }
-
-// ─── Onglet Notifications ────────────────────────────────────────────────────
 
 class _NotificationsTab extends StatelessWidget {
   final AllNotificationsController controller;
@@ -146,7 +90,6 @@ class _NotificationsTab extends StatelessWidget {
     );
   }
 
-  /// Shimmer inline — pas de Scaffold imbriqué.
   Widget _shimmer() {
     return ListView.builder(
       itemCount: 8,
@@ -253,178 +196,5 @@ class _NotificationsTab extends StatelessWidget {
   void _snack(BuildContext context, String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
-  }
-}
-
-// ─── Onglet Messages ─────────────────────────────────────────────────────────
-
-class _MessagesTab extends StatelessWidget {
-  final ChatController controller;
-  const _MessagesTab({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final isLoading =
-          controller.sellersLoading.value || controller.adminChatLoading.value;
-
-      if (isLoading) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      if (controller.sellersError.value) {
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.error_outline, size: 48, color: Colors.grey),
-              SizedBox(height: 12.h),
-              Text('Erreur de chargement',
-                  style: AppThemeData.titleTextStyle_13),
-              SizedBox(height: 12.h),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: AppThemeData.productBoxDecorationColor),
-                onPressed: controller.fetchSellers,
-                child: const Text('Réessayer',
-                    style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-        );
-      }
-
-      final hasAdmin = controller.adminId.value > 0;
-      final hasConversations = controller.sellers.isNotEmpty || hasAdmin;
-
-      if (!hasConversations) {
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.chat_bubble_outline,
-                  size: 64.r, color: Colors.grey.shade300),
-              SizedBox(height: 16.h),
-              Text(
-                'Aucune conversation',
-                style: AppThemeData.titleTextStyle_13
-                    .copyWith(color: Colors.grey),
-              ),
-            ],
-          ),
-        );
-      }
-
-      // Build list: admin support tile first, then seller tiles.
-      final itemCount =
-          controller.sellers.length + (hasAdmin ? 1 : 0);
-
-      return RefreshIndicator(
-        color: AppThemeData.productBoxDecorationColor,
-        onRefresh: () async {
-          await Future.wait([
-            controller.fetchSellers(),
-            controller.fetchAdminChatInfo(),
-          ]);
-        },
-        child: ListView.separated(
-          itemCount: itemCount,
-          separatorBuilder: (_, i) =>
-              Divider(height: 1, color: Colors.grey.shade200),
-          itemBuilder: (context, index) {
-            // Index 0 is admin support when available.
-            if (hasAdmin && index == 0) {
-              return _AdminSupportTile(controller: controller);
-            }
-            final sellerIndex = hasAdmin ? index - 1 : index;
-            final seller = controller.sellers[sellerIndex];
-            return ListTile(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(30.r),
-                child: SizedBox(
-                  width: 48.r,
-                  height: 48.r,
-                  child: NetworkImageCheckerWidget(
-                    image: seller.logo,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: Text(
-                seller.shopName,
-                style: AppThemeData.titleTextStyle_14,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: seller.lastMessage.isNotEmpty
-                  ? Text(
-                      seller.lastMessage,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppThemeData.titleTextStyle_13
-                          .copyWith(color: Colors.grey),
-                    )
-                  : null,
-              trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-              onTap: () async {
-                await controller.openChatRoom(
-                    seller.chatRoomId, seller.userId, seller.shopName);
-                Get.toNamed(Routes.chatRoom);
-              },
-            );
-          },
-        ),
-      );
-    });
-  }
-}
-
-// ─── Tile "Support Admin" ────────────────────────────────────────────────────
-
-class _AdminSupportTile extends StatelessWidget {
-  final ChatController controller;
-  const _AdminSupportTile({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding:
-          EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-      leading: CircleAvatar(
-        radius: 24.r,
-        backgroundColor: const Color(0xFFFF0008),
-        child: Icon(Icons.support_agent, color: Colors.white, size: 26.r),
-      ),
-      title: Text(
-        controller.adminName.value.isNotEmpty
-            ? controller.adminName.value
-            : 'Support Admin',
-        style: AppThemeData.titleTextStyle_14,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Text(
-        'Contacter le support',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: AppThemeData.titleTextStyle_13.copyWith(color: Colors.grey),
-      ),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: () async {
-        await controller.openChatRoom(
-          controller.adminChatRoomId.value,
-          controller.adminId.value,
-          controller.adminName.value.isNotEmpty
-              ? controller.adminName.value
-              : 'Support Admin',
-        );
-        // After opening the room, refresh the admin chat room ID in case a new
-        // room was just created by the first message.
-        Get.toNamed(Routes.chatRoom)?.then((_) {
-          controller.fetchAdminChatInfo();
-        });
-      },
-    );
   }
 }
