@@ -9,6 +9,7 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.interprest.futurestore
+        team_id: 83BN6S4B79
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
