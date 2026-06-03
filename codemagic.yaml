@@ -35,7 +35,7 @@ workflows:
             --release \
             --no-tree-shake-icons \
             --build-name=1.2.1 \
-            --build-number=14
+            --build-number=15
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
