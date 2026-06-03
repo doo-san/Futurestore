@@ -9,7 +9,6 @@ import '../../utils/app_theme_data.dart';
 import 'package:yoori_ecommerce/src/utils/responsive.dart';
 import '../../widgets/loader/shimmer_favorite.dart';
 import 'favorite_product.dart';
-import 'favorite_store.dart';
 
 class FavoritesScreen extends StatelessWidget {
    FavoritesScreen({super.key});
@@ -75,49 +74,7 @@ class FavoritesScreen extends StatelessWidget {
           );
         }
 
-        return Column(
-          children: [
-            Expanded(
-              child: DefaultTabController(
-                length: 2,
-                initialIndex: 0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 160.w,
-                      child: TabBar(
-                        labelColor: Colors.red,
-                        unselectedLabelColor: Colors.black,
-                        indicatorColor: Colors.red,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        padding: EdgeInsets.zero,
-                        indicatorPadding: EdgeInsets.zero,
-                        labelPadding: EdgeInsets.symmetric(horizontal: 8.w),
-                        labelStyle: TextStyle(
-                          fontFamily: "Poppins Medium",
-                          fontSize: isMobile(context) ? 13.sp : 10.sp,
-                        ),
-                        tabs: [
-                          Tab(text: AppTags.products.tr),
-                          Tab(text: AppTags.store.tr),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          FavoriteProduct(favouriteData: controller.data!),
-                          FavoriteStore(favouriteData: controller.data!),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
+        return FavoriteProduct(favouriteData: controller.data!);
       }),
     );
   }
