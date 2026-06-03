@@ -52,7 +52,7 @@ class NetworkService {
         'X-Requested-With': 'XMLHttpRequest',
         'apiKey': Config.apiKey,
       },
-    );
+    ).timeout(const Duration(seconds: 30));
 
     return response;
   }
@@ -100,7 +100,6 @@ class NetworkService {
 
   Future<dynamic> _getData(String url) async {
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
       final response = await getRequest(url);
       return _returnResponse(response);
     } on SocketException {
