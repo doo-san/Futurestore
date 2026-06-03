@@ -9,11 +9,6 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.interprest.futurestore
-      vars:
-        APP_STORE_CONNECT_ISSUER_ID: Encrypted(...)
-        APP_STORE_CONNECT_KEY_IDENTIFIER: Encrypted(...)
-        APP_STORE_CONNECT_PRIVATE_KEY: Encrypted(...)
-        CERTIFICATE_PRIVATE_KEY: Encrypted(...)
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
