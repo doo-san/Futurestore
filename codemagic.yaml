@@ -6,6 +6,8 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
+      groups:
+        - ios_credentials
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
