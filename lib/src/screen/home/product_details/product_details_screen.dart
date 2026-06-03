@@ -1380,12 +1380,9 @@ class DetailsPage extends StatelessWidget {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            Get.toNamed(
-                                              Routes.wvScreen,
-                                              parameters: {
-                                                'url': 'https://www.facebook.com/share/1D2mYVZ6k7/',
-                                                'title': "Facebook",
-                                              },
+                                            launchUrl(
+                                              Uri.parse('https://www.facebook.com/share/1D2mYVZ6k7/'),
+                                              mode: LaunchMode.externalApplication,
                                             );
                                           },
                                           child: Container(
@@ -1409,12 +1406,9 @@ class DetailsPage extends StatelessWidget {
                                         SizedBox(width: 8.w),
                                         InkWell(
                                           onTap: () {
-                                            Get.toNamed(
-                                              Routes.wvScreen,
-                                              parameters: {
-                                                'url': 'https://www.instagram.com/futurestoresn',
-                                                'title': "Instagram",
-                                              },
+                                            launchUrl(
+                                              Uri.parse('https://www.instagram.com/futurestoresn'),
+                                              mode: LaunchMode.externalApplication,
                                             );
                                           },
                                           child: Container(
