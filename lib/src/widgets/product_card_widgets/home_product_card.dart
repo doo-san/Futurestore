@@ -205,7 +205,7 @@ class HomeProductCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: isMobile(context)? AppThemeData.todayDealTitleStyle:AppThemeData.todayDealTitleStyleTab),
                       ),
-                      SizedBox(height: 5.h),
+                      SizedBox(height: 12.h),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 18.w:10.w),
                         child: Center(
