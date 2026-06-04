@@ -125,40 +125,32 @@ class SearchProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 18.h),
-              // Image with cart button anchored to its bottom-right corner
+              SizedBox(height: 4.h),
               Expanded(
-                child: Stack(
-                  clipBehavior: Clip.none,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.r),
+                  child: NetworkImageCheckerWidget(
+                    image: data.image,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              // Bouton panier entre image et titre
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Positioned.fill(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.r),
-                        child: NetworkImageCheckerWidget(
-                          image: data.image,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 8.h,
-                      right: 8,
-                      child: GestureDetector(
-                        onTap: () {},
-                        behavior: HitTestBehavior.opaque,
-                        child: ProductCartControl(
-                          productId: data.id ?? 0,
-                          title: data.title ?? '',
-                          minOrderQty: data.minimumOrderQuantity ?? 1,
-                          currentStock: data.currentStock ?? 0,
-                          hasVariant: data.hasVariant ?? false,
-                        ),
-                      ),
+                    ProductCartControl(
+                      productId: data.id ?? 0,
+                      title: data.title ?? '',
+                      minOrderQty: data.minimumOrderQuantity ?? 1,
+                      currentStock: data.currentStock ?? 0,
+                      hasVariant: data.hasVariant ?? false,
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 10.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 7.w),
                 child: Text(

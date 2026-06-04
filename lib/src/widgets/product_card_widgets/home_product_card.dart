@@ -155,56 +155,49 @@ class HomeProductCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 18.h),
-                  // Image with cart button anchored to its bottom-right corner
+                  SizedBox(height: 4.h),
                   Expanded(
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Positioned.fill(
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0.r),
-                            child: CachedNetworkImage(
-                              imageUrl: dataModel![index].image ?? "",
-                              fit: BoxFit.cover,
-                              httpHeaders: kImageHeaders,
-                              filterQuality: FilterQuality.high,
-                              placeholder: (_, _) => Container(
-                                color: Colors.grey.shade100,
-                                child: const Center(
-                                  child: CircularProgressIndicator(strokeWidth: 1.5),
-                                ),
-                              ),
-                              errorWidget: (_, _, _) => Container(
-                                color: Colors.grey.shade100,
-                                child: Image.asset(
-                                  'assets/logos/logo.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0.r),
+                      child: CachedNetworkImage(
+                        imageUrl: dataModel![index].image ?? "",
+                        fit: BoxFit.contain,
+                        httpHeaders: kImageHeaders,
+                        filterQuality: FilterQuality.high,
+                        placeholder: (_, _) => Container(
+                          color: Colors.grey.shade100,
+                          child: const Center(
+                            child: CircularProgressIndicator(strokeWidth: 1.5),
                           ),
                         ),
-                        Positioned(
-                          bottom: 8.h,
-                          right: 8,
-                          child: GestureDetector(
-                            onTap: () {},
-                            behavior: HitTestBehavior.opaque,
-                            child: ProductCartControl(
-                              productId: dataModel![index].id ?? 0,
-                              title: dataModel![index].title ?? '',
-                              minOrderQty: dataModel![index].minimumOrderQuantity ?? 1,
-                              currentStock: dataModel![index].currentStock ?? 0,
-                              hasVariant: dataModel![index].hasVariant ?? false,
-                            ),
+                        errorWidget: (_, _, _) => Container(
+                          color: Colors.grey.shade100,
+                          child: Image.asset(
+                            'assets/logos/logo.png',
+                            fit: BoxFit.contain,
                           ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Bouton panier entre image et titre
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ProductCartControl(
+                          productId: dataModel![index].id ?? 0,
+                          title: dataModel![index].title ?? '',
+                          minOrderQty: dataModel![index].minimumOrderQuantity ?? 1,
+                          currentStock: dataModel![index].currentStock ?? 0,
+                          hasVariant: dataModel![index].hasVariant ?? false,
                         ),
                       ],
                     ),
                   ),
                   dataModel![index].reward == 0
-                      ? SizedBox(height: 10.h)
+                      ? const SizedBox()
                       : Container(
                     width: double.infinity,
                     color: Colors.yellow.withOpacity(0.3),
