@@ -65,212 +65,216 @@ class HomeProductCard extends StatelessWidget {
               ),
             ],
           ),
-          child:  Stack(
-            children: [
-              GetBuilder<CurrencyConverterController>(
-                builder: (currencyConverterController){
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(5.0.r),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+          child: GetBuilder<CurrencyConverterController>(
+            builder: (currencyConverterController) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(5.0.r),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(child: Row(
                           children: [
-                            Flexible(child: Row(
-                              children: [
-                                dataModel![index].specialDiscountType == 'flat'
-                                    ? (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) ==
-                                    0.0
-                                    ? const SizedBox()
-                                    : Flexible(
-                                  child: Container(
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                    color: AppThemeData.productBoxDecorationColor
-                                        .withOpacity(0.06),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(3.r),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 3.w),
-                                      child: Text(
-                                        "${currencyConverterController.convertCurrency(dataModel![index].specialDiscount!)} OFF",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style:isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
-                                      ),
-                                    ),
-                                  ),
+                            dataModel![index].specialDiscountType == 'flat'
+                                ? (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) ==
+                                0.0
+                                ? const SizedBox()
+                                : Flexible(
+                              child: Container(
+                              height: 20.h,
+                              decoration: BoxDecoration(
+                                color: AppThemeData.productBoxDecorationColor
+                                    .withOpacity(0.06),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(3.r),
                                 ),
-                                )
-                                    : dataModel![index].specialDiscountType ==
-                                    'percentage'
-                                    ? (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) ==
-                                    0.0
-                                    ? const SizedBox()
-                                    : Flexible(
-                                  child: Container(
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                    color: AppThemeData.productBoxDecorationColor
-                                        .withOpacity(0.06),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(3.r),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 3.w),
-                                      child: Text(
-                                        "${homeScreenContentController.removeTrailingZeros(dataModel![index].specialDiscount)}% OFF",
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style:isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                )
-                                    : Container(),
-                                dataModel![index].specialDiscount == 0
-                                    ? const SizedBox()
-                                    : SizedBox(width: 5.w),
-                                dataModel![index].currentStock == 0
-                                    ? Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
-                                  decoration: BoxDecoration(
-                                    color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(3.r)),
-                                  ),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 3.w),
                                   child: Text(
-                                    AppTags.stockOut.tr,
-                                    style: isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                    "${currencyConverterController.convertCurrency(dataModel![index].specialDiscount!)} OFF",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style:isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
                                   ),
-                                )
-                                    : const SizedBox(),
-                              ],
-                            )),
+                                ),
+                              ),
+                            ),
+                            )
+                                : dataModel![index].specialDiscountType ==
+                                'percentage'
+                                ? (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) ==
+                                0.0
+                                ? const SizedBox()
+                                : Flexible(
+                              child: Container(
+                              height: 20.h,
+                              decoration: BoxDecoration(
+                                color: AppThemeData.productBoxDecorationColor
+                                    .withOpacity(0.06),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(3.r),
+                                ),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 3.w),
+                                  child: Text(
+                                    "${homeScreenContentController.removeTrailingZeros(dataModel![index].specialDiscount)}% OFF",
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style:isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            )
+                                : Container(),
+                            dataModel![index].specialDiscount == 0
+                                ? const SizedBox()
+                                : SizedBox(width: 5.w),
+                            dataModel![index].currentStock == 0
+                                ? Container(
+                              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+                              decoration: BoxDecoration(
+                                color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(3.r)),
+                              ),
+                              child: Text(
+                                AppTags.stockOut.tr,
+                                style: isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                              ),
+                            )
+                                : const SizedBox(),
                           ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 18.h,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0.r),
-                          child: CachedNetworkImage(
-                            imageUrl: dataModel![index].image ?? "",
-                            fit: BoxFit.cover,
-                            httpHeaders: kImageHeaders,
-                            filterQuality: FilterQuality.high,
-                            placeholder: (_, _) => Container(
-                              color: Colors.grey.shade100,
-                              child: const Center(
-                                child: CircularProgressIndicator(strokeWidth: 1.5),
+                        )),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+                  // Image with cart button anchored to its bottom-right corner
+                  Expanded(
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned.fill(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0.r),
+                            child: CachedNetworkImage(
+                              imageUrl: dataModel![index].image ?? "",
+                              fit: BoxFit.cover,
+                              httpHeaders: kImageHeaders,
+                              filterQuality: FilterQuality.high,
+                              placeholder: (_, _) => Container(
+                                color: Colors.grey.shade100,
+                                child: const Center(
+                                  child: CircularProgressIndicator(strokeWidth: 1.5),
+                                ),
                               ),
-                            ),
-                            errorWidget: (_, _, _) => Container(
-                              color: Colors.grey.shade100,
-                              child: Image.asset(
-                                'assets/logos/logo.png',
-                                fit: BoxFit.contain,
+                              errorWidget: (_, _, _) => Container(
+                                color: Colors.grey.shade100,
+                                child: Image.asset(
+                                  'assets/logos/logo.png',
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      dataModel![index].reward == 0
-                          ? SizedBox(height: 14.h)
-                          : Container(
-                        width: double.infinity,
-                        color: Colors.yellow.withOpacity(0.3),
-                        padding: EdgeInsets.all(2.r),
-                        child: Center(
-                          child: Text(
-                            "${AppTags.reward.tr}: ${dataModel![index].reward}",
-                            style: AppThemeData.rewardStyle,
+                        Positioned(
+                          bottom: 8.h,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {},
+                            behavior: HitTestBehavior.opaque,
+                            child: ProductCartControl(
+                              productId: dataModel![index].id ?? 0,
+                              title: dataModel![index].title ?? '',
+                              minOrderQty: dataModel![index].minimumOrderQuantity ?? 1,
+                              currentStock: dataModel![index].currentStock ?? 0,
+                              hasVariant: dataModel![index].hasVariant ?? false,
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  dataModel![index].reward == 0
+                      ? SizedBox(height: 10.h)
+                      : Container(
+                    width: double.infinity,
+                    color: Colors.yellow.withOpacity(0.3),
+                    padding: EdgeInsets.all(2.r),
+                    child: Center(
+                      child: Text(
+                        "${AppTags.reward.tr}: ${dataModel![index].reward}",
+                        style: AppThemeData.rewardStyle,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 7.w),
-                        child: Text(dataModel![index].title!,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: isMobile(context)? AppThemeData.todayDealTitleStyle:AppThemeData.todayDealTitleStyleTab),
-                      ),
-                      SizedBox(height: 12.h),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 18.w:10.w),
-                        child: Center(
-                          child: (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) == 0.0
-                                  ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      currencyConverterController
-                                          .convertCurrency(dataModel![index].price!),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle:AppThemeData.todayDealDiscountPriceStyleTab,
-                                    ),
-                                  ),
-                                ],
-                              ) : Row(
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 7.w),
+                    child: Text(
+                      dataModel![index].title!,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: isMobile(context)? AppThemeData.todayDealTitleStyle:AppThemeData.todayDealTitleStyleTab,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 18.w:10.w),
+                    child: Center(
+                      child: (num.tryParse((dataModel![index].specialDiscount?.toString() ?? '').replaceAll(',', '')) ?? 0) == 0.0
+                              ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Flexible(
                                 child: Text(
-                                  currencyConverterController.convertCurrency(
-                                    dataModel![index].price!,
-                                  ),
-                                  style: isMobile(context)? AppThemeData.todayDealOriginalPriceStyle:AppThemeData.todayDealOriginalPriceStyleTab,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                              ),
-                              SizedBox(width: isMobile(context)? 8.w:4.w),
-                              Flexible(
-                                child: Text(
-                                  currencyConverterController.convertCurrency(
-                                      dataModel![index].discountPrice!),
+                                  currencyConverterController
+                                      .convertCurrency(dataModel![index].price!),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle:AppThemeData.todayDealDiscountPriceStyleTab,
                                 ),
                               ),
                             ],
+                          ) : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              currencyConverterController.convertCurrency(
+                                dataModel![index].price!,
+                              ),
+                              style: isMobile(context)? AppThemeData.todayDealOriginalPriceStyle:AppThemeData.todayDealOriginalPriceStyleTab,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
-                        ),
+                          SizedBox(width: isMobile(context)? 8.w:4.w),
+                          Flexible(
+                            child: Text(
+                              currencyConverterController.convertCurrency(
+                                  dataModel![index].discountPrice!),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle:AppThemeData.todayDealDiscountPriceStyleTab,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 5.h),
-                    ],
-                  );
-                },
-              ),
-              Positioned(
-                bottom: isMobile(context) ? 50.h : 52.h,
-                right: 8,
-                child: GestureDetector(
-                  onTap: () {},
-                  behavior: HitTestBehavior.opaque,
-                  child: ProductCartControl(
-                    productId: dataModel![index].id ?? 0,
-                    title: dataModel![index].title ?? '',
-                    minOrderQty: dataModel![index].minimumOrderQuantity ?? 1,
-                    currentStock: dataModel![index].currentStock ?? 0,
-                    hasVariant: dataModel![index].hasVariant ?? false,
+                    ),
                   ),
-                ),
-              )
-            ],
+                  SizedBox(height: 8.h),
+                ],
+              );
+            },
           ),
         ),
       ),
