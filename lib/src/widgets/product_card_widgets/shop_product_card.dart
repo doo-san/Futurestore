@@ -62,18 +62,37 @@ class ShopProductCard extends StatelessWidget {
             );
             Get.find<DetailsPageController>().isFavoriteLocal.value = dataModel[index].isFavourite ?? false;
           },
-          child: Stack(
+          child: Column(
             children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(5.r),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+              Padding(
+                padding: EdgeInsets.all(5.r),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            dataModel[index].specialDiscountType == 'flat'
+                        dataModel[index].specialDiscountType == 'flat'
+                            ? (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) ==
+                                    0.0
+                                ? const SizedBox()
+                                : Container(
+                                    height: 20.h,
+                                    decoration: BoxDecoration(
+                                      color: AppThemeData.productBoxDecorationColor
+                                          .withOpacity(0.06),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(3.r),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "${currencyConverterController.convertCurrency(dataModel[index].specialDiscount)} OFF",
+                                        style: isMobile(context)?AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                      ),
+                                    ),
+                                  )
+                            : dataModel[index].specialDiscountType ==
+                                    'percentage'
                                 ? (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) ==
                                         0.0
                                     ? const SizedBox()
@@ -88,146 +107,140 @@ class ShopProductCard extends StatelessWidget {
                                         ),
                                         child: Center(
                                           child: Text(
-                                            "${currencyConverterController.convertCurrency(dataModel[index].specialDiscount)} OFF",
-                                            style: isMobile(context)?AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                            "${homeController.removeTrailingZeros(dataModel[index].specialDiscount)}% OFF",
+                                            textAlign: TextAlign.center,
+                                            style:
+                                            isMobile(context)?AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
                                           ),
                                         ),
                                       )
-                                : dataModel[index].specialDiscountType ==
-                                        'percentage'
-                                    ? (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) ==
-                                            0.0
-                                        ? const SizedBox()
-                                        : Container(
-                                            height: 20.h,
-                                            decoration: BoxDecoration(
-                                              color: AppThemeData.productBoxDecorationColor
-                                                  .withOpacity(0.06),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(3.r),
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                "${homeController.removeTrailingZeros(dataModel[index].specialDiscount)}% OFF",
-                                                textAlign: TextAlign.center,
-                                                style:
-                                                isMobile(context)?AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
-                                              ),
-                                            ),
-                                          )
-                                    : Container(),
-                          ],
-                        ),
-                        (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) == 0.0
-                            ? const SizedBox()
-                            : SizedBox(width: 5.w),
-                        dataModel[index].currentStock == 0
-                            ? Container(
-                                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
-                                decoration: BoxDecoration(
-                                  color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(3.r)),
-                                ),
-                                child: Text(
-                                  AppTags.stockOut.tr,
-                                  style: isMobile(context)?AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
-                                ),
-                              )
-                            : const SizedBox(),
+                                : Container(),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 18.h,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.r),
-                      child: CachedNetworkImage(
-                        imageUrl: dataModel[index].image ?? "",
-                        fit: BoxFit.cover,
-                        filterQuality: FilterQuality.high,
-                        placeholder: (_, _) => Container(
-                          color: Colors.grey.shade100,
-                          child: const Center(
-                            child: CircularProgressIndicator(strokeWidth: 1.5),
+                    (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) == 0.0
+                        ? const SizedBox()
+                        : SizedBox(width: 5.w),
+                    dataModel[index].currentStock == 0
+                        ? Container(
+                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(3.r)),
+                            ),
+                            child: Text(
+                              AppTags.stockOut.tr,
+                              style: isMobile(context)?AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                            ),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+              ),
+              SizedBox(height: 18.h),
+              // Image with cart button anchored to its bottom-right corner
+              Expanded(
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned.fill(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.r),
+                        child: CachedNetworkImage(
+                          imageUrl: dataModel[index].image ?? "",
+                          fit: BoxFit.cover,
+                          filterQuality: FilterQuality.high,
+                          placeholder: (_, _) => Container(
+                            color: Colors.grey.shade100,
+                            child: const Center(
+                              child: CircularProgressIndicator(strokeWidth: 1.5),
+                            ),
                           ),
-                        ),
-                        errorWidget: (_, _, _) => Container(
-                          color: Colors.grey.shade100,
-                          child: Image.asset(
-                            'assets/logos/logo.png',
-                            fit: BoxFit.contain,
+                          errorWidget: (_, _, _) => Container(
+                            color: Colors.grey.shade100,
+                            child: Image.asset(
+                              'assets/logos/logo.png',
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 14.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 7.w),
-                    child: Text(
-                      dataModel[index].title!,
-                      maxLines: 1,
-                      textAlign: TextAlign.start,
-                      style: isMobile(context)?AppThemeData.todayDealTitleStyle:AppThemeData.todayDealTitleStyleTab,
+                    Positioned(
+                      bottom: 8.h,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: () {},
+                        behavior: HitTestBehavior.opaque,
+                        child: ProductCartControl(
+                          productId: dataModel![index].id ?? 0,
+                          title: dataModel![index].title ?? '',
+                          minOrderQty: dataModel![index].minimumOrderQuantity ?? 1,
+                          currentStock: dataModel![index].currentStock ?? 0,
+                          hasVariant: dataModel![index].hasVariant ?? false,
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5.h),
-                  Padding(
-                     padding: EdgeInsets.symmetric(horizontal: 7.w),
-                    child: Center(
-                      child: (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) == 0.0
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  currencyConverterController
-                                      .convertCurrency((dataModel[index].price ?? '0')),
-                                  style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle: AppThemeData.todayDealDiscountPriceStyleTab,
-                                ),
-                              ],
-                            )
-                          : Row(
-                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  currencyConverterController
-                                      .convertCurrency((dataModel[index].price ?? '0')),
-                                  style:isMobile(context)? AppThemeData.todayDealOriginalPriceStyle:AppThemeData.todayDealOriginalPriceStyleTab,
-                                ),
-                                SizedBox(width: 5.w,),
-                                Text(
-                                  currencyConverterController.convertCurrency(
-                                      (dataModel[index].discountPrice ?? '0')),
-                                  style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle: AppThemeData.todayDealDiscountPriceStyleTab,
-                                ),
-                              ],
-                            ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                ],
-              ),
-              Positioned(
-                bottom: isMobile(context) ? 50.h : 52.h,
-                right: 8,
-                child: GestureDetector(
-                  onTap: () {},
-                  behavior: HitTestBehavior.opaque,
-                  child: ProductCartControl(
-                    productId: dataModel![index].id ?? 0,
-                    title: dataModel![index].title ?? '',
-                    minOrderQty: dataModel![index].minimumOrderQuantity ?? 1,
-                    currentStock: dataModel![index].currentStock ?? 0,
-                    hasVariant: dataModel![index].hasVariant ?? false,
-                  ),
+                  ],
                 ),
-              )
+              ),
+              SizedBox(height: 10.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 7.w),
+                child: Text(
+                  dataModel[index].title!,
+                  maxLines: 1,
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.ellipsis,
+                  style: isMobile(context)?AppThemeData.todayDealTitleStyle:AppThemeData.todayDealTitleStyleTab,
+                ),
+              ),
+              SizedBox(height: 5.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 7.w),
+                child: Center(
+                  child: (num.tryParse(dataModel[index].specialDiscount?.toString() ?? '0') ?? 0) == 0.0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                currencyConverterController
+                                    .convertCurrency((dataModel[index].price ?? '0')),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle: AppThemeData.todayDealDiscountPriceStyleTab,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                currencyConverterController
+                                    .convertCurrency((dataModel[index].price ?? '0')),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style:isMobile(context)? AppThemeData.todayDealOriginalPriceStyle:AppThemeData.todayDealOriginalPriceStyleTab,
+                              ),
+                            ),
+                            SizedBox(width: 5.w),
+                            Flexible(
+                              child: Text(
+                                currencyConverterController.convertCurrency(
+                                    (dataModel[index].discountPrice ?? '0')),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle: AppThemeData.todayDealDiscountPriceStyleTab,
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
+              ),
+              SizedBox(height: 8.h),
             ],
           ),
         ),

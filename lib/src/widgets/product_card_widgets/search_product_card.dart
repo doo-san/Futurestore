@@ -52,19 +52,37 @@ class SearchProductCard extends StatelessWidget {
               },
             );
           },
-          child: Stack(
+          child: Column(
             children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(5.r),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+              Padding(
+                padding: EdgeInsets.all(5.r),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            data.specialDiscountType == 'flat'
-                                ? (num.tryParse((data.specialDiscount ?? '').replaceAll(',', '')) ?? 0) == 0.0
+                        data.specialDiscountType == 'flat'
+                            ? (num.tryParse((data.specialDiscount ?? '').replaceAll(',', '')) ?? 0) == 0.0
+                                ? const SizedBox()
+                                : Container(
+                                    height: 20.h,
+                                    decoration: BoxDecoration(
+                                      color: AppThemeData.productBoxDecorationColor
+                                          .withOpacity(0.06),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(3.r),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "${currencyConverterController.convertCurrency(data.specialDiscount)} OFF",
+                                        style: isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                      ),
+                                    ),
+                                  )
+                            : data.specialDiscountType == 'percentage'
+                                ? num.parse(data.specialDiscount ?? "0") ==
+                                        0.0
                                     ? const SizedBox()
                                     : Container(
                                         height: 20.h,
@@ -77,131 +95,126 @@ class SearchProductCard extends StatelessWidget {
                                         ),
                                         child: Center(
                                           child: Text(
-                                            "${currencyConverterController.convertCurrency(data.specialDiscount)} OFF",
-                                            style: isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                                            "${homeController.removeTrailingZeros(data.specialDiscount ?? "0")}% OFF",
+                                            textAlign: TextAlign.center,
+                                            style:
+                                            isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
                                           ),
                                         ),
                                       )
-                                : data.specialDiscountType == 'percentage'
-                                    ? num.parse(data.specialDiscount ?? "0") ==
-                                            0.0
-                                        ? const SizedBox()
-                                        : Container(
-                                            height: 20.h,
-                                            decoration: BoxDecoration(
-                                              color: AppThemeData.productBoxDecorationColor
-                                                  .withOpacity(0.06),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(3.r),
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                "${homeController.removeTrailingZeros(data.specialDiscount ?? "0")}% OFF",
-                                                textAlign: TextAlign.center,
-                                                style:
-                                                isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
-                                              ),
-                                            ),
-                                          )
-                                    : Container(),
-                          ],
-                        ),
-                        data.specialDiscount == null
-                            ? const SizedBox()
-                            : SizedBox(width: 5.w),
-                        data.currentStock == 0
-                            ? Container(
-                                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
-                                decoration: BoxDecoration(
-                                  color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(3.r)),
-                                ),
-                                child: Text(
-                                  AppTags.stockOut.tr,
-                                  style:  isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
-                                ),
-                              )
-                            : const SizedBox(),
+                                : Container(),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 18.h,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.r),
-                      child: NetworkImageCheckerWidget(
-                        image: data.image,
-                        fit: BoxFit.cover,
+                    data.specialDiscount == null
+                        ? const SizedBox()
+                        : SizedBox(width: 5.w),
+                    data.currentStock == 0
+                        ? Container(
+                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: AppThemeData.productBoxDecorationColor.withOpacity(0.06),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(3.r)),
+                            ),
+                            child: Text(
+                              AppTags.stockOut.tr,
+                              style:  isMobile(context)? AppThemeData.todayDealNewStyle:AppThemeData.todayDealNewStyleTab,
+                            ),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+              ),
+              SizedBox(height: 18.h),
+              // Image with cart button anchored to its bottom-right corner
+              Expanded(
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned.fill(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.r),
+                        child: NetworkImageCheckerWidget(
+                          image: data.image,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 14.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 7.w),
-                    child: Text(
-                      data.title!,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: isMobile(context)? AppThemeData.todayDealTitleStyle:AppThemeData.todayDealTitleStyleTab,
+                    Positioned(
+                      bottom: 8.h,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: () {},
+                        behavior: HitTestBehavior.opaque,
+                        child: ProductCartControl(
+                          productId: data.id ?? 0,
+                          title: data.title ?? '',
+                          minOrderQty: data.minimumOrderQuantity ?? 1,
+                          currentStock: data.currentStock ?? 0,
+                          hasVariant: data.hasVariant ?? false,
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: isMobile(context)?18.w:10.w),
-                    child: Center(
-                      child: (num.tryParse((data.specialDiscount ?? '').replaceAll(',', '')) ?? 0) == 0.0
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  currencyConverterController
-                                      .convertCurrency(data.price!),
-                                  style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle:AppThemeData.todayDealDiscountPriceStyleTab,
-                                ),
-                              ],
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  currencyConverterController
-                                      .convertCurrency(data.price!),
-                                  style: AppThemeData.todayDealOriginalPriceStyle,
-                                ),
-                                SizedBox(width:isMobile(context)? 15.w:5.w),
-                                Text(
-                                  currencyConverterController
-                                      .convertCurrency(data.discountPrice!),
-                                  style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle:AppThemeData.todayDealDiscountPriceStyleTab,
-                                ),
-                              ],
-                            ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                ],
-              ),
-              Positioned(
-                bottom: isMobile(context) ? 50.h : 52.h,
-                right: 8,
-                child: GestureDetector(
-                  onTap: () {},
-                  behavior: HitTestBehavior.opaque,
-                  child: ProductCartControl(
-                    productId: data.id ?? 0,
-                    title: data.title ?? '',
-                    minOrderQty: data.minimumOrderQuantity ?? 1,
-                    currentStock: data.currentStock ?? 0,
-                    hasVariant: data.hasVariant ?? false,
-                  ),
+                  ],
                 ),
-              )
+              ),
+              SizedBox(height: 10.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 7.w),
+                child: Text(
+                  data.title!,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: isMobile(context)? AppThemeData.todayDealTitleStyle:AppThemeData.todayDealTitleStyleTab,
+                ),
+              ),
+              SizedBox(height: 5.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: isMobile(context)?18.w:10.w),
+                child: Center(
+                  child: (num.tryParse((data.specialDiscount ?? '').replaceAll(',', '')) ?? 0) == 0.0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                currencyConverterController
+                                    .convertCurrency(data.price!),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle:AppThemeData.todayDealDiscountPriceStyleTab,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                currencyConverterController
+                                    .convertCurrency(data.price!),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: AppThemeData.todayDealOriginalPriceStyle,
+                              ),
+                            ),
+                            SizedBox(width:isMobile(context)? 15.w:5.w),
+                            Flexible(
+                              child: Text(
+                                currencyConverterController
+                                    .convertCurrency(data.discountPrice!),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: isMobile(context)? AppThemeData.todayDealDiscountPriceStyle:AppThemeData.todayDealDiscountPriceStyleTab,
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
+              ),
+              SizedBox(height: 8.h),
             ],
           ),
         ),
