@@ -1536,7 +1536,7 @@ class HomeScreenContent extends StatelessWidget {
     }
 
     return Container(
-      height: 260,
+      height: 290,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1574,44 +1574,66 @@ class HomeScreenContent extends StatelessWidget {
 
                     child: Card(
                       elevation: 3,
-
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
 
-                          Expanded(
-                            child: Image.network(
-                              product['image'] ?? "",
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-
-                              errorBuilder: (_, _, _) =>
-                              const Icon(Icons.image, size: 50),
+                          // Image à ratio fixe 1:1, contain pour ne jamais rogner
+                          AspectRatio(
+                            aspectRatio: 1.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade50,
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(8),
+                                ),
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              child: CachedNetworkImage(
+                                imageUrl: product['image'] ?? "",
+                                fit: BoxFit.contain,
+                                placeholder: (_, _) => Container(
+                                  color: Colors.grey.shade100,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(strokeWidth: 1.5),
+                                  ),
+                                ),
+                                errorWidget: (_, _, _) => Container(
+                                  color: Colors.grey.shade100,
+                                  child: const Icon(Icons.image_not_supported_outlined, size: 36, color: Colors.grey),
+                                ),
+                              ),
                             ),
                           ),
 
                           Padding(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.fromLTRB(8, 6, 8, 2),
                             child: Text(
                               product['title'] ?? "",
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
 
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                             child: Text(
                               Get.find<CurrencyConverterController>()
                                   .convertCurrency(product['price'] ?? "0"),
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.orange,
+                                fontSize: 12,
                               ),
                             ),
                           ),
-
-                          const SizedBox(height: 6),
                         ],
                       ),
                     ),
