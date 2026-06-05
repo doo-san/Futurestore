@@ -45,3 +45,54 @@ workflows:
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
+
+  macos-release:
+    name: macOS App Store Release
+    max_build_duration: 60
+    environment:
+      flutter: 3.41.6
+      xcode: latest
+      cocoapods: default
+      groups:
+        - ios_credentials
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Install CocoaPods
+        script: find . -name "Podfile" -execdir pod install \;
+      - name: Set up keychain
+        script: keychain initialize
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files \
+            com.interprest.futurestore \
+            --type MAC_APP_STORE \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+            --certificate-key "$CERTIFICATE_PRIVATE_KEY" \
+            --create
+      - name: Add certificates to keychain
+        script: keychain add-certificates
+      - name: Use provisioning profiles
+        script: xcode-project use-profiles
+      - name: Build macOS
+        script: |
+          flutter build macos \
+            --release \
+            --no-tree-shake-icons \
+            --build-name=1.0.0 \
+            --build-number=1
+      - name: Package macOS app
+        script: |
+          cd build/macos/Build/Products/Release
+          ditto -c -k --sequesterRsrc --keepParent "Future Store.app" "Future Store.zip"
+    artifacts:
+      - build/macos/Build/Products/Release/*.zip
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true

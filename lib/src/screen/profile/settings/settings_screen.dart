@@ -255,10 +255,15 @@ class Settings extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
                 onTap: () {
-                  StoreRedirect.redirect(
-                    androidAppId: settingController.packageInfo!.packageName,
-                    iOSAppId: Config.iosAppId,
-                  );
+                  if (Platform.isMacOS) {
+                    launchUrl(Uri.parse(
+                        'https://apps.apple.com/app/id${Config.iosAppId}'));
+                  } else {
+                    StoreRedirect.redirect(
+                      androidAppId: settingController.packageInfo!.packageName,
+                      iOSAppId: Config.iosAppId,
+                    );
+                  }
                 },
                 child: ListTile(
                   title: Text(
