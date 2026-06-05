@@ -9,7 +9,7 @@ class Config {
   //enter onesignal app id below
   static String oneSignalAppId = "fe15cb82-a45f-4ea7-8501-9dd973547563";
   // find your ios APP id from app store
-  static const String iosAppId = "";
+  static const String iosAppId = "6775458470";
   static const bool enableGoogleLogin = true;
   static const bool enableFacebookLogin = false;
   // if "groceryCartMode = true" then product will be added to cart directly
