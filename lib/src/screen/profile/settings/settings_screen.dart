@@ -216,7 +216,8 @@ class Settings extends StatelessWidget {
                     Share.share(
                         "https://play.google.com/store/apps/details?id=${settingController.packageInfo!.packageName}");
                   } else if (Platform.isIOS) {
-                    Share.share("https://google.com");
+                    Share.share(
+                        "Téléchargez Future Store sur l'App Store : https://apps.apple.com/app/id6775458470");
                   }
                 },
                 child: ListTile(
