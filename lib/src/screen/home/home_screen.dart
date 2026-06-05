@@ -1536,7 +1536,7 @@ class HomeScreenContent extends StatelessWidget {
     }
 
     return Container(
-      height: 290,
+      height: 310,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1574,14 +1574,16 @@ class HomeScreenContent extends StatelessWidget {
 
                     child: Card(
                       elevation: 3,
+                      margin: EdgeInsets.zero,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
 
-                          // Image à ratio fixe 1:1, contain pour ne jamais rogner
+                          // Image à ratio fixe 1:1
                           AspectRatio(
                             aspectRatio: 1.0,
                             child: Container(
@@ -1609,28 +1611,38 @@ class HomeScreenContent extends StatelessWidget {
                             ),
                           ),
 
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 6, 8, 2),
-                            child: Text(
-                              product['title'] ?? "",
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                            child: Text(
-                              Get.find<CurrencyConverterController>()
-                                  .convertCurrency(product['price'] ?? "0"),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.orange,
-                                fontSize: 12,
+                          // Zone texte à hauteur fixe — titre + prix toujours visibles
+                          SizedBox(
+                            height: 82,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    product['title'] ?? "",
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.3,
+                                    ),
+                                  ),
+                                  Text(
+                                    Get.find<CurrencyConverterController>()
+                                        .convertCurrency(product['price'] ?? "0"),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.orange,
+                                      fontSize: 11,
+                                      height: 1.3,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
