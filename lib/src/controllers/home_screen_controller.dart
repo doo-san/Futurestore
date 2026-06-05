@@ -121,20 +121,28 @@ class HomeScreenController extends GetxController implements GetxService {
       isLoadingFromServer(true);
       hasError(false);
 
+      // Affiche le cache immédiatement si disponible (pré-chargé pendant le splash)
       HomeDataModel? cached = LocalDataHelper().getHomeData();
-      if (cached != null && cached.data != null && cached.data!.isNotEmpty) {
+      final hasCachedData = cached != null && cached.data != null && cached.data!.isNotEmpty;
+      if (hasCachedData) {
         homeDataModel.value = cached;
         isLoadingFromServer(false);
       }
 
+      // Rafraîchit en arrière-plan sans bloquer l'UI
       final homeData = await Repository().getHomeScreenData();
       homeDataModel.value = homeData;
       LocalDataHelper().saveHomeContent(homeData);
 
     } catch (e) {
       printLog("❌ HomeScreenController.getHomeScreenData erreur: $e");
-      hasError(true);
-      _showErrorDialog('Impossible de charger la page d\'accueil.\nVérifiez votre connexion internet.');
+      // Si le cache existe, on ne montre pas l'erreur — l'utilisateur voit déjà les données
+      final hasCachedData = homeDataModel.value.data != null &&
+          homeDataModel.value.data!.isNotEmpty;
+      if (!hasCachedData) {
+        hasError(true);
+        _showErrorDialog('Impossible de charger la page d\'accueil.\nVérifiez votre connexion internet.');
+      }
     } finally {
       isLoadingFromServer(false);
     }

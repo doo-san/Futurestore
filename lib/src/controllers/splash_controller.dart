@@ -7,6 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yoori_ecommerce/src/_route/routes.dart';
 import 'package:yoori_ecommerce/src/data/local_data_helper.dart';
+import 'package:yoori_ecommerce/src/servers/repository.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yoori_ecommerce/src/utils/app_tags.dart';
 
@@ -38,11 +39,19 @@ class SplashController extends GetxController {
   }
 
   void handleConfigData() async {
-    // 🔒 MODE SAFE — config locale temporaire
+    // Pré-charge les données home en parallèle pendant les 2s du splash
+    _prefetchHomeData();
     Timer(const Duration(seconds: 2), () {
       isLoading(false);
       Get.offAllNamed(Routes.dashboardScreen);
     });
+  }
+
+  // Lance le fetch home en arrière-plan — résultat mis en cache pour HomeScreenController
+  void _prefetchHomeData() {
+    Repository().getHomeScreenData().then((data) {
+      LocalDataHelper().saveHomeContent(data);
+    }).catchError((_) {});
   }
 
   Future<void> navigate() async {

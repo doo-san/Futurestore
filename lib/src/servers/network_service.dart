@@ -52,7 +52,7 @@ class NetworkService {
         'X-Requested-With': 'XMLHttpRequest',
         'apiKey': Config.apiKey,
       },
-    ).timeout(const Duration(seconds: 30));
+    ).timeout(const Duration(seconds: 12));
 
     return response;
   }
