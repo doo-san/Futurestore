@@ -269,7 +269,6 @@ class AuthController extends GetxController {
       final oauthCredential = OAuthProvider("apple.com").credential(
         idToken: appleCredential.identityToken,
         rawNonce: rawNonce,
-        accessToken: appleCredential.authorizationCode,
       );
 
       await _auth.signInWithCredential(oauthCredential);
