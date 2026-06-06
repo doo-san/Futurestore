@@ -202,7 +202,7 @@ class AuthController extends GetxController {
     try {
       await _googleSignIn.initialize(
         serverClientId:
-        "858468987379-ulhpemk54i753jdrc4vmff5vl52c8946.apps.googleusercontent.com",
+        "990974304774-vbcm4acme4igafafkq9uhj3av8iuqlk7.apps.googleusercontent.com",
       );
       isGoogleSignInInitialized.value = true;
     } catch (_) {
