@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>990974304774-bac3hu554kl072j4grj6l8m799ocsl26.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.990974304774-bac3hu554kl072j4grj6l8m799ocsl26</string>
 	<key>API_KEY</key>
 	<string>AIzaSyB6xuDcp1SHBizs-6TFrqg99ZRaxcrGgeQ</string>
 	<key>GCM_SENDER_ID</key>
@@ -9,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.interprest.futurestore</string>
+	<string>com.interprest.futurestore.</string>
 	<key>PROJECT_ID</key>
 	<string>futurestore-4850d</string>
 	<key>STORAGE_BUCKET</key>
