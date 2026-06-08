@@ -1,12 +1,8 @@
-import 'dart:convert';
-import 'dart:math';
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:yoori_ecommerce/src/servers/repository.dart';
 import 'package:yoori_ecommerce/src/data/local_data_helper.dart';
 import 'package:yoori_ecommerce/src/_route/routes.dart';
@@ -242,52 +238,25 @@ class AuthController extends GetxController {
 
   // ================= APPLE LOGIN =================
 
-  String _generateNonce([int length = 32]) {
-    const charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-    final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
-  }
-
-  String _sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    return sha256.convert(bytes).toString();
-  }
-
   Future<void> signInWithApple() async {
     try {
       isLoggingIn.value = true;
 
-      final rawNonce = _generateNonce();
-      final nonce = _sha256ofString(rawNonce);
+      final appleProvider = AppleAuthProvider()
+        ..addScope('email')
+        ..addScope('fullName');
 
-      final appleCredential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-        nonce: nonce,
-      );
+      await _auth.signInWithProvider(appleProvider);
 
-      final idToken = appleCredential.identityToken;
-      if (idToken == null) {
-        Get.snackbar("Erreur", "Token Apple manquant — réessayez");
-        return;
-      }
-
-      final oauthCredential = OAuthProvider("apple.com").credential(
-        idToken: idToken,
-        rawNonce: rawNonce,
-      );
-
-      await _auth.signInWithCredential(oauthCredential);
-    } on SignInWithAppleAuthorizationException catch (e) {
-      if (e.code != AuthorizationErrorCode.canceled) {
-        Get.snackbar("Erreur", e.message);
+    } on FirebaseAuthException catch (e) {
+      if (e.code != 'canceled') {
+        Get.snackbar("Erreur", e.message ?? e.toString());
       }
     } catch (e) {
-      Get.snackbar("Erreur", e.toString());
+      final msg = e.toString();
+      if (!msg.contains('canceled') && !msg.contains('cancelled')) {
+        Get.snackbar("Erreur", msg);
+      }
     } finally {
       isLoggingIn.value = false;
     }
