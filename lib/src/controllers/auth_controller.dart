@@ -93,7 +93,7 @@ class AuthController extends GetxController {
 
   // ================= AUTH STATE =================
 
-  void _handleAuthChanged(User? user) async {
+  Future<void> _handleAuthChanged(User? user) async {
     if (user == null) return;
 
     final currentRoute = Get.currentRoute;
@@ -251,6 +251,8 @@ class AuthController extends GetxController {
       );
 
       await _auth.signInWithCredential(credential);
+      // Appel explicite car authStateChanges ne se déclenche pas si déjà connecté
+      await _handleAuthChanged(_auth.currentUser);
 
     } on GoogleSignInException catch (e) {
       if (e.code != GoogleSignInExceptionCode.canceled) {
@@ -274,6 +276,8 @@ class AuthController extends GetxController {
         ..addScope('fullName');
 
       await _auth.signInWithProvider(appleProvider);
+      // Appel explicite car authStateChanges ne se déclenche pas si déjà connecté
+      await _handleAuthChanged(_auth.currentUser);
 
     } on FirebaseAuthException catch (e) {
       if (e.code != 'canceled' && _auth.currentUser == null) {
