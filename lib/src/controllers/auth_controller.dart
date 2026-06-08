@@ -229,6 +229,10 @@ class AuthController extends GetxController {
 
       await _auth.signInWithCredential(credential);
 
+    } on GoogleSignInException catch (e) {
+      if (e.code != GoogleSignInExceptionCode.canceled) {
+        Get.snackbar("Erreur", e.toString());
+      }
     } catch (e) {
       Get.snackbar("Erreur", e.toString());
     } finally {
@@ -266,8 +270,14 @@ class AuthController extends GetxController {
         nonce: nonce,
       );
 
+      final idToken = appleCredential.identityToken;
+      if (idToken == null) {
+        Get.snackbar("Erreur", "Token Apple manquant — réessayez");
+        return;
+      }
+
       final oauthCredential = OAuthProvider("apple.com").credential(
-        idToken: appleCredential.identityToken,
+        idToken: idToken,
         rawNonce: rawNonce,
       );
 
