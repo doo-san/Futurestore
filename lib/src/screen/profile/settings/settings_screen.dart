@@ -350,11 +350,11 @@ class Settings extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
                 onTap: () async {
-                  final whatsappUrl = Uri.parse('whatsapp://send?phone=%2B221784742328');
+                  final whatsappUrl = Uri.parse('whatsapp://send?phone=%2B221784742338');
                   if (await canLaunchUrl(whatsappUrl)) {
                     await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
                   } else {
-                    await launchUrl(Uri.parse('https://wa.me/221784742328'), mode: LaunchMode.externalApplication);
+                    await launchUrl(Uri.parse('https://wa.me/221784742338'), mode: LaunchMode.externalApplication);
                   }
                 },
                 child: ListTile(

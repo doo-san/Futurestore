@@ -1432,11 +1432,11 @@ class DetailsPage extends StatelessWidget {
                                         SizedBox(width: 8.w),
                                         InkWell(
                                           onTap: () async {
-                                            final whatsappUri = Uri.parse('whatsapp://send?phone=%2B221784742328');
+                                            final whatsappUri = Uri.parse('whatsapp://send?phone=%2B221784742338');
                                             if (await canLaunchUrl(whatsappUri)) {
                                               launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
                                             } else {
-                                              launchUrl(Uri.parse('https://wa.me/221784742328'), mode: LaunchMode.externalApplication);
+                                              launchUrl(Uri.parse('https://wa.me/221784742338'), mode: LaunchMode.externalApplication);
                                             }
                                           },
                                           child: Container(
