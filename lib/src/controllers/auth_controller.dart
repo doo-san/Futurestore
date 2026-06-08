@@ -249,12 +249,13 @@ class AuthController extends GetxController {
       await _auth.signInWithProvider(appleProvider);
 
     } on FirebaseAuthException catch (e) {
-      if (e.code != 'canceled') {
+      // Ne pas afficher d'erreur si l'utilisateur est connecté malgré l'exception
+      if (e.code != 'canceled' && _auth.currentUser == null) {
         Get.snackbar("Erreur", e.message ?? e.toString());
       }
     } catch (e) {
       final msg = e.toString();
-      if (!msg.contains('canceled') && !msg.contains('cancelled')) {
+      if (!msg.contains('canceled') && !msg.contains('cancelled') && _auth.currentUser == null) {
         Get.snackbar("Erreur", msg);
       }
     } finally {
