@@ -97,23 +97,15 @@ class AuthController extends GetxController {
     if (user == null) return;
 
     final currentRoute = Get.currentRoute;
-    final hasBackendToken = LocalDataHelper().getUserToken() != null;
 
-    if (hasBackendToken) {
-      // Login email/téléphone déjà géré — naviguer seulement
-      if (currentRoute != Routes.dashboardScreen) {
-        Get.offAllNamed(Routes.dashboardScreen);
-      }
-      return;
-    }
-
-    // Login social (Google/Apple) — appeler le backend d'abord
+    // Détecter si c'est une connexion sociale (Google ou Apple)
     final providers = user.providerData.map((p) => p.providerId).toList();
     String? providerId;
     if (providers.contains('google.com')) providerId = 'google';
     else if (providers.contains('apple.com')) providerId = 'apple';
 
     if (providerId != null) {
+      // Toujours appeler le backend pour créer ou connecter le compte
       await _repository.postFirebaseAuth(
         name: user.displayName,
         email: user.email,
