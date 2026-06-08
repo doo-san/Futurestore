@@ -225,6 +225,19 @@ class AuthController extends GetxController {
 
       await _auth.signInWithCredential(credential);
 
+      final user = _auth.currentUser;
+      if (user != null) {
+        await _repository.postFirebaseAuth(
+          name: user.displayName,
+          email: user.email,
+          phone: user.phoneNumber ?? '',
+          image: user.photoURL,
+          providerId: 'google',
+          uid: user.uid,
+        );
+        Get.offAllNamed(Routes.dashboardScreen);
+      }
+
     } on GoogleSignInException catch (e) {
       if (e.code != GoogleSignInExceptionCode.canceled) {
         Get.snackbar("Erreur", e.toString());
@@ -248,8 +261,20 @@ class AuthController extends GetxController {
 
       await _auth.signInWithProvider(appleProvider);
 
+      final user = _auth.currentUser;
+      if (user != null) {
+        await _repository.postFirebaseAuth(
+          name: user.displayName,
+          email: user.email,
+          phone: user.phoneNumber ?? '',
+          image: user.photoURL,
+          providerId: 'apple',
+          uid: user.uid,
+        );
+        Get.offAllNamed(Routes.dashboardScreen);
+      }
+
     } on FirebaseAuthException catch (e) {
-      // Ne pas afficher d'erreur si l'utilisateur est connecté malgré l'exception
       if (e.code != 'canceled' && _auth.currentUser == null) {
         Get.snackbar("Erreur", e.message ?? e.toString());
       }
