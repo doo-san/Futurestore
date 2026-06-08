@@ -93,12 +93,39 @@ class AuthController extends GetxController {
 
   // ================= AUTH STATE =================
 
-  void _handleAuthChanged(User? user) {
-    if (user != null) {
-      final currentRoute = Get.currentRoute;
+  void _handleAuthChanged(User? user) async {
+    if (user == null) return;
+
+    final currentRoute = Get.currentRoute;
+    final hasBackendToken = LocalDataHelper().getUserToken() != null;
+
+    if (hasBackendToken) {
+      // Login email/téléphone déjà géré — naviguer seulement
       if (currentRoute != Routes.dashboardScreen) {
         Get.offAllNamed(Routes.dashboardScreen);
       }
+      return;
+    }
+
+    // Login social (Google/Apple) — appeler le backend d'abord
+    final providers = user.providerData.map((p) => p.providerId).toList();
+    String? providerId;
+    if (providers.contains('google.com')) providerId = 'google';
+    else if (providers.contains('apple.com')) providerId = 'apple';
+
+    if (providerId != null) {
+      await _repository.postFirebaseAuth(
+        name: user.displayName,
+        email: user.email,
+        phone: user.phoneNumber ?? '',
+        image: user.photoURL,
+        providerId: providerId,
+        uid: user.uid,
+      );
+    }
+
+    if (currentRoute != Routes.dashboardScreen) {
+      Get.offAllNamed(Routes.dashboardScreen);
     }
   }
 
@@ -225,19 +252,6 @@ class AuthController extends GetxController {
 
       await _auth.signInWithCredential(credential);
 
-      final user = _auth.currentUser;
-      if (user != null) {
-        await _repository.postFirebaseAuth(
-          name: user.displayName,
-          email: user.email,
-          phone: user.phoneNumber ?? '',
-          image: user.photoURL,
-          providerId: 'google',
-          uid: user.uid,
-        );
-        Get.offAllNamed(Routes.dashboardScreen);
-      }
-
     } on GoogleSignInException catch (e) {
       if (e.code != GoogleSignInExceptionCode.canceled) {
         Get.snackbar("Erreur", e.toString());
@@ -260,19 +274,6 @@ class AuthController extends GetxController {
         ..addScope('fullName');
 
       await _auth.signInWithProvider(appleProvider);
-
-      final user = _auth.currentUser;
-      if (user != null) {
-        await _repository.postFirebaseAuth(
-          name: user.displayName,
-          email: user.email,
-          phone: user.phoneNumber ?? '',
-          image: user.photoURL,
-          providerId: 'apple',
-          uid: user.uid,
-        );
-        Get.offAllNamed(Routes.dashboardScreen);
-      }
 
     } on FirebaseAuthException catch (e) {
       if (e.code != 'canceled' && _auth.currentUser == null) {
