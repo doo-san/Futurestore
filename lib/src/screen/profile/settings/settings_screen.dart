@@ -1,4 +1,5 @@
 ﻿import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -13,6 +14,7 @@ import '../../../controllers/language_controller.dart';
 import '../../../controllers/setting_controller.dart';
 import '../../../data/local_data_helper.dart';
 import '../../../utils/app_tags.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/app_theme_data.dart';
 import 'package:yoori_ecommerce/src/utils/responsive.dart';
 import 'address_screen.dart';
@@ -211,13 +213,14 @@ class Settings extends StatelessWidget {
             Padding(
               padding:  EdgeInsets.symmetric(horizontal: isMobile(context)? 0.w:10.w,vertical: isMobile(context)? 0.h:8.h),
               child: InkWell(
-                onTap: () {
-                  if (Platform.isAndroid) {
-                    Share.share(
-                        "https://play.google.com/store/apps/details?id=${settingController.packageInfo!.packageName}");
-                  } else if (Platform.isIOS) {
-                    Share.share(
-                        "Téléchargez Future Store sur l'App Store : https://apps.apple.com/app/id6775458470");
+                onTap: () async {
+                  try {
+                    final String shareText = (!kIsWeb && Platform.isIOS)
+                        ? "Téléchargez Future Store sur l'App Store : https://apps.apple.com/app/id6775458470"
+                        : "https://play.google.com/store/apps/details?id=${settingController.packageInfo?.packageName ?? 'com.interprest.futurestore'}";
+                    await SharePlus.instance.share(ShareParams(text: shareText));
+                  } catch (e) {
+                    printLog("Share this app failed: $e");
                   }
                 },
                 child: ListTile(
