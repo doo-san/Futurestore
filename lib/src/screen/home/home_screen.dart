@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yoori_ecommerce/src/_route/routes.dart';
 import 'package:yoori_ecommerce/src/models/home_data_model.dart';
 import 'package:yoori_ecommerce/src/utils/constants.dart';
@@ -206,6 +207,30 @@ class HomeScreenContent extends StatelessWidget {
         ],
       ),
       drawer: const DrawerScreen(),
+
+      // ── Bouton flottant WhatsApp ──────────────────────────
+      // Ouvre une conversation directe avec le support.
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'whatsapp_fab',
+        backgroundColor: const Color(0xFF25D366), // vert WhatsApp
+        tooltip: 'WhatsApp',
+        onPressed: () async {
+          final whatsappUri =
+              Uri.parse('whatsapp://send?phone=%2B221784742338');
+          if (await canLaunchUrl(whatsappUri)) {
+            launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+          } else {
+            launchUrl(Uri.parse('https://wa.me/221784742338'),
+                mode: LaunchMode.externalApplication);
+          }
+        },
+        child: SvgPicture.asset(
+          Images.whatsappLogo,
+          height: 28.h,
+          width: 28.w,
+          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+        ),
+      ),
 
       // ✅ CORRECTION PRINCIPALE : Obx uniquement sur le body
       // Avant : Obx enveloppait tout le Scaffold + une condition stricte

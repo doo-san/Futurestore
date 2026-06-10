@@ -51,5 +51,8 @@
             android:authorities="com.facebook.app.FacebookContentProvider1023033166317146"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true" />
+        <!-- Permet à canLaunchUrl de détecter l'app WhatsApp (Android 11+) -->
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
     </queries>
 </manifest>
