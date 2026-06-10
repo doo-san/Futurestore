@@ -54,5 +54,10 @@
         <!-- Permet à canLaunchUrl de détecter l'app WhatsApp (Android 11+) -->
         <package android:name="com.whatsapp" />
         <package android:name="com.whatsapp.w4b" />
+        <!-- Permet à canLaunchUrl de gérer les appels téléphoniques (Android 11+) -->
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
     </queries>
 </manifest>
