@@ -215,12 +215,17 @@ class HomeScreenContent extends StatelessWidget {
         backgroundColor: const Color(0xFF25D366), // vert WhatsApp
         tooltip: 'WhatsApp',
         onPressed: () async {
+          // Message pré-rempli dans la conversation WhatsApp.
+          const message = 'Bonjour,\n'
+              'Suite à ma visite sur l\'application FutureStore, je souhaiterais obtenir davantage d\'informations concernant vos produits et services.\n'
+              'Dans l\'attente de votre retour, je vous remercie.';
+          final text = Uri.encodeComponent(message);
           final whatsappUri =
-              Uri.parse('whatsapp://send?phone=%2B221784742338');
+              Uri.parse('whatsapp://send?phone=%2B221784742338&text=$text');
           if (await canLaunchUrl(whatsappUri)) {
             launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
           } else {
-            launchUrl(Uri.parse('https://wa.me/221784742338'),
+            launchUrl(Uri.parse('https://wa.me/221784742338?text=$text'),
                 mode: LaunchMode.externalApplication);
           }
         },
