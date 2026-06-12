@@ -265,6 +265,7 @@ class AppTags {
   static const String couponCodeCopied = "couponCodeCopied";
   static const String voucherList = "voucherList";
   static const String copy = "copy";
+  static const String validUntil = "validUntil";
 
   //Track Order Screen
   static const String deliveryStatus = "deliveryStatus";

@@ -177,6 +177,7 @@ const Map<String, String> frFR = {
   "currentPassword": "Mot de passe actuel",
   "voucherList": "Liste des bons",
   "copy": "Copier",
+  "validUntil": "Valable jusqu'au",
   "couponCodeCopied": "Code coupon copié",
   "deleteYourAccount": "Supprimer votre compte",
   "billingShippingAddress": "Adresse de facturation & livraison",

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -66,7 +66,7 @@ class _VoucherListState extends State<VoucherList> {
 
             onPressed: () {
               Get.back();
-            }, 
+            },
           ),
           centerTitle: true,
           title: Text(
@@ -88,83 +88,177 @@ class _VoucherListState extends State<VoucherList> {
           ) : ListView.builder(
                   itemCount: voucherController.couponListModel.value!.data!.coupons!.length,
                   itemBuilder: (context, index) {
+                    final coupon =
+                        voucherController.couponListModel.value!.data!.coupons![index];
+                    final Color accent = fixedColor[index % fixedColor.length];
+                    final String discountLabel = coupon.discountType == "percent"
+                        ? "${coupon.discount.toString()}%"
+                        : currencyConverterController
+                            .convertCurrency(coupon.discount!.toString());
                     return Padding(
-                      padding:  EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           horizontal: 15.w, vertical: 8.h),
                       child: Container(
-                        constraints: BoxConstraints(minHeight: isMobile(context) ? 90.h : 110.h),
                         decoration: BoxDecoration(
-                          color: fixedColor[index % fixedColor.length]
-                              .withOpacity(0.1),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(12.r)),
                           border: Border.all(
-                              color: fixedColor[index % fixedColor.length]),
-                          borderRadius:
-                               BorderRadius.all(Radius.circular(10.r)),
+                              color: accent.withOpacity(0.4), width: 1),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF404040).withOpacity(0.1),
+                              color: Colors.black.withOpacity(0.05),
                               spreadRadius: 0,
-                              blurRadius: 30,
-                              offset: const Offset(
-                                  0, 15),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
                             ),
                           ],
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15.w, vertical: 12.h),
-                          child: IntrinsicHeight(
+                        child: IntrinsicHeight(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(
+                              // ── Panneau remise (gauche, coloré) ──
+                              Container(
+                                width: isMobile(context) ? 92.w : 80.w,
+                                decoration: BoxDecoration(
+                                  color: accent,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(12.r),
+                                    bottomLeft: Radius.circular(12.r),
+                                  ),
+                                ),
                                 child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                        voucherController.couponListModel.value!
-                                            .data!.coupons![index].title!,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: fixedColor[
-                                              index % fixedColor.length],
-                                          fontFamily: "Poppins",
-                                          fontSize: isMobile(context)? 14.sp:10.sp,
-                                        )),
-                                    Text(
-                                        voucherController.couponListModel.value!
-                                            .data!.coupons![index].endTime
-                                            .toString(),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 4.w),
+                                      child: Text(
+                                        discountLabel,
+                                        textAlign: TextAlign.center,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          color: const Color(0xFF666666),
-                                          fontFamily: "Poppins",
-                                          fontSize:isMobile(context)? 13.sp:9.sp,
-                                        )),
+                                          color: Colors.white,
+                                          fontFamily: "Poppins Medium",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize:
+                                              isMobile(context) ? 20.sp : 14.sp,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 2.h),
                                     Padding(
-                                      padding: EdgeInsets.only(
-                                          right: 15.w, top: 3.h),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 4.w),
+                                      child: Text(
+                                        AppTags.off.tr,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                          color: Colors.white.withOpacity(0.9),
+                                          fontFamily: "Poppins",
+                                          fontSize:
+                                              isMobile(context) ? 9.sp : 7.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // ── Séparation pointillée ──
+                              CustomPaint(
+                                size: Size(1.r, double.infinity),
+                                painter:
+                                    DashedLineVerticalPainter(accent),
+                              ),
+                              // ── Détails (droite) ──
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(14.r),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        coupon.title ?? '',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: const Color(0xFF333333),
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w600,
+                                          fontSize:
+                                              isMobile(context) ? 14.sp : 10.sp,
+                                        ),
+                                      ),
+                                      SizedBox(height: 6.h),
+                                      Row(
                                         children: [
+                                          Icon(Icons.access_time_rounded,
+                                              size: 13.r,
+                                              color: const Color(0xFF999999)),
+                                          SizedBox(width: 5.w),
+                                          Expanded(
+                                            child: Text(
+                                              "${AppTags.validUntil.tr}: ${coupon.endTime.toString()}",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color: const Color(0xFF666666),
+                                                fontFamily: "Poppins",
+                                                fontSize: isMobile(context)
+                                                    ? 11.sp
+                                                    : 8.sp,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      // Code + bouton copier
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              height: 32.h,
+                                              alignment: Alignment.center,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8.w),
+                                              decoration: BoxDecoration(
+                                                color: accent.withOpacity(0.10),
+                                                borderRadius:
+                                                    BorderRadius.circular(6.r),
+                                                border: Border.all(
+                                                    color:
+                                                        accent.withOpacity(0.5),
+                                                    width: 1),
+                                              ),
+                                              child: Text(
+                                                coupon.code?.toString() ?? '',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: accent,
+                                                  fontFamily: "Poppins Medium",
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 1.2,
+                                                  fontSize: isMobile(context)
+                                                      ? 13.sp
+                                                      : 10.sp,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 8.w),
                                           SizedBox(
-                                            width: 86.w,
-                                            height: 28.h,
+                                            height: 32.h,
                                             child: ElevatedButton(
                                               onPressed: () {
                                                 Clipboard.setData(
                                                   ClipboardData(
-                                                      text: voucherController
-                                                          .couponListModel
-                                                          .value!
-                                                          .data!
-                                                          .coupons![index]
-                                                          .code ?? ''),
+                                                      text: coupon.code ?? ''),
                                                 ).then(
                                                   (value) =>
                                                       ScaffoldMessenger.of(
@@ -178,125 +272,48 @@ class _VoucherListState extends State<VoucherList> {
                                                 );
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: fixedColor[
-                                                    index % fixedColor.length],
-                                                elevation: 6,
-                                                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                                backgroundColor: accent,
+                                                elevation: 0,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 12.w),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(4.r),
+                                                      BorderRadius.circular(6.r),
                                                 ),
-                                                shadowColor:
-                                                    const Color(0xFF404040)
-                                                        .withOpacity(0.10),
                                               ),
                                               child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Text(
                                                     AppTags.copy.tr,
                                                     style: TextStyle(
-                                                      color: const Color(0xFFFFFFFF),
+                                                      color: Colors.white,
                                                       fontFamily: "Poppins",
-                                                      fontSize: isMobile(context)? 12.sp:9.sp,
+                                                      fontSize: isMobile(context)
+                                                          ? 12.sp
+                                                          : 9.sp,
                                                     ),
                                                   ),
                                                   SizedBox(width: 4.w),
                                                   Icon(
                                                     Icons.copy,
                                                     color: Colors.white,
-                                                    size: isMobile(context) ? 14.r : 11.r,
+                                                    size: isMobile(context)
+                                                        ? 13.r
+                                                        : 11.r,
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           ),
-                                          Container(
-                                            width: isMobile(context)? 100.w:75.w,
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              voucherController
-                                                  .couponListModel
-                                                  .value!
-                                                  .data!.coupons![index].code!
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  color: fixedColor[index %
-                                                      fixedColor.length],
-                                                  fontFamily: "Poppins Medium",
-                                                  fontSize: isMobile(context)? 14.sp:10.sp),
-                                              overflow: TextOverflow.ellipsis,
-                                              softWrap: true,
-                                            ),
-                                          ),
                                         ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 15.h),
-                                child: CustomPaint(
-                                  size:  Size(isMobile(context)?3.r:0.r, double.infinity),
-                                  painter: DashedLineVerticalPainter(
-                                      fixedColor[index % fixedColor.length]),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 90.w,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    voucherController
-                                                .couponListModel
-                                                .value!.data!.coupons![index]
-                                                .discountType ==
-                                            "percent"
-                                        ? Text(
-                                            "${voucherController.couponListModel.value!.data!.coupons![index].discount!.toString()}%",
-                                            style: TextStyle(
-                                              color: fixedColor[
-                                                  index % fixedColor.length],
-                                              fontFamily: "Poppins Medium",
-                                              fontSize: isMobile(context)? 18.sp:13.sp,
-                                            ),
-                                            maxLines: 1,
-                                          )
-                                        : Text(
-                                            currencyConverterController
-                                                .convertCurrency(
-                                                    voucherController
-                                                        .couponListModel
-                                                        .value!
-                                                        .data!
-                                                        .coupons![index]
-                                                        .discount!
-                                                        .toString()),
-                                            style: TextStyle(
-                                                color: fixedColor[
-                                                    index % fixedColor.length],
-                                                fontFamily: "Poppins Medium",
-                                                fontSize: isMobile(context)? 18.sp:13.sp),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                    Text(
-                                      AppTags.off.tr,
-                                      style: TextStyle(
-                                          color: fixedColor[
-                                              index % fixedColor.length],
-                                          fontFamily: "Poppins Medium",
-                                          fontSize:isMobile(context)? 14.sp:11.sp),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          ), // IntrinsicHeight
                         ),
                       ),
                     );
@@ -313,7 +330,7 @@ class DashedLineVerticalPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double dashHeight = 5, dashSpace = 5, startY = -15;
+    double dashHeight = 5, dashSpace = 5, startY = 0;
     final paint = Paint()
       ..color = color
       ..strokeWidth = 1;

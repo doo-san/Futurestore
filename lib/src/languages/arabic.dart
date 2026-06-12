@@ -159,6 +159,7 @@ const Map<String, String> arSA = {
   "currentPassword": "كلمة المرور الحالية",
   "voucherList": "قائمة القسائم",
   "copy": "ينسخ",
+  "validUntil": "صالح حتى",
   "couponCodeCopied": "تم نسخ رمز القسيمة",
   "deleteYourAccount": "حذف حسابك",
   "billingShippingAddress": "عنوان الفواتير والشحن",

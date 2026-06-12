@@ -159,6 +159,7 @@ const Map<String, String> enUS = {
   "currentPassword": "Current Password",
   "voucherList": "Voucher List",
   "copy": "Copy",
+  "validUntil": "Valid until",
   "couponCodeCopied": "Coupon code copied",
   "deleteYourAccount": "Delete your Account",
   "billingShippingAddress": "Billing & Shipping Address",

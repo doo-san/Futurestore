@@ -159,6 +159,7 @@ const Map<String, String> bnBD = {
   "currentPassword": "বর্তমান পাসওয়ার্ড",
   "voucherList": "ভাউচার তালিকা",
   "copy": "কপি",
+  "validUntil": "বৈধ পর্যন্ত",
   "couponCodeCopied": "কুপন কোড কপি করা হয়েছে",
   "deleteYourAccount": "আপনার একাউন্ট মুছে ফেলুন",
   "billingShippingAddress": "বিলিং এবং শিপিংয়ের ঠিকানা",
