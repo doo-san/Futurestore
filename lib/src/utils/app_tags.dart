@@ -320,6 +320,8 @@ class AppTags {
   static const String amount = "amount";
   static const String pdf = "pdf";
   static const String payNow = "payNow";
+  static const String paid = "paid";
+  static const String unpaid = "unpaid";
   static const String off = "off";
 
   static const String myDownload = "myDownload";

@@ -1,13 +1,11 @@
 ﻿import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 import '../../_route/routes.dart';
 import '../../controllers/currency_converter_controller.dart';
 import '../../controllers/order_history_controller.dart';
 import '../../data/local_data_helper.dart';
-import '../../servers/network_service.dart';
 import 'package:yoori_ecommerce/src/utils/app_tags.dart';
 import '../../utils/app_theme_data.dart';
 import 'package:yoori_ecommerce/src/utils/responsive.dart';
@@ -93,188 +91,204 @@ class OrderHistory extends StatelessWidget {
                         },);
                       },
                       child: Container(
-                        alignment: Alignment.center,
-                        height: 110.h,
                         decoration: BoxDecoration(
                           color: AppThemeData.orderHistoryMainBoxColor,
                           borderRadius: BorderRadius.all(
-                            Radius.circular(10.r),
+                            Radius.circular(12.r),
                           ),
+                          border: Border.all(
+                              color: const Color(0xffEDEDED), width: 1),
                           boxShadow: [
                             BoxShadow(
                               spreadRadius: 0,
-                              blurRadius: 15,
-                              color: AppThemeData.boxShadowColor.withOpacity(0.05),
-                              offset: const Offset(0, 30),
+                              blurRadius: 10,
+                              color: Colors.black.withOpacity(0.05),
+                              offset: const Offset(0, 4),
                             )
                           ],
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(15.r),
-                          child: Row(
+                          padding: EdgeInsets.all(16.r),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Row(
+                              // En-tête : n° de facture + badge statut
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Row(
                                       children: [
                                         Text(
-                                          "${AppTags.invoice.tr}: #",
-                                          style:
-                                          isMobile(context)? AppThemeData.orderHistoryTextStyle_12:AppThemeData.orderHistoryTextStyle_9Tab,
-                                        ), SelectableText(
-                                          orderHistoryController.orderListModel.data!.orders![index].orderCode.toString(),
-                                          style:
-                                          isMobile(context)? AppThemeData.orderHistoryTextStyle_12:AppThemeData.orderHistoryTextStyle_9Tab,
+                                          "${AppTags.invoice.tr} #",
+                                          style: (isMobile(context)
+                                                  ? AppThemeData
+                                                      .orderHistoryTextStyle_12
+                                                  : AppThemeData
+                                                      .orderHistoryTextStyle_9Tab)
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w600),
+                                        ),
+                                        Flexible(
+                                          child: SelectableText(
+                                            orderHistoryController.orderListModel
+                                                .data!.orders![index].orderCode
+                                                .toString(),
+                                            maxLines: 1,
+                                            style: (isMobile(context)
+                                                    ? AppThemeData
+                                                        .orderHistoryTextStyle_12
+                                                    : AppThemeData
+                                                        .orderHistoryTextStyle_9Tab)
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    Text(
-                                        "${AppTags.orderDate.tr}: ${orderHistoryController.orderListModel.data!.orders![index].date.toString()}",
-                                        style: isMobile(context)? AppThemeData.orderHistoryTextStyle_12:AppThemeData.orderHistoryTextStyle_9Tab),
-                                    Text(
-                                        "${AppTags.amount.tr}: ${currencyConverterController.convertCurrency(orderHistoryController.orderListModel.data!.orders![index].totalPayable.toString())}",
-                                        style: isMobile(context)? AppThemeData.orderHistoryTextStyle_12:AppThemeData.orderHistoryTextStyle_9Tab),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  InkWell(
-                                    onTap: () async {
-                                      var url =
-                                          "${NetworkService.apiUrl}/invoice-download/${orderHistoryController.orderListModel.data!.orders![index].id}?token=${LocalDataHelper().getUserToken()}";
-                                      try {
-                                        await launchUrl(Uri.parse(url),
-                                            mode:
-                                                LaunchMode.externalApplication);
-                                      } catch (e) {
-                                        Get.showSnackbar(
-                                            GetSnackBar(
-                                          backgroundColor: Colors.red,
-                                          message: "Can't open link.",
-                                          maxWidth: 200.w,
-                                          duration: const Duration(seconds: 3),
-                                          snackStyle: SnackStyle.FLOATING,
-                                          margin: EdgeInsets.all(10.r),
-                                          borderRadius: 5.r,
-                                          isDismissible: true,
-                                          dismissDirection:
-                                              DismissDirection.horizontal,
-                                        ));
-                                      }
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: 28.h,
-                                      width: 80.w,
-                                      decoration: BoxDecoration(
-                                        color: AppThemeData.orderHistoryBoxColor
-                                            .withOpacity(0.1),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(5.r),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w, vertical: 4.h),
+                                    decoration: BoxDecoration(
+                                      color: (orderStatus == "unpaid"
+                                              ? const Color(0xffFF0008)
+                                              : const Color(0xff2E9E7B))
+                                          .withOpacity(0.12),
+                                      borderRadius:
+                                          BorderRadius.circular(20.r),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          orderStatus == "unpaid"
+                                              ? Icons.cancel
+                                              : Icons.check_circle,
+                                          size: 13.r,
+                                          color: orderStatus == "unpaid"
+                                              ? const Color(0xffFF0008)
+                                              : const Color(0xff2E9E7B),
                                         ),
-                                      ),
-                                      child: Text(
-                                        AppTags.pdf.tr,
-                                        style: isMobile(context)? AppThemeData.orderHistoryPDFTextStyle_13:AppThemeData.orderHistoryPDFTextStyleTab,
+                                        SizedBox(width: 4.w),
+                                        Text(
+                                          orderStatus == "unpaid"
+                                              ? AppTags.unpaid.tr
+                                              : AppTags.paid.tr,
+                                          style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize:
+                                                isMobile(context) ? 11.sp : 9.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: orderStatus == "unpaid"
+                                                ? const Color(0xffFF0008)
+                                                : const Color(0xff2E9E7B),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12.h),
+                              Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  color: const Color(0xffF0F0F0)),
+                              SizedBox(height: 12.h),
+                              // Date de commande
+                              Row(
+                                children: [
+                                  Icon(Icons.calendar_today_outlined,
+                                      size: 14.r,
+                                      color: const Color(0xff999999)),
+                                  SizedBox(width: 8.w),
+                                  Expanded(
+                                    child: Text(
+                                      "${AppTags.orderDate.tr}: ${orderHistoryController.orderListModel.data!.orders![index].date.toString()}",
+                                      style: isMobile(context)
+                                          ? AppThemeData.orderHistoryTextStyle_12
+                                          : AppThemeData
+                                              .orderHistoryTextStyle_9Tab,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8.h),
+                              // Montant
+                              Row(
+                                children: [
+                                  Icon(Icons.payments_outlined,
+                                      size: 14.r,
+                                      color: const Color(0xff999999)),
+                                  SizedBox(width: 8.w),
+                                  Text(
+                                    "${AppTags.amount.tr}: ",
+                                    style: isMobile(context)
+                                        ? AppThemeData.orderHistoryTextStyle_12
+                                        : AppThemeData
+                                            .orderHistoryTextStyle_9Tab,
+                                  ),
+                                  Text(
+                                    currencyConverterController.convertCurrency(
+                                        orderHistoryController
+                                            .orderListModel
+                                            .data!
+                                            .orders![index]
+                                            .totalPayable
+                                            .toString()),
+                                    style: (isMobile(context)
+                                            ? AppThemeData
+                                                .orderHistoryTextStyle_12
+                                            : AppThemeData
+                                                .orderHistoryTextStyle_9Tab)
+                                        .copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color: const Color(0xffFF0008)),
+                                  ),
+                                ],
+                              ),
+                              // Bouton Payer (commandes impayées uniquement)
+                              if (orderStatus == "unpaid") ...[
+                                SizedBox(height: 14.h),
+                                InkWell(
+                                  onTap: () {
+                                    Get.toNamed(
+                                      Routes.paymentScreen,
+                                      parameters: {
+                                        'trxId': LocalDataHelper()
+                                                .getCartTrxId() ??
+                                            "",
+                                        'token': LocalDataHelper()
+                                                .getUserToken() ??
+                                            ""
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: double.infinity,
+                                    height: 38.h,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffFF0008),
+                                      borderRadius:
+                                          BorderRadius.circular(8.r),
+                                    ),
+                                    child: Text(
+                                      AppTags.payNow.tr,
+                                      style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize:
+                                            isMobile(context) ? 13.sp : 10.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      orderStatus ==
-                                              "unpaid"
-                                          ? Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                              child: Text(
-                                                orderStatus
-                                                    .toString(),
-                                                style:isMobile(context)? AppThemeData.orderHistoryPDFTextStyle_13:AppThemeData.orderHistoryPDFTextStyleTab,
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                      orderStatus ==
-                                              "unpaid"
-                                          ? InkWell(
-                                              onTap: () {
-                                                Get.toNamed(
-                                                  Routes.paymentScreen,
-                                                  parameters: {
-                                                    'trxId': LocalDataHelper()
-                                                            .getCartTrxId() ??
-                                                        "",
-                                                    'token': LocalDataHelper()
-                                                            .getUserToken() ??
-                                                        ""
-                                                  },
-                                                );
-                                              },
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                height: 28.h,
-                                                width: orderStatus.length <= 8 ? 80.w : null,
-                                                decoration: BoxDecoration(
-                                                  color: AppThemeData.orderHistoryColor
-                                                      .withOpacity(0.1),
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(5.r),
-                                                  ),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 3.w),
-                                                  child: Text(
-                                                    AppTags.payNow.tr,
-                                                    style: isMobile(context)? AppThemeData.orderHistoryStatusTextStyle_13:AppThemeData.orderHistoryStatusTextStyle_10Tab,
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                      orderStatus !=
-                                              "unpaid"
-                                          ? Container(
-                                              alignment: Alignment.center,
-                                              height: 28.h,
-                                              width: orderStatus
-                                                          .length <=
-                                                      8
-                                                  ? 80.w
-                                                  : null,
-                                              decoration: BoxDecoration(
-                                                color: AppThemeData.orderHistoryColor
-                                                    .withOpacity(0.1),
-                                                borderRadius:
-                                                BorderRadius.all(
-                                                  Radius.circular(5.r),
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                     EdgeInsets.symmetric(
-                                                        horizontal: 3.w),
-                                                child: Text(
-                                                  orderStatus.toString(),
-                                                  style: isMobile(context)? AppThemeData.orderHistoryStatusTextStyle_13:AppThemeData.orderHistoryStatusTextStyle_10Tab,
-                                                ),
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                    ],
-                                  ),
-                                ],
-                              )
+                                ),
+                              ],
                             ],
                           ),
                         ),

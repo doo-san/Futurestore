@@ -65,10 +65,51 @@ class PaymentScreen extends GetView<PaymentController> {
                           paymentController.webViewController = controller;
                         },
                         onCreateWindow: (controller, createWindowAction) async {
-                          final url = createWindowAction.request.url;
-                          if (url != null) {
-                            controller.loadUrl(urlRequest: URLRequest(url: url));
-                          }
+                          // PayPal "Debit or Credit Card" ouvre son formulaire dans
+                          // une fenêtre enfant (window.open). On l'héberge dans une
+                          // WebView liée au windowId pour qu'il s'affiche correctement.
+                          await showDialog(
+                            context: context,
+                            builder: (dialogContext) {
+                              return Dialog(
+                                insetPadding: EdgeInsets.all(10.w),
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.close),
+                                        onPressed: () =>
+                                            Navigator.of(dialogContext).pop(),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: InAppWebView(
+                                        windowId: createWindowAction.windowId,
+                                        initialOptions:
+                                            paymentController.options,
+                                        onCloseWindow: (controller) {
+                                          if (Navigator.of(dialogContext)
+                                              .canPop()) {
+                                            Navigator.of(dialogContext).pop();
+                                          }
+                                        },
+                                        onLoadStop: (controller, url) {
+                                          if (url ==
+                                              Uri.parse(
+                                                  "${Config.apiServerUrl}/payment-success")) {
+                                            Navigator.of(dialogContext).pop();
+                                            Get.offAllNamed(
+                                                Routes.paymentConfirm);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
                           return true;
                         },
                         onLoadStart: (controller, url) {

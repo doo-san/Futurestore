@@ -238,6 +238,8 @@ const Map<String, String> enUS = {
   "amount": "Amount",
   "pdf": "PDF",
   "payNow": "Pay Now",
+  "paid": "Paid",
+  "unpaid": "Unpaid",
   "featuredCategories": "Featured Categories",
   "totalProduct": "Total Product",
   "gender": "Gender",

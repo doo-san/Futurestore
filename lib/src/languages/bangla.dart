@@ -238,6 +238,8 @@ const Map<String, String> bnBD = {
   "amount": "পরিমাণ",
   "pdf": "পিডিএফ",
   "payNow": "অর্থ প্রদান",
+  "paid": "পরিশোধিত",
+  "unpaid": "অপরিশোধিত",
   "featuredCategories": "বৈশিষ্ট্যযুক্ত বিভাগসমূহ",
   "totalProduct": "মোট পণ্য",
   "gender": "জেন্ডার",

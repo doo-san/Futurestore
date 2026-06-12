@@ -251,6 +251,8 @@ const Map<String, String> frFR = {
   "amount": "Montant",
   "pdf": "PDF",
   "payNow": "Payer maintenant",
+  "paid": "Payé",
+  "unpaid": "Impayé",
   "featuredCategories": "Catégories vedettes",
   "totalProduct": "Total produits",
   "gender": "Genre",

@@ -238,6 +238,8 @@ const Map<String, String> arSA = {
   "amount": "مقدار",
   "pdf": "بي دي إف",
   "payNow": "ادفع الان",
+  "paid": "مدفوع",
+  "unpaid": "غير مدفوع",
   "featuredCategories": "فئات مميزة",
   "totalProduct": "إجمالي المنتج",
   "gender": "جنس",
