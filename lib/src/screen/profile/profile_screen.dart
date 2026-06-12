@@ -19,7 +19,6 @@ import '../../utils/validators.dart';
 import '../../widgets/loader/shimmer_profile_screen.dart';
 import 'edit_profile_screen.dart';
 import 'my_download_screen.dart';
-import 'my_reward_screen.dart';
 import 'wallet/my_wallet_screen.dart';
 import 'order_history_screen.dart';
 
@@ -37,8 +36,6 @@ class _ProfileContentState extends State<ProfileContent> {
       Get.put(ProfileContentController());
   String? user = LocalDataHelper().getUserToken();
   bool isWallet = LocalDataHelper().getConfigData().data?.appConfig?.walletSystem ?? false;
-
-  var addons = LocalDataHelper().getConfigData().data?.addons ?? [];
 
   @override
   Widget build(BuildContext context) {
@@ -264,21 +261,6 @@ class _ProfileContentState extends State<ProfileContent> {
               thickness: 1,
             ),
           ) : const SizedBox(),
-                InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => MyRewardScreen(
-                        userDataModel: userDataModel,
-                        conversionRate: "My Reward",
-                      ),
-                    ),
-                  );
-                },
-                child: mobileViewTile("reward",AppTags.myRewards.tr)
-            ),
-             divider(),
-
           InkWell(
               onTap: () {
                 _profileContentController.firstNameController.text =  _profileContentController.profileDataModel.value.data?.firstName??"";
@@ -421,29 +403,6 @@ class _ProfileContentState extends State<ProfileContent> {
               false
               ? divider()
               : const SizedBox(),
-          //My reward
-          for (int i = 0; i < addons.length; i++)
-            addons[i].addonIdentifier == "reward" && addons[i].status == true
-                ? InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => MyRewardScreen(
-                        userDataModel: userDataModel,
-                        conversionRate: addons[i]
-                            .addonData!
-                            .conversionRate
-                            .toString(),
-                      ),
-                    ),
-                  );
-                },
-                child: tabViewTile("reward",AppTags.myRewards.tr))
-                : const SizedBox(),
-          for (int i = 0; i < addons.length; i++)
-            addons[i].addonIdentifier == "reward" && addons[i].status == true
-                ? divider() : const SizedBox(),
-
           InkWell(
               onTap: () {
                 Navigator.of(context).push(

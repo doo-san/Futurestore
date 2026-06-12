@@ -34,8 +34,8 @@ workflows:
           flutter build ipa \
             --release \
             --no-tree-shake-icons \
-            --build-name=1.2.8 \
-            --build-number=33
+            --build-name=1.2.9 \
+            --build-number=34
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -81,8 +81,8 @@ workflows:
           flutter build macos \
             --release \
             --no-tree-shake-icons \
-            --build-name=1.2.8 \
-            --build-number=33
+            --build-name=1.2.9 \
+            --build-number=34
       - name: Package macOS app
         script: |
           cd build/macos/Build/Products/Release
