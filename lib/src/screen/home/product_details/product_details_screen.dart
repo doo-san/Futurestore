@@ -8,7 +8,6 @@ import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:yoori_ecommerce/src/_route/routes.dart';
 import 'package:yoori_ecommerce/src/utils/images.dart';
 import '../../../controllers/cart_content_controller.dart';
 import '../../../controllers/color_selection_controller.dart';
