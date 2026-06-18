@@ -301,7 +301,7 @@ class InvoiceScreen extends StatelessWidget {
             width: double.infinity,
             height: 48.h,
             child: ElevatedButton.icon(
-              onPressed: () => _downloadInvoice(order),
+              onPressed: () => _downloadInvoice(context, order),
               icon: Icon(Icons.download_rounded,
                   color: Colors.white, size: 18.r),
               label: Text(
@@ -326,7 +326,11 @@ class InvoiceScreen extends StatelessWidget {
 
   // Génère la facture en PDF dans l'app puis ouvre le partage (Enregistrer
   // dans Fichiers / Téléchargements). Ne dépend plus du backend.
-  Future<void> _downloadInvoice(Order order) async {
+  Future<void> _downloadInvoice(BuildContext context, Order order) async {
+    // iOS exige un rectangle d'ancrage pour la feuille de partage (iPad/iPhone).
+    final box = context.findRenderObject() as RenderBox?;
+    final Rect? origin =
+        box != null ? box.localToGlobal(Offset.zero) & box.size : null;
     try {
       Get.dialog(
         const Center(child: CircularProgressIndicator()),
@@ -346,6 +350,7 @@ class InvoiceScreen extends StatelessWidget {
         ShareParams(
           files: [XFile(file.path)],
           text: '${AppTags.invoice.tr} #${trackingId.toString()}',
+          sharePositionOrigin: origin,
         ),
       );
     } catch (e) {
