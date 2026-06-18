@@ -82,6 +82,16 @@ class InvoiceScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Center(
+                        child: Image.asset(
+                          'assets/logos/logo.png',
+                          height: 40.h,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Divider(height: 1, color: const Color(0xFFEEEEEE)),
+                      SizedBox(height: 12.h),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
