@@ -1,12 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../controllers/currency_converter_controller.dart';
 import '../../controllers/invoice_screen_controller.dart';
-import '../../servers/network_service.dart';
-import '../../data/local_data_helper.dart';
+import '../../models/track_order_model.dart';
 import '../../utils/app_theme_data.dart';
+import '../../utils/invoice_pdf_generator.dart';
 import 'package:yoori_ecommerce/src/utils/app_tags.dart';
 import 'package:yoori_ecommerce/src/utils/responsive.dart';
 import '../../widgets/loader/shimmer_invoice.dart';
@@ -298,15 +301,7 @@ class InvoiceScreen extends StatelessWidget {
             width: double.infinity,
             height: 48.h,
             child: ElevatedButton.icon(
-              onPressed: () async {
-                Uri url = Uri.parse(
-                    "${NetworkService.apiUrl}/invoice-download/${order.id}?token=${LocalDataHelper().getUserToken()}");
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url, mode: LaunchMode.externalApplication);
-                } else {
-                  Get.snackbar(AppTags.invoice.tr, "Can't open link.");
-                }
-              },
+              onPressed: () => _downloadInvoice(order),
               icon: Icon(Icons.download_rounded,
                   color: Colors.white, size: 18.r),
               label: Text(
@@ -327,6 +322,36 @@ class InvoiceScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  // Génère la facture en PDF dans l'app puis ouvre le partage (Enregistrer
+  // dans Fichiers / Téléchargements). Ne dépend plus du backend.
+  Future<void> _downloadInvoice(Order order) async {
+    try {
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
+      );
+      final bytes = await InvoicePdfGenerator.generate(
+        order: order,
+        invoiceNo: trackingId.toString(),
+        convert: (s) =>
+            currencyConverterController.convertCurrency((s ?? '').toString()),
+      );
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/Facture-${trackingId.toString()}.pdf');
+      await file.writeAsBytes(bytes);
+      if (Get.isDialogOpen ?? false) Get.back();
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: '${AppTags.invoice.tr} #${trackingId.toString()}',
+        ),
+      );
+    } catch (e) {
+      if (Get.isDialogOpen ?? false) Get.back();
+      Get.snackbar(AppTags.invoice.tr, e.toString());
+    }
   }
 
   // ── Helpers UI ──
