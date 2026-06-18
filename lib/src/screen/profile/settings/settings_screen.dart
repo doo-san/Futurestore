@@ -215,10 +215,17 @@ class Settings extends StatelessWidget {
               child: InkWell(
                 onTap: () async {
                   try {
+                    // iOS exige un rectangle d'ancrage pour la feuille de partage.
+                    final box = context.findRenderObject() as RenderBox?;
+                    final Rect? origin = box != null
+                        ? box.localToGlobal(Offset.zero) & box.size
+                        : null;
                     final String shareText = (!kIsWeb && Platform.isIOS)
                         ? "Téléchargez Future Store sur l'App Store : https://apps.apple.com/app/id6775458470"
                         : "https://play.google.com/store/apps/details?id=${settingController.packageInfo?.packageName ?? 'com.interprest.futurestore'}";
-                    await SharePlus.instance.share(ShareParams(text: shareText));
+                    await SharePlus.instance.share(
+                      ShareParams(text: shareText, sharePositionOrigin: origin),
+                    );
                   } catch (e) {
                     printLog("Share this app failed: $e");
                   }
