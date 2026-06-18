@@ -184,6 +184,7 @@ const Map<String, String> enUS = {
   "trkAwaiting": "Awaiting",
   "trkOrderIdRequired": "Order ID Required",
   "trkEnterOrderId": "Please enter your order ID",
+  "trkSelectOrder": "Select an order to track",
   "deliveryStatus": "Delivery Status",
   "orderPlaced": "Order Placed",
   "orderConfirmed": "Order Confirmed",

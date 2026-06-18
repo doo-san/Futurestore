@@ -184,6 +184,7 @@ const Map<String, String> bnBD = {
   "trkAwaiting": "অপেক্ষায়",
   "trkOrderIdRequired": "অর্ডার আইডি প্রয়োজন",
   "trkEnterOrderId": "অনুগ্রহ করে আপনার অর্ডার আইডি লিখুন",
+  "trkSelectOrder": "ট্র্যাক করতে একটি অর্ডার নির্বাচন করুন",
   "deliveryStatus": "ডেলিভারি স্ট্যাটাস",
   "orderPlaced": "অর্ডার প্লেসড",
   "orderConfirmed": "অর্ডার কনফার্রমড হয়েছে",

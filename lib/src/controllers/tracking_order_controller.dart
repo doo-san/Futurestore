@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:yoori_ecommerce/src/data/local_data_helper.dart';
+import 'package:yoori_ecommerce/src/models/order_list_model.dart';
 import 'package:yoori_ecommerce/src/models/track_order_model.dart';
 
 import 'package:yoori_ecommerce/src/servers/repository.dart';
@@ -21,6 +23,28 @@ class TrackingOrderController extends GetxController {
   var isLoading = false.obs;
   var loadData = false.obs;
   final dateFormat = DateFormat('dd-MM-yyyy hh:mm aa');
+
+  // Liste des commandes de l'utilisateur affichée sous le champ de recherche.
+  OrderListModel orderListModel = OrderListModel();
+  var ordersLoading = false.obs;
+
+  @override
+  void onInit() {
+    getOrders();
+    super.onInit();
+  }
+
+  Future<void> getOrders() async {
+    if (LocalDataHelper().getUserToken() == null) return;
+    try {
+      ordersLoading.value = true;
+      orderListModel = await Repository().getOrderList();
+    } catch (_) {
+      // liste indisponible : on retombe sur l'état vide
+    } finally {
+      ordersLoading.value = false;
+    }
+  }
 
   TrackingOrderModel? trackingOrderModel;
   Future getTrackingOrder(String trackId) async {

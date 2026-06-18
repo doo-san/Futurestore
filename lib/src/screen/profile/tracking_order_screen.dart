@@ -8,6 +8,7 @@ import 'package:timelines_plus/timelines_plus.dart';
 import 'package:yoori_ecommerce/src/utils/images.dart';
 
 import '../../controllers/tracking_order_controller.dart';
+import '../../models/order_list_model.dart' as ord;
 import '../../models/track_order_model.dart';
 import 'package:yoori_ecommerce/src/utils/app_tags.dart';
 import '../../utils/app_theme_data.dart';
@@ -278,18 +279,145 @@ class TrackingOrder extends StatelessWidget {
                               .data!.order!.orderHistory!.length,
                         ),
                       )*/
-                : SizedBox(
-              height: 580.h,
-              child: Center(
-                child: Lottie.asset(
-                  "assets/lottie/notFound.json",
-                  height: 300.h,
-                  width: 300.w,
-                ),
+                : _ordersList(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Liste des commandes de l'utilisateur sous le champ de recherche.
+  // Un tap charge automatiquement la frise de suivi de la commande.
+  Widget _ordersList(BuildContext context) {
+    if (trackingOrderController.ordersLoading.value) {
+      return SizedBox(
+        height: 300.h,
+        child: Center(
+          child: CircularProgressIndicator(
+            color: AppThemeData.trackingSelectorColor,
+          ),
+        ),
+      );
+    }
+    final orders = trackingOrderController.orderListModel.data?.orders ?? [];
+    if (orders.isEmpty) {
+      return SizedBox(
+        height: 580.h,
+        child: Center(
+          child: Lottie.asset(
+            "assets/lottie/notFound.json",
+            height: 300.h,
+            width: 300.w,
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 16.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 10.h, left: 2.w),
+            child: Text(
+              AppTags.trkSelectOrder.tr,
+              style: TextStyle(
+                fontFamily: "Poppins Medium",
+                fontWeight: FontWeight.w600,
+                fontSize: isMobile(context) ? 14.sp : 11.sp,
+                color: const Color(0xff333333),
               ),
             ),
           ),
+          ...orders.map((o) => _orderCard(context, o)),
         ],
+      ),
+    );
+  }
+
+  Widget _orderCard(BuildContext context, ord.Orders o) {
+    final code = o.orderCode?.toString() ?? '';
+    final isPaid = (o.paymentStatus ?? '').toLowerCase() == 'paid';
+    return Padding(
+      padding: EdgeInsets.only(bottom: 10.h),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10.r),
+        onTap: () {
+          if (code.isEmpty) return;
+          trackingOrderController.trackingController.text = code;
+          trackingOrderController.isLoadingUpdate(true);
+          trackingOrderController.getTrackingOrder(code).then((value) {
+            trackingOrderController.isLoadingUpdate(false);
+            trackingOrderController.loadDataUpdate(true);
+          });
+        },
+        child: Container(
+          padding: EdgeInsets.all(14.r),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.r),
+            boxShadow: [
+              BoxShadow(
+                color: AppThemeData.boxShadowColor.withOpacity(0.06),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "#$code",
+                      style: TextStyle(
+                        fontFamily: "Poppins Medium",
+                        fontWeight: FontWeight.w700,
+                        fontSize: isMobile(context) ? 14.sp : 11.sp,
+                        color: const Color(0xff333333),
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      o.date?.toString() ?? '',
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: isMobile(context) ? 12.sp : 9.sp,
+                        color: const Color(0xff777777),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: (isPaid
+                          ? const Color(0xff2E9E7B)
+                          : const Color(0xffFF0008))
+                      .withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  isPaid ? AppTags.paid.tr : AppTags.unpaid.tr,
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w600,
+                    fontSize: isMobile(context) ? 11.sp : 8.sp,
+                    color: isPaid
+                        ? const Color(0xff2E9E7B)
+                        : const Color(0xffFF0008),
+                  ),
+                ),
+              ),
+              SizedBox(width: 6.w),
+              Icon(Icons.chevron_right,
+                  size: 20.r, color: const Color(0xffBBBBBB)),
+            ],
+          ),
+        ),
       ),
     );
   }

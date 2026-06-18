@@ -184,6 +184,7 @@ const Map<String, String> arSA = {
   "trkAwaiting": "في الانتظار",
   "trkOrderIdRequired": "رقم الطلب مطلوب",
   "trkEnterOrderId": "الرجاء إدخال رقم الطلب الخاص بك",
+  "trkSelectOrder": "اختر طلبًا لتتبعه",
   "deliveryStatus": "تم الطلب",
   "orderPlaced": "تم الطلب",
   "orderConfirmed": "تم تاكيد الطلب",

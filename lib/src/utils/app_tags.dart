@@ -280,6 +280,7 @@ class AppTags {
   static const String trkAwaiting = "trkAwaiting";
   static const String trkOrderIdRequired = "trkOrderIdRequired";
   static const String trkEnterOrderId = "trkEnterOrderId";
+  static const String trkSelectOrder = "trkSelectOrder";
   static const String orderPlaced = "orderPlaced";
   static const String orderConfirmed = "orderConfirmed";
   static const String orderProcessing = "orderProcessing";

@@ -200,6 +200,7 @@ const Map<String, String> frFR = {
   "trkAwaiting": "En attente",
   "trkOrderIdRequired": "Numéro de commande requis",
   "trkEnterOrderId": "Veuillez saisir votre numéro de commande",
+  "trkSelectOrder": "Sélectionnez une commande à suivre",
   "deliveryStatus": "Statut de livraison",
   "orderPlaced": "Commande passée",
   "orderConfirmed": "Commande confirmée",
