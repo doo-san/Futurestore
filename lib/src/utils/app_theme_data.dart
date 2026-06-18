@@ -46,7 +46,7 @@ class AppThemeData {
 
   //product
   static const Color boxShadowColor = Color(0xff404040);
-  static const Color productBoxDecorationColor = Color(0xFFF51E46);
+  static const Color productBoxDecorationColor = Color(0xFFFF0008);
   static const Color productBannerColor = Color(0xFFFAB75A);
   static const Color productContentColor = Color(0xFFF3F3F3);
   static const Color productContentBoxColor = Color(0xffDBE8C2);
@@ -171,11 +171,11 @@ class AppThemeData {
   static final timeDateTextStyleTab = TextStyle(
       color: const Color(0xffFFFFFF), fontFamily: "Poppins", fontSize: 9.sp);
   static final timeDateTextStyle_13 = TextStyle(
-      color: const Color(0xffF51E46),
+      color: const Color(0xFFFF0008),
       fontFamily: "Poppins Medium",
       fontSize: 13.sp);
   static final timeDateTextStyle_10Tab = TextStyle(
-      color: const Color(0xffF51E46),
+      color: const Color(0xFFFF0008),
       fontFamily: "Poppins Medium",
       fontSize: 10.sp);
   static final orderHistoryTextStyle_12 = TextStyle(
@@ -198,13 +198,13 @@ class AppThemeData {
   static final timeDateTextStyle_11 = TextStyle(
       color: const Color(0xffFFFFFF), fontFamily: "Poppins", fontSize: 11.sp);
   static final timeDateTextStyle_10 = TextStyle(
-      color: const Color(0xffF51E46), fontFamily: "Poppins", fontSize: 10.sp);
+      color: const Color(0xFFFF0008), fontFamily: "Poppins", fontSize: 10.sp);
   static final timeDateTextStyle_8Tab = TextStyle(
-      color: const Color(0xffF51E46), fontFamily: "Poppins", fontSize: 10.sp);
+      color: const Color(0xFFFF0008), fontFamily: "Poppins", fontSize: 10.sp);
   static final addressDefaultTextStyle_10 = TextStyle(
       color: const Color(0xff666666), fontFamily: "Poppins", fontSize: 10.sp);
   static final priceVideoTextStyle_14 = TextStyle(
-      color: const Color(0xffF51E46), fontFamily: "Poppins Medium", fontSize: 14.sp);
+      color: const Color(0xFFFF0008), fontFamily: "Poppins Medium", fontSize: 14.sp);
   static final headerTextStyle = TextStyle(
       color: const Color(0xff333333),
       fontFamily: "Poppins Medium",
@@ -394,21 +394,21 @@ class AppThemeData {
   static final dateTextStyle_9Tab = TextStyle(
       color: const Color(0xff999999), fontFamily: "Poppins", fontSize: 9.sp);
   static final todayDealNewStyle = TextStyle(
-      color: const Color(0xFFF51E46), fontFamily: "Poppins", fontSize: 10.sp);
+      color: const Color(0xFFFF0008), fontFamily: "Poppins", fontSize: 10.sp);
   static final todayDealNewStyleTab = TextStyle(
-      color: const Color(0xFFF51E46), fontFamily: "Poppins", fontSize: 8.sp);
+      color: const Color(0xFFFF0008), fontFamily: "Poppins", fontSize: 8.sp);
   static final todayDealTitleStyle =
       TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 12.sp);
   static final todayDealTitleStyleTab =
       TextStyle(color: Colors.black, fontFamily: "Poppins", fontSize: 10.sp);
   static final todayDealOriginalPriceStyle = TextStyle(
-    color: const Color(0xFFF51E46),
+    color: const Color(0xFFFF0008),
     fontFamily: "Poppins Medium",
     fontSize: 10.sp,
     decoration: TextDecoration.lineThrough,
   );
   static final todayDealOriginalPriceStyleTab = TextStyle(
-    color: const Color(0xFFF51E46),
+    color: const Color(0xFFFF0008),
     fontFamily: "Poppins Medium",
     fontSize: 8.sp,
     decoration: TextDecoration.lineThrough,

@@ -270,6 +270,16 @@ class AppTags {
   //Track Order Screen
   static const String deliveryStatus = "deliveryStatus";
   static const String searchParcel = "searchParcel";
+  static const String trkInfoTitle = "trkInfoTitle";
+  static const String trkPending = "trkPending";
+  static const String trkConfirmed = "trkConfirmed";
+  static const String trkPickedUp = "trkPickedUp";
+  static const String trkOnTheWay = "trkOnTheWay";
+  static const String trkDelivered = "trkDelivered";
+  static const String trkDone = "trkDone";
+  static const String trkAwaiting = "trkAwaiting";
+  static const String trkOrderIdRequired = "trkOrderIdRequired";
+  static const String trkEnterOrderId = "trkEnterOrderId";
   static const String orderPlaced = "orderPlaced";
   static const String orderConfirmed = "orderConfirmed";
   static const String orderProcessing = "orderProcessing";

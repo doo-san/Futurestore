@@ -104,7 +104,7 @@ class _ProductByCampaignState extends State<ProductByCampaign> {
                                             width: 56.w,
                                             height: 16.h,
                                             decoration: BoxDecoration(
-                                              color: const Color(0xFFF51E46)
+                                              color: const Color(0xFFFF0008)
                                                   .withOpacity(0.06),
                                               borderRadius:
                                               BorderRadius.all(
@@ -126,7 +126,7 @@ class _ProductByCampaignState extends State<ProductByCampaign> {
                                                 width: 60.w,
                                                 height: 16.h,
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xFFF51E46).withOpacity(0.06),
+                                                  color: const Color(0xFFFF0008).withOpacity(0.06),
                                                   borderRadius: BorderRadius.all(Radius.circular(3.r),),
                                                 ),
                                                 child: Center(
@@ -145,7 +145,7 @@ class _ProductByCampaignState extends State<ProductByCampaign> {
                                 ? Container(
                                     padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFF51E46)
+                                      color: const Color(0xFFFF0008)
                                           .withOpacity(0.06),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(3.r)),

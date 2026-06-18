@@ -1216,7 +1216,7 @@ class DetailsPage extends StatelessWidget {
                                                                           border:
                                                                               Border.all(
                                                                             color: _colorSelectionController.selectedArray[i] == index
-                                                                                ? const Color(0xffF51E46)
+                                                                                ? const Color(0xFFFF0008)
                                                                                 : const Color(0xffF4F4F4),
                                                                           ),
                                                                           borderRadius:

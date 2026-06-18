@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
@@ -15,13 +16,61 @@ import 'package:yoori_ecommerce/src/utils/responsive.dart';
 class TrackingOrder extends StatelessWidget {
   TrackingOrder({super.key});
   final trackingOrderController = Get.find<TrackingOrderController>();
-   final List statusList =[
-    "Order Pending",
-    "Order Confirm",
-    "Order Picked Up",
-    "Order On The Way",
-    "Order Delivered",
+
+  // Icône dédiée à chaque étape (assets/icons/track_order/*.svg)
+  final List<String> _stepIcons = const [
+    "order_pending",
+    "order_confirm",
+    "order_picked",
+    "order_on_the_way",
+    "order_delivered",
   ];
+
+  // Événements renvoyés par le backend correspondant à chaque étape,
+  // utilisés pour retrouver la date à laquelle l'étape a été atteinte.
+  final List<List<String>> _stepEvents = const [
+    ["order_pending_event", "order_create_event"],
+    ["order_confirm_event"],
+    ["order_picked_up_event"],
+    ["order_on_the_way_event"],
+    ["order_delivered_event"],
+  ];
+
+  String _stepLabel(int index) {
+    switch (index) {
+      case 0:
+        return AppTags.trkPending.tr;
+      case 1:
+        return AppTags.trkConfirmed.tr;
+      case 2:
+        return AppTags.trkPickedUp.tr;
+      case 3:
+        return AppTags.trkOnTheWay.tr;
+      default:
+        return AppTags.trkDelivered.tr;
+    }
+  }
+
+  // Sous-titre = date réelle de l'étape si disponible, sinon son état.
+  String _stepSubtitle(int index, Data data) {
+    final history = data.order?.orderHistory ?? [];
+    final candidates = _stepEvents[index];
+    for (final h in history) {
+      if (h.event != null &&
+          candidates.contains(h.event) &&
+          h.createdAt != null) {
+        return _formatDate(h.createdAt!);
+      }
+    }
+    final trackStatus = data.order?.orderTrackingStatus ?? 0;
+    return index < trackStatus ? AppTags.trkDone.tr : AppTags.trkAwaiting.tr;
+  }
+
+  String _formatDate(String raw) {
+    final parsed = DateTime.tryParse(raw);
+    if (parsed == null) return raw;
+    return DateFormat('dd MMM yyyy, HH:mm').format(parsed);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +319,7 @@ class TrackingOrder extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 16.0,top: 16.0),
-            child: Text("Informations de suivi",style: (Theme.of(context).textTheme.displayLarge ?? const TextStyle()).copyWith(fontWeight: FontWeight.w600,fontSize: 16.sp),),
+            child: Text(AppTags.trkInfoTitle.tr,style: (Theme.of(context).textTheme.displayLarge ?? const TextStyle()).copyWith(fontWeight: FontWeight.w600,fontSize: 16.sp),),
           ),
           Timeline.tileBuilder(
             shrinkWrap: true,
@@ -296,7 +345,7 @@ class TrackingOrder extends StatelessWidget {
               },
               itemExtentBuilder: (_, _) => 70.h,
               contentsBuilder: (context, index) =>
-                  orderTrackDetails(index,context),
+                  orderTrackDetails(index, context, data),
 
               itemCount: 5,
               indicatorBuilder: (_, index) {
@@ -318,11 +367,11 @@ class TrackingOrder extends StatelessWidget {
       ),
     ),
   );
-  Widget? orderTrackDetails( index,context) {
+  Widget? orderTrackDetails(int index, BuildContext context, Data data) {
     return deliveryTrackItem(
-        "order_created",
-        statusList[index],
-        "Order history",
+        _stepIcons[index],
+        _stepLabel(index),
+        _stepSubtitle(index, data),
         index,
         context
     );

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:yoori_ecommerce/src/models/track_order_model.dart';
 
 import 'package:yoori_ecommerce/src/servers/repository.dart';
+import 'package:yoori_ecommerce/src/utils/app_tags.dart';
 import 'package:yoori_ecommerce/src/utils/app_theme_data.dart';
 
 
@@ -46,8 +47,8 @@ class TrackingOrderController extends GetxController {
 
    void textFieldEmptySnackBar() {
     Get.snackbar(
-      'Order ID Required!',
-      'Please enter order Id',
+      AppTags.trkOrderIdRequired.tr,
+      AppTags.trkEnterOrderId.tr,
       snackPosition: SnackPosition.BOTTOM,
       duration: const Duration(seconds: 5),
       isDismissible: false,
