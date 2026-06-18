@@ -31,11 +31,14 @@ workflows:
         script: xcode-project use-profiles
       - name: Build iOS IPA
         script: |
+          # Récupère le dernier build TestFlight et incrémente automatiquement
+          BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_APPLE_ID" --platform IOS) + 1))
+          echo "iOS build number: $BUILD_NUMBER"
           flutter build ipa \
             --release \
             --no-tree-shake-icons \
             --build-name=1.3.2 \
-            --build-number=38
+            --build-number=$BUILD_NUMBER
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -78,11 +81,14 @@ workflows:
         script: xcode-project use-profiles
       - name: Build macOS
         script: |
+          # Récupère le dernier build TestFlight macOS et incrémente automatiquement
+          BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_APPLE_ID" --platform MAC_OS) + 1))
+          echo "macOS build number: $BUILD_NUMBER"
           flutter build macos \
             --release \
             --no-tree-shake-icons \
             --build-name=1.3.2 \
-            --build-number=38
+            --build-number=$BUILD_NUMBER
       - name: Package macOS app
         script: |
           cd build/macos/Build/Products/Release
