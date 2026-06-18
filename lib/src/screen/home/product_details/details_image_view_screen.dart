@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import '../../../controllers/details_screen_controller.dart';
 import '../../../utils/app_theme_data.dart';
+import '../../../utils/image_url_helper.dart';
 import 'package:yoori_ecommerce/src/utils/responsive.dart';
 
 class DetailsImageViewScreen extends StatelessWidget {
@@ -28,7 +30,11 @@ class DetailsImageViewScreen extends StatelessWidget {
                   builder: (context, index) {
                     return PhotoViewGalleryPageOptions(
                       basePosition: Alignment.center,
-                      imageProvider: NetworkImage(productDetailsImages![index]),
+                      imageProvider: CachedNetworkImageProvider(
+                        buildImageUrl(productDetailsImages![index]),
+                        headers: kImageHeaders,
+                      ),
+                      filterQuality: FilterQuality.high,
                       minScale: PhotoViewComputedScale.contained,
                       maxScale: PhotoViewComputedScale.covered,
                     );
