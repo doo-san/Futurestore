@@ -47,6 +47,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   bool isSelectBilling = false;
   int? shippingIndex = 0;
   String? token = LocalDataHelper().getUserToken();
+  static const Color _brandRed = Color(0xFFFF0008);
   Calculations? calculations;
   bool isLoadingShippingCostData = false;
 
@@ -169,31 +170,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: AppThemeData.headerTextStyle_16.copyWith(color: Colors.white),
                     ),
                     actions: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.h),
-                        child: TextButton(
-                          child: Text(
-                            "+ ${AppTags.add.tr}",
-                            style: AppThemeData.addAddressTextStyle_13,
-                          ),
-                          onPressed: () {
-                            if (token != null) {
-                              createAddress();
-                            } else {
-                              Get.snackbar(
-                                AppTags.login.tr,
-                                AppTags.pleaseLoginFirst.tr,
-                                snackPosition: SnackPosition.BOTTOM,
-                                duration: const Duration(seconds: 3),
-                                colorText: Colors.white,
-                                backgroundColor: Colors.black,
-                                forwardAnimationCurve: Curves.decelerate,
-                                shouldIconPulse: false,
-                              );
-                            }
-                          },
-                        ),
-                      )
+                      _buildAddButton(context),
                     ],
                   )
                 : AppBar(
@@ -218,31 +195,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: AppThemeData.headerTextStyle_14,
                     ),
                     actions: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.h),
-                        child: TextButton(
-                          child: Text(
-                            "+ ${AppTags.add.tr}",
-                            style: AppThemeData.addAddressTextStyle_10Tab,
-                          ),
-                          onPressed: () {
-                            if (token != null) {
-                              createAddress();
-                            } else {
-                              Get.snackbar(
-                                AppTags.login.tr,
-                                AppTags.pleaseLoginFirst.tr,
-                                snackPosition: SnackPosition.BOTTOM,
-                                duration: const Duration(seconds: 3),
-                                colorText: Colors.white,
-                                backgroundColor: Colors.black,
-                                forwardAnimationCurve: Curves.decelerate,
-                                shouldIconPulse: false,
-                              );
-                            }
-                          },
-                        ),
-                      )
+                      _buildAddButton(context),
                     ],
                   ),
             body: SizedBox(
@@ -807,100 +760,98 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             : AppThemeData.profileTextStyle_10Tab),
                     SizedBox(height: 8.h),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        InkWell(
-                          onTap: () async {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text(AppTags.confirmation.tr),
-                                  content:
-                                      Text(AppTags.doYouWantToDeleteAddress.tr),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop(
-                                                false); // dismisses only the dialog and returns false
-                                      },
-                                      child: Text(AppTags.no.tr),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        await Repository()
-                                            .deleteUserAddress(
-                                                addressId: shippingAddressModel
-                                                    .data!.addresses![index].id
-                                                    .toString())
-                                            .then((value) =>
-                                                getShippingAddress());
-                                        setState(() {});
-                                        if (!mounted) return;
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop(
-                                                true); // dismisses only the dialog and returns true
-                                      },
-                                      child: Text(AppTags.yes.tr),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Container(
-                            width: 80.w,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: const Color(0xffF4F4F4), width: 1),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.r),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(AppTags.confirmation.tr),
+                                    content: Text(
+                                        AppTags.doYouWantToDeleteAddress.tr),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop(false);
+                                        },
+                                        child: Text(AppTags.no.tr),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          await Repository()
+                                              .deleteUserAddress(
+                                                  addressId: shippingAddressModel
+                                                      .data!.addresses![index].id
+                                                      .toString())
+                                              .then((value) =>
+                                                  getShippingAddress());
+                                          setState(() {});
+                                          if (!mounted) return;
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop(true);
+                                        },
+                                        child: Text(AppTags.yes.tr),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            icon: Icon(Icons.delete_outline,
+                                size: 18.r, color: _brandRed),
+                            label: Text(
+                              AppTags.delete.tr,
+                              style: TextStyle(
+                                fontFamily: "Poppins Medium",
+                                fontWeight: FontWeight.w600,
+                                fontSize: isMobile(context) ? 13.sp : 10.sp,
                               ),
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.h),
-                              child: Text(AppTags.delete.tr,
-                                  style: isMobile(context)
-                                      ? AppThemeData.buttonDltTextStyle_13
-                                      : AppThemeData.buttonDltTextStyle_10Tab),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: _brandRed,
+                              side: BorderSide(color: _brandRed, width: 1.2),
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 15.w,
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            await getEditViewAddress(shippingAddressModel
-                                    .data!.addresses![index].id!)
-                                .then((value) => editAddress(
-                                    shippingAddressModel
-                                        .data!.addresses![index].id,
-                                    editViewModel));
-                          },
-                          child: Container(
-                            width: 80.w,
-                            //   height: 42,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: const Color(0xffF4F4F4), width: 1),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.r),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              await getEditViewAddress(shippingAddressModel
+                                      .data!.addresses![index].id!)
+                                  .then((value) => editAddress(
+                                      shippingAddressModel
+                                          .data!.addresses![index].id,
+                                      editViewModel));
+                            },
+                            icon: Icon(Icons.edit_outlined,
+                                size: 18.r, color: Colors.white),
+                            label: Text(
+                              AppTags.edit.tr,
+                              style: TextStyle(
+                                fontFamily: "Poppins Medium",
+                                fontWeight: FontWeight.w600,
+                                fontSize: isMobile(context) ? 13.sp : 10.sp,
+                                color: Colors.white,
                               ),
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.h),
-                              child: Text(AppTags.edit.tr,
-                                  style: isMobile(context)
-                                      ? AppThemeData.buttonTextStyle_13
-                                      : AppThemeData.buttonTextStyle_10Tab),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _brandRed,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
                             ),
                           ),
                         ),
@@ -912,6 +863,51 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             ),
           );
         });
+  }
+
+  // Bouton "+ Ajouter" de l'entête : pilule blanche avec texte rouge,
+  // bien visible sur l'AppBar rouge.
+  Widget _buildAddButton(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+      child: TextButton.icon(
+        onPressed: () {
+          if (token != null) {
+            createAddress();
+          } else {
+            Get.snackbar(
+              AppTags.login.tr,
+              AppTags.pleaseLoginFirst.tr,
+              snackPosition: SnackPosition.BOTTOM,
+              duration: const Duration(seconds: 3),
+              colorText: Colors.white,
+              backgroundColor: Colors.black,
+              forwardAnimationCurve: Curves.decelerate,
+              shouldIconPulse: false,
+            );
+          }
+        },
+        icon: Icon(Icons.add, size: 18.r, color: _brandRed),
+        label: Text(
+          AppTags.add.tr,
+          style: TextStyle(
+            fontFamily: "Poppins Medium",
+            fontWeight: FontWeight.w600,
+            fontSize: isMobile(context) ? 13.sp : 10.sp,
+            color: _brandRed,
+          ),
+        ),
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.white,
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+      ),
+    );
   }
 
   // Billing Address
@@ -1015,100 +1011,98 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             : AppThemeData.profileTextStyle_10Tab),
                     SizedBox(height: 15.h),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        InkWell(
-                          onTap: () async {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text(AppTags.confirmation.tr),
-                                  content:
-                                      Text(AppTags.doYouWantToDeleteAddress.tr),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop(
-                                                false); // dismisses only the dialog and returns false
-                                      },
-                                      child: Text(AppTags.no.tr),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        await Repository()
-                                            .deleteUserAddress(
-                                                addressId: shippingAddressModel
-                                                    .data!.addresses![index].id
-                                                    .toString())
-                                            .then((value) =>
-                                                getShippingAddress());
-                                        setState(() {});
-                                        if (!mounted) return;
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop(
-                                                true); // dismisses only the dialog and returns true
-                                      },
-                                      child: Text(AppTags.yes.tr),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Container(
-                            width: 80.w,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: const Color(0xffF4F4F4), width: 1),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.r),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(AppTags.confirmation.tr),
+                                    content: Text(
+                                        AppTags.doYouWantToDeleteAddress.tr),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop(false);
+                                        },
+                                        child: Text(AppTags.no.tr),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          await Repository()
+                                              .deleteUserAddress(
+                                                  addressId: shippingAddressModel
+                                                      .data!.addresses![index].id
+                                                      .toString())
+                                              .then((value) =>
+                                                  getShippingAddress());
+                                          setState(() {});
+                                          if (!mounted) return;
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop(true);
+                                        },
+                                        child: Text(AppTags.yes.tr),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            icon: Icon(Icons.delete_outline,
+                                size: 18.r, color: _brandRed),
+                            label: Text(
+                              AppTags.delete.tr,
+                              style: TextStyle(
+                                fontFamily: "Poppins Medium",
+                                fontWeight: FontWeight.w600,
+                                fontSize: isMobile(context) ? 13.sp : 10.sp,
                               ),
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.h),
-                              child: Text(AppTags.delete.tr,
-                                  style: isMobile(context)
-                                      ? AppThemeData.buttonDltTextStyle_13
-                                      : AppThemeData.buttonDltTextStyle_10Tab),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: _brandRed,
+                              side: BorderSide(color: _brandRed, width: 1.2),
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 15.w,
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            await getEditViewAddress(shippingAddressModel
-                                    .data!.addresses![index].id!)
-                                .then((value) => editAddress(
-                                    shippingAddressModel
-                                        .data!.addresses![index].id,
-                                    editViewModel));
-                          },
-                          child: Container(
-                            width: 80.w,
-                            //   height: 42,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: const Color(0xffF4F4F4), width: 1),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5.r),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              await getEditViewAddress(shippingAddressModel
+                                      .data!.addresses![index].id!)
+                                  .then((value) => editAddress(
+                                      shippingAddressModel
+                                          .data!.addresses![index].id,
+                                      editViewModel));
+                            },
+                            icon: Icon(Icons.edit_outlined,
+                                size: 18.r, color: Colors.white),
+                            label: Text(
+                              AppTags.edit.tr,
+                              style: TextStyle(
+                                fontFamily: "Poppins Medium",
+                                fontWeight: FontWeight.w600,
+                                fontSize: isMobile(context) ? 13.sp : 10.sp,
+                                color: Colors.white,
                               ),
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.h),
-                              child: Text(AppTags.edit.tr,
-                                  style: isMobile(context)
-                                      ? AppThemeData.buttonTextStyle_13
-                                      : AppThemeData.buttonTextStyle_10Tab),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _brandRed,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
                             ),
                           ),
                         ),
