@@ -790,7 +790,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                               .then((value) =>
                                                   getShippingAddress());
                                           setState(() {});
-                                          if (!mounted) return;
+                                          if (!context.mounted) return;
                                           Navigator.of(context,
                                                   rootNavigator: true)
                                               .pop(true);
@@ -1041,7 +1041,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                               .then((value) =>
                                                   getShippingAddress());
                                           setState(() {});
-                                          if (!mounted) return;
+                                          if (!context.mounted) return;
                                           Navigator.of(context,
                                                   rootNavigator: true)
                                               .pop(true);

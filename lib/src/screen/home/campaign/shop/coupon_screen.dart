@@ -52,15 +52,15 @@ class CouponScreen extends StatelessWidget {
                                 Clipboard.setData(
                                   ClipboardData(
                                       text: visitShopModel!.data!.coupons![index].code!),
-                                ).then(
-                                  (value) => ScaffoldMessenger.of(context)
-                                      .showSnackBar(
+                                ).then((value) {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content:
                                           Text(AppTags.couponCodeCopied.tr),
                                     ),
-                                  ),
-                                );
+                                  );
+                                });
                               },
                               style: ElevatedButton.styleFrom(
                                 elevation: 3,

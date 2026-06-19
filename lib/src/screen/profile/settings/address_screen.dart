@@ -338,7 +338,7 @@ class _AddressesState extends State<Addresses> {
                                               .then((value) =>
                                                   getShippingAddress());
                                           setState(() {});
-                                          if (!mounted) return;
+                                          if (!context.mounted) return;
                                           Navigator.of(context,
                                                   rootNavigator: true)
                                               .pop(true);

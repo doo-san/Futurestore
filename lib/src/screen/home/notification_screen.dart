@@ -223,18 +223,19 @@ class _NotificationContentState extends State<NotificationContent> {
   Future<void> deleteNotification(int id, BuildContext context) async {
     bool? isDeleted = await Repository().deleteNotification(id);
     if (isDeleted != null) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       isDeleted
           ? showSnackBar(context, AppTags.notificationDeleted.tr)
           : showSnackBar(context, AppTags.notificationCanNotBeDeleted.tr);
     } else {
-      if (!mounted) return;
+      if (!context.mounted) return;
       showSnackBar(context, AppTags.somethingWentWrong.tr);
     }
   }
 
   Future<void> deleteAllNotification(BuildContext context) async {
     controller.deleteAllNotifications().then((value) {
+      if (!context.mounted) return;
       value
           ? showSnackBar(
               context, AppTags.allNotificationsDeleted.tr)

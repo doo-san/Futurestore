@@ -259,17 +259,16 @@ class _VoucherListState extends State<VoucherList> {
                                                 Clipboard.setData(
                                                   ClipboardData(
                                                       text: coupon.code ?? ''),
-                                                ).then(
-                                                  (value) =>
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
+                                                ).then((value) {
+                                                  if (!context.mounted) return;
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
                                                     SnackBar(
                                                       content: Text(AppTags
                                                           .couponCodeCopied.tr),
                                                     ),
-                                                  ),
-                                                );
+                                                  );
+                                                });
                                               },
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor: accent,
