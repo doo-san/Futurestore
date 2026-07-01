@@ -17,6 +17,16 @@ class OrderHistoryController extends GetxController {
     isLoading.value = false;
   }
 
+  // Supprime une facture non payée puis rafraîchit la liste.
+  Future<Map<String, dynamic>> deleteOrder(int orderId) async {
+    final result = await Repository().deleteOrder(orderId);
+    if (result['success'] == true) {
+      isLoading.value = true;
+      await getOrderList();
+    }
+    return result;
+  }
+
   @override
   void onInit() {
     if(LocalDataHelper().getUserToken() != null){

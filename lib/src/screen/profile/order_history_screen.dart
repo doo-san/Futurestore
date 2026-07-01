@@ -288,6 +288,67 @@ class OrderHistory extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                SizedBox(height: 10.h),
+                                // Bouton Supprimer la facture non payée
+                                InkWell(
+                                  onTap: () {
+                                    Get.defaultDialog(
+                                      title: "Supprimer la facture",
+                                      middleText:
+                                          "Voulez-vous vraiment supprimer cette facture non payée ? Cette action est définitive.",
+                                      textConfirm: "Oui, supprimer",
+                                      textCancel: "Annuler",
+                                      confirmTextColor: Colors.white,
+                                      buttonColor: const Color(0xffFF0008),
+                                      onConfirm: () async {
+                                        Get.back();
+                                        final res = await orderHistoryController
+                                            .deleteOrder(orderHistoryController
+                                                .orderListModel
+                                                .data!
+                                                .orders![index]
+                                                .id!);
+                                        Get.snackbar(
+                                          "Info",
+                                          (res['message'] ?? "").toString(),
+                                          snackPosition: SnackPosition.BOTTOM,
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: double.infinity,
+                                    height: 38.h,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      border: Border.all(
+                                          color: const Color(0xffFF0008)),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.delete_outline,
+                                            size: 16.r,
+                                            color: const Color(0xffFF0008)),
+                                        SizedBox(width: 6.w),
+                                        Text(
+                                          "Supprimer",
+                                          style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: isMobile(context)
+                                                ? 13.sp
+                                                : 10.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: const Color(0xffFF0008),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ],
                           ),

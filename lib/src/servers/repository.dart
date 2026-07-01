@@ -916,6 +916,27 @@ class Repository {
     return OrderListModel.fromJson(response);
   }
 
+  //Delete an unpaid order (facture non payée)
+  Future<Map<String, dynamic>> deleteOrder(int orderId) async {
+    var headers = {"apiKey": Config.apiKey};
+    var url = Uri.parse(
+        "${NetworkService.apiUrl}/delete-order?token=${LocalDataHelper().getUserToken()}&$langCurrCode");
+    Map<String, dynamic> data = {"id": orderId.toString()};
+    try {
+      final response =
+          await NetworkService.client.post(url, headers: headers, body: data);
+      printLog("deleteOrder: ${response.body}");
+      final decoded = jsonDecode(response.body);
+      if (decoded is Map<String, dynamic>) {
+        return decoded;
+      }
+      return {"success": false, "message": "Unexpected response"};
+    } catch (e) {
+      printLog("deleteOrder ERROR: $e");
+      return {"success": false, "message": e.toString()};
+    }
+  }
+
   //Guest Order List
   Future<OrderListModel> getGuestOrderList({String? trxId}) async {
     var url = "${NetworkService.apiUrl}/order-by-trx?trx_id=$trxId";
