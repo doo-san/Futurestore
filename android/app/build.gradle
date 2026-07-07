@@ -105,7 +105,10 @@ plugins {
     id "com.android.application"
     id "dev.flutter.flutter-gradle-plugin"
     id "org.jetbrains.kotlin.android"
-    id 'com.google.gms.google-services' version '4.4.3' apply false
+    // Doit être appliqué (pas "apply false") pour que google-services.json soit
+    // transformé en ressources Android — sinon Firebase.initializeApp() échoue
+    // au démarrage et l'app reste bloquée sur le splash screen.
+    id 'com.google.gms.google-services'
 }
 
 def keystoreProperties = new Properties()
@@ -157,8 +160,9 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

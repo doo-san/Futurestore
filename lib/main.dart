@@ -9,12 +9,19 @@ import 'src/controllers/init_controller.dart';
 import 'src/_route/routes.dart';
 import 'src/data/data_storage_service.dart';
 import 'src/languages/language_translation.dart';
+import 'src/utils/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await initialConfig();
-  await Firebase.initializeApp();
+  // Un échec d'init Firebase ne doit jamais empêcher runApp() :
+  // sans ce garde-fou, l'app reste figée sur le splash screen.
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    printLog('Firebase init failed: $e');
+  }
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());
